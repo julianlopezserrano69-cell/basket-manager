@@ -1,0 +1,16 @@
+{
+  "name": "Basket Manager",
+  "short_name": "Basket Manager",
+  "description": "Gestión integral de baloncesto: equipos, entrenamientos, planificación, scouting e informes.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08111f",
+  "theme_color": "#0b1627",
+  "orientation": "any",
+  "lang": "es",
+  "categories": [
+    "sports",
+    "productivity"
+  ]
+}
