@@ -1,8 +1,10 @@
-const CACHE_NAME = 'basket-manager-v8.5.70';
+const CACHE_NAME = 'basket-manager-v8.5.72';
 const APP_SHELL = [
   './',
   './index.html',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
