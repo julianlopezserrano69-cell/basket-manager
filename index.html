@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.75 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.76 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -36571,7 +36571,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.75 acción entrenamiento',action,id,err);
+    console.error('V8.5.76 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36782,7 +36782,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.75 fundament',name,e);
+    console.warn('V8.5.76 fundament',name,e);
   }
 }
 
@@ -36874,7 +36874,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.75 import',item,e);
+        console.error('V8.5.76 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36885,7 +36885,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.75 reload',e)}
+    }catch(e){console.warn('V8.5.76 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37086,7 +37086,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.75 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.76 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37210,7 +37210,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.75 Drive import',r,e);
+        console.error('V8.5.76 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37221,7 +37221,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.75 reload',e)}
+    }catch(e){console.warn('V8.5.76 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37248,7 +37248,7 @@ window.v8574ImportAll=async function(){
 'use strict';
 
 /*
- V8.5.75
+ V8.5.76
  Guardia final de navegación.
  Algunas extensiones históricas de Biblioteca usan display inline para páginas
  fuera del array original. Esta capa deja siempre visible la página solicitada
@@ -37314,6 +37314,186 @@ document.addEventListener('click',function(ev){
 },true);
 
 window.v8575EnsurePage=v8575EnsurePage;
+})();
+</script>
+
+<script id="v8576-equipos-filtros-fix">
+(function(){
+'use strict';
+
+function E76(id){ return document.getElementById(id); }
+
+function norm76(v){
+  return String(v==null?'':v)
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase();
+}
+
+function catEq76(a,b){
+  return norm76(a)===norm76(b);
+}
+
+function highlight76(cat){
+  var wanted=norm76(cat);
+  document.querySelectorAll('#p-equipos .eq-cat-card').forEach(function(card){
+    var active=norm76(card.getAttribute('data-eq-cat')||'')===wanted;
+    card.classList.toggle('eq-card-active',active);
+    card.setAttribute('aria-pressed',active?'true':'false');
+  });
+}
+
+function sidebar76(cat){
+  var wanted=norm76(cat);
+  document.querySelectorAll('.nav-cat-sub[data-cat-page="equipos"]').forEach(function(el){
+    var active=norm76(el.getAttribute('data-cat-value')||'')===wanted;
+    el.classList.toggle('active',active);
+    el.classList.toggle('active-cat',active);
+  });
+}
+
+function filter76(){
+  if(!window.DB || !Array.isArray(DB.equipos)) return;
+
+  var q = norm76(E76('q-eq') ? E76('q-eq').value : '');
+  var cat = E76('fsel-cat-eq') ? E76('fsel-cat-eq').value : '';
+  var gen = norm76(E76('fsel-genero-eq') ? E76('fsel-genero-eq').value : '');
+  var club = String(E76('fsel-club-eq') ? E76('fsel-club-eq').value : '').trim();
+
+  var data = DB.equipos.filter(function(e){
+    var matchQ = !q || norm76(JSON.stringify(e)).indexOf(q)!==-1;
+    var matchCat = !cat || catEq76(e.categoria||e.category||'',cat);
+    var matchGen = !gen || norm76(e.genero||e.gender||'')===gen;
+    var matchClub = !club || String(e.club_id||'')===club;
+    return matchQ && matchCat && matchGen && matchClub;
+  });
+
+  if(typeof window.renderEquipos==='function') window.renderEquipos(data);
+  else if(typeof renderEquipos==='function') renderEquipos(data);
+
+  highlight76(cat);
+  sidebar76(cat);
+}
+
+function ensureSelectValue76(cat){
+  var sel=E76('fsel-cat-eq');
+  if(!sel) return;
+  var wanted=String(cat==null?'':cat).trim();
+
+  var found='';
+  Array.prototype.forEach.call(sel.options,function(op){
+    if(catEq76(op.value,wanted)) found=op.value;
+  });
+
+  if(wanted && !found){
+    var op=document.createElement('option');
+    op.value=wanted;
+    op.textContent=wanted;
+    sel.appendChild(op);
+    found=wanted;
+  }
+
+  sel.value=wanted ? found : '';
+}
+
+function apply76(cat,source){
+  cat=String(cat==null?'':cat).trim();
+
+  if(typeof window.nav==='function'){
+    try{ window.nav('equipos'); }catch(e){}
+  }
+
+  setTimeout(function(){
+    ensureSelectValue76(cat);
+    filter76();
+
+    var wrap=E76('eq-tbl-wrap') || document.querySelector('#p-equipos .tbl-wrap');
+    if(wrap && source==='card'){
+      try{ wrap.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
+    }
+  },60);
+}
+
+/* Funciones definitivas usadas por HTML existente */
+window.filterEq = filter76;
+window.highlightEquipoCategoryCards = highlight76;
+window.setEquipoCategoriaFromCard = function(cat){ apply76(cat,'card'); };
+
+/* Conserva Jugadores/Encuentros y resuelve Equipos aquí al final de todos los wrappers históricos. */
+var oldSetMenu76=window.setMenuCategoria;
+window.setMenuCategoria=function(page,categoria){
+  if(page==='equipos'){
+    apply76(categoria,'sidebar');
+    return;
+  }
+  if(typeof oldSetMenu76==='function') return oldSetMenu76.apply(this,arguments);
+};
+
+/* Sincroniza también el desplegable de categoría. */
+function bind76(){
+  var sel=E76('fsel-cat-eq');
+  if(sel && !sel.__v8576Bound){
+    sel.__v8576Bound=true;
+    sel.addEventListener('change',function(){ filter76(); });
+  }
+
+  var q=E76('q-eq');
+  if(q && !q.__v8576Bound){
+    q.__v8576Bound=true;
+    q.addEventListener('input',function(){ filter76(); });
+  }
+
+  var gen=E76('fsel-genero-eq');
+  if(gen && !gen.__v8576Bound){
+    gen.__v8576Bound=true;
+    gen.addEventListener('change',function(){ filter76(); });
+  }
+
+  var club=E76('fsel-club-eq');
+  if(club && !club.__v8576Bound){
+    club.__v8576Bound=true;
+    club.addEventListener('change',function(){ filter76(); });
+  }
+
+  /* Defensa adicional: los cards funcionan aunque un inline onclick histórico falle. */
+  document.querySelectorAll('#p-equipos .eq-cat-card').forEach(function(card){
+    if(card.__v8576Bound)return;
+    card.__v8576Bound=true;
+    card.addEventListener('click',function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      apply76(card.getAttribute('data-eq-cat')||'','card');
+    },true);
+  });
+
+  document.querySelectorAll('.nav-cat-sub[data-cat-page="equipos"]').forEach(function(el){
+    if(el.__v8576Bound)return;
+    el.__v8576Bound=true;
+    el.addEventListener('click',function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      apply76(el.getAttribute('data-cat-value')||'','sidebar');
+    },true);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(bind76,250);
+  setTimeout(bind76,1000);
+});
+
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    bind76();
+    if(E76('p-equipos') && E76('p-equipos').classList.contains('active')) filter76();
+  },400);
+});
+
+/* Expuesto para depuración y futuros refrescos de datos. */
+window.v8576FilterEquipos=filter76;
+window.v8576ApplyEquipoCategoria=apply76;
+
 })();
 </script>
 </body>
