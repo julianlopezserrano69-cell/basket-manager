@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.76 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.77 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -6334,6 +6334,20 @@ body.v8537-ready{overflow:auto}
 .v8574-log .ok{color:#86efac}.v8574-log .upd{color:#93c5fd}.v8574-log .skip{color:#fde68a}.v8574-log .err{color:#fca5a5}
 @media(max-width:760px){.v8574-summary{grid-template-columns:1fr 1fr}.v8574-table th:nth-child(1),.v8574-table td:nth-child(1),.v8574-table th:nth-child(5),.v8574-table td:nth-child(5){display:none}}
 </style>
+
+<style id="v8577-equipos-css">
+#p-equipos .eq-cat-card{cursor:pointer!important}
+#p-equipos .eq-cat-card.v8577-active{
+  border-color:var(--accent)!important;
+  box-shadow:0 0 0 2px rgba(249,115,22,.40),0 8px 22px rgba(0,0,0,.24)!important;
+  transform:translateY(-2px)
+}
+.nav-cat-sub[data-cat-page="equipos"].v8577-active{
+  color:var(--accent)!important;
+  background:rgba(249,115,22,.12)!important;
+  font-weight:700!important
+}
+</style>
 </head>
 <body>
 <div id="bm-intro-splash" aria-hidden="true">
@@ -7078,16 +7092,16 @@ window.addEventListener('DOMContentLoaded', function(){
     <div class="nav-sub" id="nav-entrenadores" onclick="nav('entrenadores')"><span class="nav-sub-icon">🧑‍🏫</span> Entrenadores</div>
     <div class="nav-sub" id="nav-localizaciones" onclick="nav('localizaciones')"><span class="nav-sub-icon">📍</span> Localizaciones</div>
     <div class="nav-item" id="nav-equipos" onclick="nav('equipos')"><span class="nav-icon">🏆</span> Equipos</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-todas" data-cat-page="equipos" data-cat-value="" onclick="setMenuCategoria('equipos','')"><span class="nav-sub-icon">🏷️</span> Todas las categorías</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-alevin" data-cat-page="equipos" data-cat-value="Alevín" onclick="setMenuCategoria('equipos','Alevín')"><span class="nav-sub-icon">🏷️</span> Alevín</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-benjamin" data-cat-page="equipos" data-cat-value="Benjamín" onclick="setMenuCategoria('equipos','Benjamín')"><span class="nav-sub-icon">🏷️</span> Benjamín</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-cadete" data-cat-page="equipos" data-cat-value="Cadete" onclick="setMenuCategoria('equipos','Cadete')"><span class="nav-sub-icon">🏷️</span> Cadete</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-infantil" data-cat-page="equipos" data-cat-value="Infantil" onclick="setMenuCategoria('equipos','Infantil')"><span class="nav-sub-icon">🏷️</span> Infantil</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-junior" data-cat-page="equipos" data-cat-value="Junior" onclick="setMenuCategoria('equipos','Junior')"><span class="nav-sub-icon">🏷️</span> Junior</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-prebenjamin" data-cat-page="equipos" data-cat-value="Prebenjamín" onclick="setMenuCategoria('equipos','Prebenjamín')"><span class="nav-sub-icon">🏷️</span> Prebenjamín</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-senior" data-cat-page="equipos" data-cat-value="Senior" onclick="setMenuCategoria('equipos','Senior')"><span class="nav-sub-icon">🏷️</span> Senior</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-sub22" data-cat-page="equipos" data-cat-value="SUB22" onclick="setMenuCategoria('equipos','SUB22')"><span class="nav-sub-icon">🏷️</span> SUB22</div>
-    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-veteranats" data-cat-page="equipos" data-cat-value="Veteran@s" onclick="setMenuCategoria('equipos','Veteran@s')"><span class="nav-sub-icon">🏷️</span> Veteran@s</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-todas" data-cat-page="equipos" data-cat-value="" onclick="return v8577SelectEquipoCategoria('','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Todas las categorías</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-alevin" data-cat-page="equipos" data-cat-value="Alevín" onclick="return v8577SelectEquipoCategoria('Alevín','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Alevín</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-benjamin" data-cat-page="equipos" data-cat-value="Benjamín" onclick="return v8577SelectEquipoCategoria('Benjamín','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Benjamín</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-cadete" data-cat-page="equipos" data-cat-value="Cadete" onclick="return v8577SelectEquipoCategoria('Cadete','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Cadete</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-infantil" data-cat-page="equipos" data-cat-value="Infantil" onclick="return v8577SelectEquipoCategoria('Infantil','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Infantil</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-junior" data-cat-page="equipos" data-cat-value="Junior" onclick="return v8577SelectEquipoCategoria('Junior','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Junior</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-prebenjamin" data-cat-page="equipos" data-cat-value="Prebenjamín" onclick="return v8577SelectEquipoCategoria('Prebenjamín','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Prebenjamín</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-senior" data-cat-page="equipos" data-cat-value="Senior" onclick="return v8577SelectEquipoCategoria('Senior','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Senior</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-sub22" data-cat-page="equipos" data-cat-value="SUB22" onclick="return v8577SelectEquipoCategoria('SUB22','sidebar',event)"><span class="nav-sub-icon">🏷️</span> SUB22</div>
+    <div class="nav-sub nav-cat-sub" id="nav-equipos-cat-veteranats" data-cat-page="equipos" data-cat-value="Veteran@s" onclick="return v8577SelectEquipoCategoria('Veteran@s','sidebar',event)"><span class="nav-sub-icon">🏷️</span> Veteran@s</div>
     <div class="nav-item" id="nav-jugadores" onclick="nav('jugadores')"><span class="nav-icon">👤</span> Jugadores</div>
     <div class="nav-sub nav-cat-sub" id="nav-jugadores-cat-todas" data-cat-page="jugadores" data-cat-value="" onclick="setMenuCategoria('jugadores','')"><span class="nav-sub-icon">🏷️</span> Todas las categorías</div>
     <div class="nav-sub nav-cat-sub" id="nav-jugadores-cat-alevin" data-cat-page="jugadores" data-cat-value="Alevín" onclick="setMenuCategoria('jugadores','Alevín')"><span class="nav-sub-icon">🏷️</span> Alevín</div>
@@ -7353,16 +7367,16 @@ window.addEventListener('DOMContentLoaded', function(){
       <div style="display:flex;justify-content:flex-end;"><button class="btn btn-primary" onclick="openModal('equipo',null)">+ Anadir Equipo</button></div>
     </div>
     <div class="eq-category-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;width:100%;">
-      <div class="stat-card eq-cat-card" data-eq-cat="" onclick="setEquipoCategoriaFromCard('')" title="Mostrar todas las categorías" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Total Equipos</div><div class="sval" id="eq-stat-total" style="font-size:22px">0</div><div class="ssub">en la liga</div></div>
-      <div class="stat-card blue eq-cat-card" data-eq-cat="Prebenjamín" onclick="setEquipoCategoriaFromCard('Prebenjamín')" title="Filtrar por Prebenjamín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Prebenjamín</div><div class="sval" id="eq-stat-prebenjamin" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card green eq-cat-card" data-eq-cat="Benjamín" onclick="setEquipoCategoriaFromCard('Benjamín')" title="Filtrar por Benjamín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Benjamín</div><div class="sval" id="eq-stat-benjamin" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card yellow eq-cat-card" data-eq-cat="Alevín" onclick="setEquipoCategoriaFromCard('Alevín')" title="Filtrar por Alevín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Alevín</div><div class="sval" id="eq-stat-alevin" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card blue eq-cat-card" data-eq-cat="Infantil" onclick="setEquipoCategoriaFromCard('Infantil')" title="Filtrar por Infantil" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Infantil</div><div class="sval" id="eq-stat-infantil" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card green eq-cat-card" data-eq-cat="Cadete" onclick="setEquipoCategoriaFromCard('Cadete')" title="Filtrar por Cadete" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Cadete</div><div class="sval" id="eq-stat-cadete" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card yellow eq-cat-card" data-eq-cat="Junior" onclick="setEquipoCategoriaFromCard('Junior')" title="Filtrar por Junior" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Junior</div><div class="sval" id="eq-stat-junior" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card blue eq-cat-card" data-eq-cat="SUB22" onclick="setEquipoCategoriaFromCard('SUB22')" title="Filtrar por SUB22" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">SUB22</div><div class="sval" id="eq-stat-sub22" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card green eq-cat-card" data-eq-cat="Senior" onclick="setEquipoCategoriaFromCard('Senior')" title="Filtrar por Senior" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Senior</div><div class="sval" id="eq-stat-senior" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
-      <div class="stat-card yellow eq-cat-card" data-eq-cat="Veteran@s" onclick="setEquipoCategoriaFromCard('Veteran@s')" title="Filtrar por Veteran@s" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Veteran@s</div><div class="sval" id="eq-stat-veteranos" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card eq-cat-card" data-eq-cat="" onclick="return v8577SelectEquipoCategoria('','card',event)" title="Mostrar todas las categorías" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Total Equipos</div><div class="sval" id="eq-stat-total" style="font-size:22px">0</div><div class="ssub">en la liga</div></div>
+      <div class="stat-card blue eq-cat-card" data-eq-cat="Prebenjamín" onclick="return v8577SelectEquipoCategoria('Prebenjamín','card',event)" title="Filtrar por Prebenjamín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Prebenjamín</div><div class="sval" id="eq-stat-prebenjamin" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card green eq-cat-card" data-eq-cat="Benjamín" onclick="return v8577SelectEquipoCategoria('Benjamín','card',event)" title="Filtrar por Benjamín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Benjamín</div><div class="sval" id="eq-stat-benjamin" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card yellow eq-cat-card" data-eq-cat="Alevín" onclick="return v8577SelectEquipoCategoria('Alevín','card',event)" title="Filtrar por Alevín" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Alevín</div><div class="sval" id="eq-stat-alevin" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card blue eq-cat-card" data-eq-cat="Infantil" onclick="return v8577SelectEquipoCategoria('Infantil','card',event)" title="Filtrar por Infantil" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Infantil</div><div class="sval" id="eq-stat-infantil" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card green eq-cat-card" data-eq-cat="Cadete" onclick="return v8577SelectEquipoCategoria('Cadete','card',event)" title="Filtrar por Cadete" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Cadete</div><div class="sval" id="eq-stat-cadete" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card yellow eq-cat-card" data-eq-cat="Junior" onclick="return v8577SelectEquipoCategoria('Junior','card',event)" title="Filtrar por Junior" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Junior</div><div class="sval" id="eq-stat-junior" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card blue eq-cat-card" data-eq-cat="SUB22" onclick="return v8577SelectEquipoCategoria('SUB22','card',event)" title="Filtrar por SUB22" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">SUB22</div><div class="sval" id="eq-stat-sub22" style="font-size:22px;color:var(--accent2)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card green eq-cat-card" data-eq-cat="Senior" onclick="return v8577SelectEquipoCategoria('Senior','card',event)" title="Filtrar por Senior" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Senior</div><div class="sval" id="eq-stat-senior" style="font-size:22px;color:var(--success)">0</div><div class="ssub">equipos</div></div>
+      <div class="stat-card yellow eq-cat-card" data-eq-cat="Veteran@s" onclick="return v8577SelectEquipoCategoria('Veteran@s','card',event)" title="Filtrar por Veteran@s" style="padding:8px 10px;min-height:64px;cursor:pointer;"><div class="slabel">Veteran@s</div><div class="sval" id="eq-stat-veteranos" style="font-size:22px;color:var(--warning)">0</div><div class="ssub">equipos</div></div>
     </div>
   </div>
   <div class="card">
@@ -36571,7 +36585,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.76 acción entrenamiento',action,id,err);
+    console.error('V8.5.77 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36782,7 +36796,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.76 fundament',name,e);
+    console.warn('V8.5.77 fundament',name,e);
   }
 }
 
@@ -36874,7 +36888,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.76 import',item,e);
+        console.error('V8.5.77 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36885,7 +36899,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.76 reload',e)}
+    }catch(e){console.warn('V8.5.77 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37086,7 +37100,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.76 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.77 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37210,7 +37224,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.76 Drive import',r,e);
+        console.error('V8.5.77 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37221,7 +37235,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.76 reload',e)}
+    }catch(e){console.warn('V8.5.77 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37248,7 +37262,7 @@ window.v8574ImportAll=async function(){
 'use strict';
 
 /*
- V8.5.76
+ V8.5.77
  Guardia final de navegación.
  Algunas extensiones históricas de Biblioteca usan display inline para páginas
  fuera del array original. Esta capa deja siempre visible la página solicitada
@@ -37317,183 +37331,169 @@ window.v8575EnsurePage=v8575EnsurePage;
 })();
 </script>
 
-<script id="v8576-equipos-filtros-fix">
+<script id="v8577-equipos-filtro-definitivo">
 (function(){
 'use strict';
 
-function E76(id){ return document.getElementById(id); }
+window.V8577 = window.V8577 || { equipoCategoria:'' };
 
-function norm76(v){
-  return String(v==null?'':v)
+function e77(id){ return document.getElementById(id); }
+function norm77(v){
+  return String(v == null ? '' : v)
     .trim()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g,'')
     .toLowerCase();
 }
+function same77(a,b){ return norm77(a) === norm77(b); }
 
-function catEq76(a,b){
-  return norm76(a)===norm76(b);
-}
-
-function highlight76(cat){
-  var wanted=norm76(cat);
-  document.querySelectorAll('#p-equipos .eq-cat-card').forEach(function(card){
-    var active=norm76(card.getAttribute('data-eq-cat')||'')===wanted;
-    card.classList.toggle('eq-card-active',active);
-    card.setAttribute('aria-pressed',active?'true':'false');
-  });
-}
-
-function sidebar76(cat){
-  var wanted=norm76(cat);
-  document.querySelectorAll('.nav-cat-sub[data-cat-page="equipos"]').forEach(function(el){
-    var active=norm76(el.getAttribute('data-cat-value')||'')===wanted;
-    el.classList.toggle('active',active);
-    el.classList.toggle('active-cat',active);
-  });
-}
-
-function filter76(){
-  if(!window.DB || !Array.isArray(DB.equipos)) return;
-
-  var q = norm76(E76('q-eq') ? E76('q-eq').value : '');
-  var cat = E76('fsel-cat-eq') ? E76('fsel-cat-eq').value : '';
-  var gen = norm76(E76('fsel-genero-eq') ? E76('fsel-genero-eq').value : '');
-  var club = String(E76('fsel-club-eq') ? E76('fsel-club-eq').value : '').trim();
-
-  var data = DB.equipos.filter(function(e){
-    var matchQ = !q || norm76(JSON.stringify(e)).indexOf(q)!==-1;
-    var matchCat = !cat || catEq76(e.categoria||e.category||'',cat);
-    var matchGen = !gen || norm76(e.genero||e.gender||'')===gen;
-    var matchClub = !club || String(e.club_id||'')===club;
-    return matchQ && matchCat && matchGen && matchClub;
-  });
-
-  if(typeof window.renderEquipos==='function') window.renderEquipos(data);
-  else if(typeof renderEquipos==='function') renderEquipos(data);
-
-  highlight76(cat);
-  sidebar76(cat);
-}
-
-function ensureSelectValue76(cat){
-  var sel=E76('fsel-cat-eq');
+function setSelect77(cat){
+  var sel=e77('fsel-cat-eq');
   if(!sel) return;
-  var wanted=String(cat==null?'':cat).trim();
 
-  var found='';
+  var wanted=String(cat||'').trim();
+  var matched='';
+
   Array.prototype.forEach.call(sel.options,function(op){
-    if(catEq76(op.value,wanted)) found=op.value;
+    if(same77(op.value,wanted)) matched=op.value;
   });
 
-  if(wanted && !found){
+  if(wanted && !matched){
     var op=document.createElement('option');
     op.value=wanted;
     op.textContent=wanted;
     sel.appendChild(op);
-    found=wanted;
+    matched=wanted;
   }
-
-  sel.value=wanted ? found : '';
+  sel.value = wanted ? matched : '';
 }
 
-function apply76(cat,source){
-  cat=String(cat==null?'':cat).trim();
+function paint77(cat){
+  document.querySelectorAll('#p-equipos .eq-cat-card').forEach(function(card){
+    card.classList.toggle('v8577-active', same77(card.getAttribute('data-eq-cat')||'',cat));
+  });
+  document.querySelectorAll('.nav-cat-sub[data-cat-page="equipos"]').forEach(function(el){
+    el.classList.toggle('v8577-active', same77(el.getAttribute('data-cat-value')||'',cat));
+  });
+}
 
-  if(typeof window.nav==='function'){
-    try{ window.nav('equipos'); }catch(e){}
+function filtered77(){
+  if(!window.DB || !Array.isArray(DB.equipos)) return [];
+
+  var q = norm77(e77('q-eq') ? e77('q-eq').value : '');
+  var cat = String(window.V8577.equipoCategoria || '').trim();
+
+  // If the user changes the dropdown manually, its value is authoritative.
+  var sel=e77('fsel-cat-eq');
+  if(sel && document.activeElement===sel){
+    cat=sel.value||'';
+    window.V8577.equipoCategoria=cat;
   }
 
-  setTimeout(function(){
-    ensureSelectValue76(cat);
-    filter76();
+  var gen = norm77(e77('fsel-genero-eq') ? e77('fsel-genero-eq').value : '');
+  var club = String(e77('fsel-club-eq') ? e77('fsel-club-eq').value : '').trim();
 
-    var wrap=E76('eq-tbl-wrap') || document.querySelector('#p-equipos .tbl-wrap');
-    if(wrap && source==='card'){
-      try{ wrap.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
+  return DB.equipos.filter(function(eq){
+    var eqCat=eq.categoria || eq.category || '';
+    var eqGen=eq.genero || eq.gender || '';
+
+    var mq = !q || norm77(JSON.stringify(eq)).indexOf(q)!==-1;
+    var mc = !cat || same77(eqCat,cat);
+    var mg = !gen || norm77(eqGen)===gen;
+    var mclub = !club || String(eq.club_id||'')===club;
+
+    return mq && mc && mg && mclub;
+  });
+}
+
+function render77(){
+  var data=filtered77();
+
+  if(typeof window.renderEquipos==='function'){
+    window.renderEquipos(data);
+  }else if(typeof renderEquipos==='function'){
+    renderEquipos(data);
+  }
+
+  paint77(window.V8577.equipoCategoria||'');
+  return data;
+}
+
+window.v8577SelectEquipoCategoria=function(cat,source,ev){
+  if(ev){
+    try{ ev.preventDefault(); }catch(_){}
+    try{ ev.stopPropagation(); }catch(_){}
+  }
+
+  cat=String(cat||'').trim();
+  window.V8577.equipoCategoria=cat;
+
+  // Show Equipos without calling nav(), because nav() rebuilds filters and was
+  // the source of the race/reset in the previous implementation.
+  try{
+    if(typeof window.v8575EnsurePage==='function'){
+      window.v8575EnsurePage('equipos');
+    }else{
+      document.querySelectorAll('.page').forEach(function(p){
+        p.classList.toggle('active',p.id==='p-equipos');
+      });
     }
-  },60);
-}
+  }catch(_){}
 
-/* Funciones definitivas usadas por HTML existente */
-window.filterEq = filter76;
-window.highlightEquipoCategoryCards = highlight76;
-window.setEquipoCategoriaFromCard = function(cat){ apply76(cat,'card'); };
+  setSelect77(cat);
+  var data=render77();
 
-/* Conserva Jugadores/Encuentros y resuelve Equipos aquí al final de todos los wrappers históricos. */
-var oldSetMenu76=window.setMenuCategoria;
-window.setMenuCategoria=function(page,categoria){
-  if(page==='equipos'){
-    apply76(categoria,'sidebar');
-    return;
+  if(source==='card'){
+    var wrap=e77('eq-tbl-wrap') || document.querySelector('#p-equipos .tbl-wrap');
+    if(wrap){
+      try{ wrap.scrollIntoView({behavior:'smooth',block:'start'}); }catch(_){}
+    }
   }
-  if(typeof oldSetMenu76==='function') return oldSetMenu76.apply(this,arguments);
+
+  console.log('[V8.5.77 Equipos]',cat||'Todas','=>',data.length,'equipos');
+  return false;
 };
 
-/* Sincroniza también el desplegable de categoría. */
-function bind76(){
-  var sel=E76('fsel-cat-eq');
-  if(sel && !sel.__v8576Bound){
-    sel.__v8576Bound=true;
-    sel.addEventListener('change',function(){ filter76(); });
+// Replace the application's generic Equipos filter with the same deterministic engine.
+window.filterEq=function(){
+  var sel=e77('fsel-cat-eq');
+  if(sel) window.V8577.equipoCategoria=sel.value||'';
+  return render77();
+};
+
+// Keep old public function compatible in case another part calls it.
+window.setEquipoCategoriaFromCard=function(cat){
+  return window.v8577SelectEquipoCategoria(cat,'card',null);
+};
+
+// Bind non-category filters explicitly.
+function bind77(){
+  var sel=e77('fsel-cat-eq');
+  if(sel && !sel.__v8577){
+    sel.__v8577=true;
+    sel.addEventListener('change',function(){
+      window.V8577.equipoCategoria=sel.value||'';
+      render77();
+    });
   }
 
-  var q=E76('q-eq');
-  if(q && !q.__v8576Bound){
-    q.__v8576Bound=true;
-    q.addEventListener('input',function(){ filter76(); });
-  }
-
-  var gen=E76('fsel-genero-eq');
-  if(gen && !gen.__v8576Bound){
-    gen.__v8576Bound=true;
-    gen.addEventListener('change',function(){ filter76(); });
-  }
-
-  var club=E76('fsel-club-eq');
-  if(club && !club.__v8576Bound){
-    club.__v8576Bound=true;
-    club.addEventListener('change',function(){ filter76(); });
-  }
-
-  /* Defensa adicional: los cards funcionan aunque un inline onclick histórico falle. */
-  document.querySelectorAll('#p-equipos .eq-cat-card').forEach(function(card){
-    if(card.__v8576Bound)return;
-    card.__v8576Bound=true;
-    card.addEventListener('click',function(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      apply76(card.getAttribute('data-eq-cat')||'','card');
-    },true);
-  });
-
-  document.querySelectorAll('.nav-cat-sub[data-cat-page="equipos"]').forEach(function(el){
-    if(el.__v8576Bound)return;
-    el.__v8576Bound=true;
-    el.addEventListener('click',function(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      apply76(el.getAttribute('data-cat-value')||'','sidebar');
-    },true);
+  ['q-eq','fsel-genero-eq','fsel-club-eq'].forEach(function(id){
+    var el=e77(id);
+    if(el && !el.__v8577){
+      el.__v8577=true;
+      el.addEventListener(id==='q-eq'?'input':'change',render77);
+    }
   });
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  setTimeout(bind76,250);
-  setTimeout(bind76,1000);
+  bind77();
+  setTimeout(bind77,300);
+  setTimeout(bind77,1200);
 });
+window.addEventListener('load',function(){ setTimeout(bind77,250); });
 
-window.addEventListener('load',function(){
-  setTimeout(function(){
-    bind76();
-    if(E76('p-equipos') && E76('p-equipos').classList.contains('active')) filter76();
-  },400);
-});
-
-/* Expuesto para depuración y futuros refrescos de datos. */
-window.v8576FilterEquipos=filter76;
-window.v8576ApplyEquipoCategoria=apply76;
-
+window.v8577RenderEquipos=render77;
 })();
 </script>
 </body>
