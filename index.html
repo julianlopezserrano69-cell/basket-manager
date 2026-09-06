@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.77 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.78 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -6347,6 +6347,35 @@ body.v8537-ready{overflow:auto}
   background:rgba(249,115,22,.12)!important;
   font-weight:700!important
 }
+</style>
+
+<style id="v8578-library-training-css">
+#p-biblioteca-ejercicios .v8521-ex-card{position:relative}
+.v8578-card-check{position:absolute;top:10px;left:10px;z-index:6;width:28px;height:28px;border-radius:8px;background:rgba(5,14,26,.86);border:1px solid #49617e;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.v8578-card-check input{position:absolute;opacity:0;pointer-events:none}
+.v8578-card-check span{font-size:14px;color:#6f849e;font-weight:900}
+.v8578-card-check:has(input:checked){background:#ff7417;border-color:#ff9a54}
+.v8578-card-check:has(input:checked) span{color:#fff}
+.v8578-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:10px 12px;border:1px solid #304763;border-radius:10px;background:#0b1727}
+.v8578-select-all{display:flex;align-items:center;gap:7px;color:#c5d2e3;font-size:9px;cursor:pointer}
+.v8578-select-all input{accent-color:#ff7417}
+#v8578-selected-count{font-size:9px;color:#93c5fd;font-weight:800;margin-right:auto}
+.v8578-training-modal{width:min(980px,96vw)!important}
+.v8578-training-toolbar{display:grid;grid-template-columns:1fr 240px;gap:9px;margin-bottom:10px}
+.v8578-training-toolbar input,.v8578-training-toolbar select{width:100%;box-sizing:border-box;background:#081525;border:1px solid #314964;border-radius:9px;color:#e9f0f8;padding:9px 10px;font-size:9px}
+.v8578-training-list{max-height:54vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.v8578-training-row{display:grid;grid-template-columns:28px 120px 90px minmax(220px,1fr) 110px;gap:9px;align-items:center;padding:11px;border:1px solid #2e4663;border-radius:11px;background:#0a1626;cursor:pointer}
+.v8578-training-row:hover{border-color:#597393;background:#0e1c30}
+.v8578-training-row.selected{border-color:#ff7417;box-shadow:0 0 0 1px rgba(255,116,23,.28)}
+.v8578-training-row input{accent-color:#ff7417}
+.v8578-training-date{font-weight:800;color:#eef4fb;font-size:10px}
+.v8578-training-time{color:#93c5fd;font-size:9px}
+.v8578-training-team{font-weight:800;color:#e6eef8;font-size:10px}
+.v8578-training-meta{font-size:8px;color:#8ea2bd;margin-top:3px}
+.v8578-training-status{font-size:8px;color:#a8bad0;text-align:right}
+.v8578-choice-summary{margin:10px 0;padding:9px 11px;border:1px solid #314965;background:#0b1727;border-radius:9px;color:#9fb2c8;font-size:9px}
+.v8578-choice-summary b{color:#ffb36f}
+@media(max-width:720px){.v8578-training-toolbar{grid-template-columns:1fr}.v8578-training-row{grid-template-columns:28px 1fr 72px}.v8578-training-row .v8578-teamcol{grid-column:2/-1}.v8578-training-status{display:none}}
 </style>
 </head>
 <body>
@@ -33280,6 +33309,12 @@ else setTimeout(init8518,0);
         <option>Básico</option><option>Intermedio</option><option>Avanzado</option>
       </select>
     </div>
+    <div id="v8578-bulkbar" class="v8578-bulkbar">
+      <label class="v8578-select-all"><input type="checkbox" id="v8578-select-all"> Seleccionar visibles</label>
+      <span id="v8578-selected-count">0 seleccionados</span>
+      <button type="button" id="v8578-add-selected" class="btn btn-primary btn-sm" disabled onclick="v8578OpenTrainingChooser()">📋 Añadir al entrenamiento</button>
+      <button type="button" class="btn btn-secondary btn-sm" onclick="v8578ClearSelection()">Limpiar</button>
+    </div>
     <div class="v8521-ex-grid" id="v8521-ex-grid"></div>
   </div>
 </section>
@@ -33628,7 +33663,7 @@ function card(x){
   var videoUrl=(typeof v8541ValidUrl==='function')?v8541ValidUrl(x.video_url):'';
   var boardCount=(x.boards&&x.boards.length)||0;
   var visual=media?'<img src="'+esc(media)+'" alt="Pizarra de '+esc(x.name||'ejercicio')+'" onerror="v8543ImageFallback(this)">':(videoUrl?'<img class="v8541-qr-media" src="'+esc(v8541QrUrl(videoUrl,260))+'" alt="QR del vídeo">':'<span style="font-size:9px;color:#8397b3">Sin diagrama</span>');
-  return '<div class="v8521-ex-card">'+
+  return '<div class="v8521-ex-card" data-v8578-card="'+esc(x.id)+'"><label class="v8578-card-check" title="Seleccionar ejercicio"><input type="checkbox" data-v8578-select="'+esc(x.id)+'" '+(window.V8578&&V8578.selected&&V8578.selected.has(String(x.id))?'checked':'')+'><span>✓</span></label>'+
     '<div class="v8521-ex-media">'+visual+'</div>'+
     '<div class="v8521-ex-body">'+
       '<div class="v8521-ex-top"><div class="v8521-ex-name">'+esc(x.name)+(boardCount?'<span class="v8543-image-badge">🏀 '+boardCount+' PIZARRA'+(boardCount===1?'':'S')+'</span>':(x.image_url?'<span class="v8543-image-badge">🏀 PIZARRA</span>':''))+(x.animation_url?'<span class="v8541-video-badge">🎬 GIF</span>':'')+(videoUrl?'<span class="v8541-video-badge">🎥 VÍDEO + QR</span>':'')+'</div><span class="v8521-tag">'+esc(x.level||'Básico')+'</span></div>'+
@@ -33636,7 +33671,7 @@ function card(x){
       '<div class="v8521-ex-desc">'+esc(x.description||x.objective||'Sin descripción')+'</div>'+
       '<div class="v8521-ex-actions">'+
         (videoUrl?'<button class="btn btn-secondary btn-sm v8541-session-video" data-v8541-video="'+esc(x.id)+'">🎥 Vídeo / QR</button>':'')+
-        (V8521.currentTrainingId?'<button class="btn btn-primary btn-sm" data-v8521-add-session="'+esc(x.id)+'">+ Añadir</button>':'')+
+        (V8521.currentTrainingId?'<button class="btn btn-primary btn-sm" data-v8521-add-session="'+esc(x.id)+'">+ Añadir</button>':'<button class="btn btn-primary btn-sm" data-v8578-single="'+esc(x.id)+'">📋 Añadir al entrenamiento</button>')+
         ((x.boards&&x.boards.length)?'<button class="btn btn-primary btn-sm" data-v8536-sequence="'+esc(x.id)+'">🗂 '+x.boards.length+' pasos</button>':'')+
         '<button class="btn btn-secondary btn-sm" data-v8521-view="'+esc(x.id)+'">👁 Ver</button>'+
         '<button class="btn btn-secondary btn-sm" data-v8521-edit="'+esc(x.id)+'">✏️ Modificar</button>'+
@@ -36585,7 +36620,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.77 acción entrenamiento',action,id,err);
+    console.error('V8.5.78 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36796,7 +36831,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.77 fundament',name,e);
+    console.warn('V8.5.78 fundament',name,e);
   }
 }
 
@@ -36888,7 +36923,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.77 import',item,e);
+        console.error('V8.5.78 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36899,7 +36934,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.77 reload',e)}
+    }catch(e){console.warn('V8.5.78 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37100,7 +37135,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.77 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.78 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37224,7 +37259,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.77 Drive import',r,e);
+        console.error('V8.5.78 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37235,7 +37270,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.77 reload',e)}
+    }catch(e){console.warn('V8.5.78 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37262,7 +37297,7 @@ window.v8574ImportAll=async function(){
 'use strict';
 
 /*
- V8.5.77
+ V8.5.78
  Guardia final de navegación.
  Algunas extensiones históricas de Biblioteca usan display inline para páginas
  fuera del array original. Esta capa deja siempre visible la página solicitada
@@ -37450,7 +37485,7 @@ window.v8577SelectEquipoCategoria=function(cat,source,ev){
     }
   }
 
-  console.log('[V8.5.77 Equipos]',cat||'Todas','=>',data.length,'equipos');
+  console.log('[V8.5.78 Equipos]',cat||'Todas','=>',data.length,'equipos');
   return false;
 };
 
@@ -37494,6 +37529,220 @@ document.addEventListener('DOMContentLoaded',function(){
 window.addEventListener('load',function(){ setTimeout(bind77,250); });
 
 window.v8577RenderEquipos=render77;
+})();
+</script>
+
+<div class="modal-overlay" id="m-v8578-training-chooser" style="z-index:995">
+  <div class="modal v8578-training-modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title">📋 AÑADIR EJERCICIOS A ENTRENAMIENTO</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">Selecciona el entrenamiento de destino. Después se abrirá su Plan de Sesión para revisar duración, bloque y orden antes de guardar.</div>
+      </div>
+      <button class="modal-close" onclick="v8578CloseTrainingChooser()">×</button>
+    </div>
+    <div class="modal-bd">
+      <div id="v8578-choice-summary" class="v8578-choice-summary"></div>
+      <div class="v8578-training-toolbar">
+        <input id="v8578-training-q" placeholder="🔎 Buscar por equipo, fecha, tipo..." oninput="v8578RenderTrainings()">
+        <select id="v8578-training-team-filter" onchange="v8578RenderTrainings()"><option value="">Todos los equipos</option></select>
+      </div>
+      <div id="v8578-training-list" class="v8578-training-list"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-secondary" onclick="v8578CloseTrainingChooser()">Cancelar</button>
+      <button id="v8578-confirm-training" class="btn btn-primary" disabled onclick="v8578ConfirmTraining()">Añadir y abrir Plan de Sesión</button>
+    </div>
+  </div>
+</div>
+
+<script id="v8578-library-to-training-js">
+(function(){
+'use strict';
+
+window.V8578=window.V8578||{selected:new Set(),targetTraining:'',pending:[]};
+if(!(V8578.selected instanceof Set))V8578.selected=new Set(Array.isArray(V8578.selected)?V8578.selected:[]);
+
+function E78(id){return document.getElementById(id)}
+function esc78(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function norm78(s){return String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()}
+function team78(id){return ((window.DB&&DB.equipos)||[]).find(function(x){return String(x.id)===String(id)})||null}
+function ex78(id){return (window.V8521&&V8521.exercises||[]).find(function(x){return String(x.id)===String(id)})||null}
+function training78(id){return ((window.DB&&DB.entrenamientos)||[]).find(function(x){return String(x.id)===String(id)})||null}
+function fmtDate78(s){if(!s)return '—';var p=String(s).slice(0,10).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s}
+
+function updateBulk78(){
+  var n=V8578.selected.size;
+  var c=E78('v8578-selected-count');if(c)c.textContent=n+' seleccionado'+(n===1?'':'s');
+  var b=E78('v8578-add-selected');if(b)b.disabled=!n;
+  var all=E78('v8578-select-all');
+  if(all){
+    var vis=Array.from(document.querySelectorAll('#v8521-ex-grid [data-v8578-select]'));
+    all.checked=!!vis.length&&vis.every(function(x){return V8578.selected.has(String(x.getAttribute('data-v8578-select')))});
+    all.indeterminate=vis.some(function(x){return V8578.selected.has(String(x.getAttribute('data-v8578-select')))})&&!all.checked;
+  }
+}
+window.v8578UpdateBulk=updateBulk78;
+
+window.v8578ClearSelection=function(){
+  V8578.selected.clear();
+  document.querySelectorAll('[data-v8578-select]').forEach(function(x){x.checked=false});
+  updateBulk78();
+};
+
+function selectedExercises78(){
+  return Array.from(V8578.selected).map(ex78).filter(Boolean);
+}
+
+function fillTeams78(){
+  var sel=E78('v8578-training-team-filter');if(!sel)return;
+  var old=sel.value;
+  var ids={};
+  ((window.DB&&DB.entrenamientos)||[]).forEach(function(t){if(t.equipo)ids[String(t.equipo)]=1});
+  var teams=((window.DB&&DB.equipos)||[]).filter(function(t){return ids[String(t.id)]}).sort(function(a,b){return String(a.nombre||'').localeCompare(String(b.nombre||''),'es')});
+  sel.innerHTML='<option value="">Todos los equipos</option>'+teams.map(function(t){return '<option value="'+esc78(t.id)+'">'+esc78(t.nombre||t.id)+'</option>'}).join('');
+  if(teams.some(function(t){return String(t.id)===String(old)}))sel.value=old;
+}
+
+window.v8578OpenTrainingChooser=function(ids){
+  if(Array.isArray(ids)){
+    V8578.selected=new Set(ids.map(String));
+  }
+  var rows=selectedExercises78();
+  if(!rows.length){alert('Selecciona al menos un ejercicio.');return}
+  V8578.pending=rows.map(function(x){return String(x.id)});
+  V8578.targetTraining='';
+  var sum=rows.reduce(function(a,x){return a+(parseInt(x.duration_min,10)||10)},0);
+  E78('v8578-choice-summary').innerHTML='<b>'+rows.length+' ejercicio'+(rows.length===1?'':'s')+'</b> · '+sum+' min recomendados · se conservarán vídeo, QR, pizarra y datos del ejercicio.';
+  fillTeams78();
+  E78('v8578-training-q').value='';
+  E78('v8578-training-team-filter').value='';
+  v8578RenderTrainings();
+  E78('m-v8578-training-chooser').classList.add('open');
+};
+window.v8578CloseTrainingChooser=function(){E78('m-v8578-training-chooser').classList.remove('open')};
+
+window.v8578RenderTrainings=function(){
+  var box=E78('v8578-training-list');if(!box)return;
+  var q=norm78(E78('v8578-training-q').value),tf=E78('v8578-training-team-filter').value;
+  var all=((window.DB&&DB.entrenamientos)||[]).slice().filter(function(t){
+    if(tf&&String(t.equipo)!==String(tf))return false;
+    var tm=team78(t.equipo);
+    return !q||norm78([t.fecha,t.hora,t.tipo,t.obs,tm&&tm.nombre].join(' ')).indexOf(q)>=0;
+  }).sort(function(a,b){
+    var ad=String(a.fecha||'')+' '+String(a.hora||''),bd=String(b.fecha||'')+' '+String(b.hora||'');
+    return bd.localeCompare(ad);
+  });
+
+  box.innerHTML=all.length?all.map(function(t){
+    var tm=team78(t.equipo),sel=String(V8578.targetTraining)===String(t.id);
+    var hasPlan=window.V8521&&Array.isArray(V8521.plans)&&V8521.plans.some(function(p){return String(p.training_id)===String(t.id)});
+    return '<label class="v8578-training-row'+(sel?' selected':'')+'" data-v8578-training-row="'+esc78(t.id)+'">'+
+      '<input type="radio" name="v8578-training-radio" value="'+esc78(t.id)+'" '+(sel?'checked':'')+'>'+
+      '<div><div class="v8578-training-date">'+esc78(fmtDate78(t.fecha))+'</div><div class="v8578-training-meta">'+esc78(t.diasemana||'')+'</div></div>'+
+      '<div class="v8578-training-time">'+esc78(t.hora||'—')+'</div>'+
+      '<div class="v8578-teamcol"><div class="v8578-training-team">'+esc78(tm&&tm.nombre||'Equipo')+'</div><div class="v8578-training-meta">'+esc78(t.tipo||'Entrenamiento')+' · '+esc78(t.dur||t.duracion||'—')+' min</div></div>'+
+      '<div class="v8578-training-status">'+(hasPlan?'📋 Plan existente':'Plan nuevo')+'</div>'+
+    '</label>';
+  }).join(''):'<div class="v8521-empty">No hay entrenamientos con estos filtros.</div>';
+};
+
+async function fireAdd78(id){
+  var tmp=document.createElement('button');
+  tmp.type='button';
+  tmp.style.display='none';
+  tmp.setAttribute('data-v8521-add-session',id);
+  document.body.appendChild(tmp);
+  tmp.click();
+  tmp.remove();
+  await new Promise(function(r){setTimeout(r,25)});
+}
+
+window.v8578ConfirmTraining=async function(){
+  var id=V8578.targetTraining;
+  if(!id){alert('Selecciona un entrenamiento.');return}
+  var pending=V8578.pending.slice();
+  if(!pending.length)return;
+
+  var btn=E78('v8578-confirm-training');
+  btn.disabled=true;btn.textContent='Añadiendo...';
+  try{
+    v8578CloseTrainingChooser();
+    if(typeof window.v8521OpenSessionPlan!=='function')throw new Error('No está disponible el Plan de Sesión.');
+    await window.v8521OpenSessionPlan(id);
+    await new Promise(function(r){setTimeout(r,120)});
+
+    var current=new Set((window.V8521&&V8521.draftItems||[]).map(function(x){return String(x.exercise_id)}));
+    var added=0,skipped=0;
+    for(var i=0;i<pending.length;i++){
+      if(current.has(String(pending[i]))){skipped++;continue}
+      await fireAdd78(pending[i]);
+      current.add(String(pending[i]));added++;
+    }
+
+    V8578.selected.clear();V8578.pending=[];
+    updateBulk78();
+    if(typeof window.toast==='function')toast(added+' ejercicio'+(added===1?'':'s')+' añadido'+(added===1?'':'s')+(skipped?' · '+skipped+' ya estaban en el plan':''),'s');
+  }catch(e){
+    console.error('V8.5.78 add to training',e);
+    alert('No se pudieron añadir los ejercicios.\n\n'+(e&&e.message||e));
+  }finally{
+    btn.disabled=false;btn.textContent='Añadir y abrir Plan de Sesión';
+  }
+};
+
+document.addEventListener('change',function(ev){
+  var cb=ev.target.closest&&ev.target.closest('[data-v8578-select]');
+  if(cb){
+    var id=String(cb.getAttribute('data-v8578-select'));
+    if(cb.checked)V8578.selected.add(id);else V8578.selected.delete(id);
+    updateBulk78();return;
+  }
+  if(ev.target&&ev.target.id==='v8578-select-all'){
+    var check=ev.target.checked;
+    document.querySelectorAll('#v8521-ex-grid [data-v8578-select]').forEach(function(x){
+      var id=String(x.getAttribute('data-v8578-select'));x.checked=check;
+      if(check)V8578.selected.add(id);else V8578.selected.delete(id);
+    });
+    updateBulk78();return;
+  }
+  if(ev.target&&ev.target.name==='v8578-training-radio'){
+    V8578.targetTraining=ev.target.value;
+    E78('v8578-confirm-training').disabled=false;
+    document.querySelectorAll('[data-v8578-training-row]').forEach(function(r){r.classList.toggle('selected',String(r.getAttribute('data-v8578-training-row'))===String(V8578.targetTraining))});
+  }
+},true);
+
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('[data-v8578-single]');
+  if(b){
+    ev.preventDefault();ev.stopPropagation();
+    v8578OpenTrainingChooser([b.getAttribute('data-v8578-single')]);
+    return;
+  }
+  var row=ev.target.closest&&ev.target.closest('[data-v8578-training-row]');
+  if(row && !(ev.target&&ev.target.name==='v8578-training-radio')){
+    var radio=row.querySelector('input[type="radio"]');
+    if(radio){radio.checked=true;radio.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+},true);
+
+/* Tras cada render de la Biblioteca, restaura checks y contador. */
+var oldRender78=window.v8521RenderLibrary;
+if(typeof oldRender78==='function'&&!oldRender78.__v8578){
+  var wrapped=function(){
+    var r=oldRender78.apply(this,arguments);
+    setTimeout(function(){
+      document.querySelectorAll('#v8521-ex-grid [data-v8578-select]').forEach(function(x){x.checked=V8578.selected.has(String(x.getAttribute('data-v8578-select')))});
+      updateBulk78();
+    },0);
+    return r;
+  };
+  wrapped.__v8578=true;
+  window.v8521RenderLibrary=wrapped;
+}
+
+document.addEventListener('DOMContentLoaded',function(){setTimeout(updateBulk78,300)});
 })();
 </script>
 </body>
