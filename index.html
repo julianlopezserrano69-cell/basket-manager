@@ -37868,7 +37868,7 @@ window.v8581RunDiag=async function(){
  var cfg=safe(function(){return !!localStorage.getItem('liga_sb_cfg')},false);
  var token=safe(function(){return !!localStorage.getItem('v8_sb_token')},false);
  var lines=[
-  'BASKET MANAGER · INFORME TÉCNICO V8.5.88',
+  'BASKET MANAGER · INFORME TÉCNICO V8.5.89',
   'Fecha: '+new Date().toLocaleString(),
   'Página activa: '+(activePage()||'ninguna'),
   '',
@@ -38225,6 +38225,199 @@ function go(){
   document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&modal()&&modal().classList.contains('open'))X.closeEncounterModal()});
 }
 go();
+})();
+</script>
+
+
+
+<style id="v8589-encuentros-modal-layout-theme-fix">
+/* V8.5.89 · Encuentros: modal responsive + unificación visual */
+#p-encuentros{
+  background:#eef3f6!important;
+  color:#173b60!important;
+}
+#p-encuentros #v813-root{
+  background:#eef3f6!important;
+  color:#173b60!important;
+}
+#p-encuentros .v8588-kpi,
+#p-encuentros .v8588-list-card{
+  background:#fff!important;
+  border-color:#d8e3eb!important;
+  color:#173b60!important;
+  box-shadow:0 4px 16px rgba(13,54,88,.045)!important;
+}
+#p-encuentros .v8588-title h2,
+#p-encuentros .v8588-list-head strong,
+#p-encuentros .v8588-kpi .num{color:#173b60!important}
+#p-encuentros .v8588-title small,
+#p-encuentros .v8588-kpi .lab,
+#p-encuentros .v8588-kpi .sub{color:#607b94!important}
+#p-encuentros .v8588-subkpi{
+  background:#fff!important;
+  border-color:#d8e3eb!important;
+  color:#607b94!important;
+}
+#p-encuentros .v8588-subkpi b{color:#173b60!important}
+#p-encuentros .v813-filters{background:#f7fafc!important}
+#p-encuentros .v813-table th{background:#f7fafc!important;color:#27445e!important}
+#p-encuentros .v813-table td{background:#fff;color:#1c3850}
+
+.v8588-modal{
+  inset:0!important;
+  padding:18px!important;
+  overflow:hidden!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.v8588-modal-dialog{
+  width:min(1320px,calc(100vw - 36px))!important;
+  max-width:calc(100vw - 36px)!important;
+  min-width:0!important;
+  max-height:94vh!important;
+  margin:0 auto!important;
+  background:#eef3f6!important;
+  border:1px solid #d8e3eb!important;
+  border-radius:16px!important;
+  box-sizing:border-box!important;
+}
+.v8588-modal-head{
+  flex:0 0 auto;
+  background:#eef3f6!important;
+  border-bottom:1px solid #d8e3eb!important;
+  color:#173b60!important;
+  padding:14px 18px!important;
+}
+.v8588-modal-head h2{color:#173b60!important}
+.v8588-modal-head .crumb{color:#607b94!important}
+.v8588-modal-close{
+  background:#fff!important;
+  border-color:#cbd9e3!important;
+  color:#173b60!important;
+}
+.v8588-modal-body{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  background:#eef3f6!important;
+  padding:12px!important;
+  box-sizing:border-box!important;
+}
+.v8588-modal-body #v813-form{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  background:#fff!important;
+  border:1px solid #d8e3eb!important;
+  border-radius:12px!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+.v8588-modal-body .v813-form-grid{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  background:#fff!important;
+}
+.v8588-modal-body .v813-field{
+  min-width:0!important;
+  background:#fff!important;
+  color:#173b60!important;
+  padding:10px 12px!important;
+}
+.v8588-modal-body .v813-field label{color:#607b94!important}
+.v8588-modal-body .v813-field select,
+.v8588-modal-body .v813-field input,
+.v8588-modal-body .v813-field textarea,
+.v8588-modal-body .v813-multi summary{
+  min-width:0!important;
+  max-width:100%!important;
+  background:#fff!important;
+  color:#173b60!important;
+  border-color:#cbd9e3!important;
+}
+.v8588-modal-body .v813-team-picker,
+.v8588-modal-body .v813-mapwrap{min-width:0!important;max-width:100%!important}
+.v8588-modal-body .v813-team-picker select{min-width:0!important}
+.v8588-modal-body .v813-mapwrap{
+  grid-template-columns:minmax(0,1fr) 210px auto!important;
+}
+.v8588-modal-body .v813-map{width:210px!important;max-width:100%!important}
+.v8588-modal-body .v813-mapbtn{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.v8588-modal-body .v813-actions{
+  position:sticky!important;
+  bottom:0!important;
+  background:#fff!important;
+  border-top:1px solid #dfe7ed!important;
+  box-shadow:0 -5px 14px rgba(13,54,88,.05)!important;
+  padding:12px 14px!important;
+  z-index:20!important;
+}
+.v8588-view-grid{background:#eef3f6!important}
+.v8588-view-box{background:#fff!important;border-color:#d8e3eb!important}
+.v8588-view-box label{color:#607b94!important}
+.v8588-view-box div{color:#173b60!important}
+
+/* En escritorio medio ampliamos campos estrechos para que nunca queden cortados. */
+@media (max-width:1400px){
+  .v8588-modal-body .v813-span-1{grid-column:span 2!important}
+  .v8588-modal-body .v813-span-2{grid-column:span 3!important}
+  .v8588-modal-body .v813-span-3{grid-column:span 4!important}
+  .v8588-modal-body .v813-span-4{grid-column:span 6!important}
+  .v8588-modal-body .v813-span-5{grid-column:span 6!important}
+  .v8588-modal-body .v813-span-6{grid-column:span 6!important}
+  .v8588-modal-body .v813-span-8{grid-column:span 12!important}
+  .v8588-modal-body .v813-span-12{grid-column:span 12!important}
+}
+@media (max-width:1050px){
+  .v8588-modal{padding:10px!important}
+  .v8588-modal-dialog{width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;max-height:96vh!important}
+  .v8588-modal-body .v813-mapwrap{grid-template-columns:1fr!important}
+  .v8588-modal-body .v813-map{width:100%!important;height:120px!important}
+  .v8588-modal-body .v813-mapbtn{width:100%!important}
+  .v8588-modal-body .v813-span-1,
+  .v8588-modal-body .v813-span-2,
+  .v8588-modal-body .v813-span-3,
+  .v8588-modal-body .v813-span-4,
+  .v8588-modal-body .v813-span-5,
+  .v8588-modal-body .v813-span-6{grid-column:span 6!important}
+  .v8588-modal-body .v813-span-8,
+  .v8588-modal-body .v813-span-12{grid-column:span 12!important}
+}
+@media (max-width:680px){
+  .v8588-modal{padding:5px!important}
+  .v8588-modal-dialog{width:calc(100vw - 10px)!important;max-width:calc(100vw - 10px)!important;max-height:98vh!important;border-radius:12px!important}
+  .v8588-modal-head{padding:11px 12px!important}
+  .v8588-modal-body{padding:7px!important}
+  .v8588-modal-body .v813-span-1,
+  .v8588-modal-body .v813-span-2,
+  .v8588-modal-body .v813-span-3,
+  .v8588-modal-body .v813-span-4,
+  .v8588-modal-body .v813-span-5,
+  .v8588-modal-body .v813-span-6,
+  .v8588-modal-body .v813-span-8,
+  .v8588-modal-body .v813-span-12{grid-column:span 12!important}
+}
+</style>
+<script id="v8589-encuentros-modal-scroll-fix">
+(function(){
+  function go(){
+    var X=window.V81;
+    if(!X||X.__v8589){if(!X)setTimeout(go,60);return;}
+    X.__v8589=true;
+    var oldOpen=X.openEncounterModal;
+    X.openEncounterModal=function(){
+      if(typeof oldOpen==='function') oldOpen.apply(X,arguments);
+      var b=document.getElementById('v8588-modal-body');
+      if(b){b.scrollTop=0;b.scrollLeft=0;}
+      var m=document.getElementById('v8588-enc-modal');
+      if(m){m.scrollTop=0;m.scrollLeft=0;}
+    };
+  }
+  go();
 })();
 </script>
 
