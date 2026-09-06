@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.74 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.75 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -36571,7 +36571,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.74 acción entrenamiento',action,id,err);
+    console.error('V8.5.75 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36782,7 +36782,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.74 fundament',name,e);
+    console.warn('V8.5.75 fundament',name,e);
   }
 }
 
@@ -36874,7 +36874,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.74 import',item,e);
+        console.error('V8.5.75 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36885,7 +36885,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.74 reload',e)}
+    }catch(e){console.warn('V8.5.75 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37086,7 +37086,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.74 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.75 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37210,7 +37210,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.74 Drive import',r,e);
+        console.error('V8.5.75 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37221,7 +37221,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.74 reload',e)}
+    }catch(e){console.warn('V8.5.75 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37240,6 +37240,80 @@ window.v8574ImportAll=async function(){
   }
 };
 
+})();
+</script>
+
+<script id="v8575-navigation-guard">
+(function(){
+'use strict';
+
+/*
+ V8.5.75
+ Guardia final de navegación.
+ Algunas extensiones históricas de Biblioteca usan display inline para páginas
+ fuera del array original. Esta capa deja siempre visible la página solicitada
+ después de cualquier wrapper de nav(), evitando pantallas vacías.
+*/
+function v8575EnsurePage(page){
+  var wanted='p-'+page;
+  document.querySelectorAll('.page').forEach(function(el){
+    if(el.id===wanted){
+      el.classList.add('active');
+      el.style.removeProperty('display');
+    }else{
+      el.classList.remove('active');
+      /* La Biblioteca es la única página histórica que puede conservar display inline. */
+      if(el.id==='p-biblioteca-ejercicios') el.style.display='none';
+      else el.style.removeProperty('display');
+    }
+  });
+
+  var target=document.getElementById(wanted);
+  if(target){
+    /* Defensa adicional: si alguna regla/capa sigue ocultándola, mostrarla. */
+    if(window.getComputedStyle && getComputedStyle(target).display==='none'){
+      target.style.setProperty('display','block','important');
+    }
+  }
+
+  document.querySelectorAll('.nav-item,.nav-sub').forEach(function(el){
+    if(el.id==='nav-'+page) el.classList.add('active');
+    else if(el.id && el.id.indexOf('nav-')===0) el.classList.remove('active');
+  });
+}
+
+var previousNav=window.nav;
+if(typeof previousNav==='function' && !previousNav.__v8575){
+  var guarded=function(page){
+    var result=previousNav.apply(this,arguments);
+
+    /* Esperar a que terminen wrappers/renderizadores anteriores. */
+    setTimeout(function(){v8575EnsurePage(page)},0);
+    setTimeout(function(){v8575EnsurePage(page)},60);
+
+    return result;
+  };
+  guarded.__v8575=true;
+  guarded.__previous=previousNav;
+  window.nav=guarded;
+}
+
+/* Reparación específica inmediata si Equipos ya estaba seleccionado al cargar. */
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){
+    var navEq=document.getElementById('nav-equipos');
+    if(navEq && navEq.classList.contains('active')) v8575EnsurePage('equipos');
+  },250);
+});
+
+/* También protegemos el click por si algún navegador/PWA conserva un handler anterior. */
+document.addEventListener('click',function(ev){
+  var n=ev.target && ev.target.closest ? ev.target.closest('#nav-equipos') : null;
+  if(!n)return;
+  setTimeout(function(){v8575EnsurePage('equipos')},80);
+},true);
+
+window.v8575EnsurePage=v8575EnsurePage;
 })();
 </script>
 </body>
