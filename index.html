@@ -37868,7 +37868,7 @@ window.v8581RunDiag=async function(){
  var cfg=safe(function(){return !!localStorage.getItem('liga_sb_cfg')},false);
  var token=safe(function(){return !!localStorage.getItem('v8_sb_token')},false);
  var lines=[
-  'BASKET MANAGER · INFORME TÉCNICO V8.5.89',
+  'BASKET MANAGER · INFORME TÉCNICO V8.5.90',
   'Fecha: '+new Date().toLocaleString(),
   'Página activa: '+(activePage()||'ninguna'),
   '',
@@ -38418,6 +38418,104 @@ go();
     };
   }
   go();
+})();
+</script>
+
+
+<style id="v8590-encuentros-modal-hard-fix">
+/* V8.5.90 · FIX REAL: el modal vive directamente bajo BODY y usa el viewport real */
+body > #v8588-enc-modal.v8588-modal{
+  position:fixed!important; inset:0!important; width:100vw!important; height:100vh!important;
+  margin:0!important; padding:14px!important; box-sizing:border-box!important;
+  display:none; align-items:center!important; justify-content:center!important;
+  overflow:hidden!important; background:rgba(8,28,45,.58)!important; z-index:2147483000!important;
+}
+body > #v8588-enc-modal.v8588-modal.open{display:flex!important}
+body > #v8588-enc-modal .v8588-modal-dialog{
+  position:relative!important; width:min(1380px,calc(100vw - 28px))!important;
+  max-width:calc(100vw - 28px)!important; min-width:0!important;
+  height:auto!important; max-height:calc(100vh - 28px)!important;
+  margin:0!important; box-sizing:border-box!important; overflow:hidden!important;
+  display:flex!important; flex-direction:column!important;
+  background:var(--bg,#eef3f6)!important; color:var(--text,#173b60)!important;
+  border:1px solid var(--border,#d7e3eb)!important; border-radius:16px!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.34)!important;
+}
+body > #v8588-enc-modal .v8588-modal-head{
+  flex:0 0 auto!important; padding:13px 16px!important; background:var(--card,#101a2a)!important;
+  border-bottom:1px solid var(--border,#26364f)!important; color:var(--text,#f4f7fb)!important;
+}
+body > #v8588-enc-modal .v8588-modal-head h2{color:var(--text,#f4f7fb)!important;margin:2px 0 0!important}
+body > #v8588-enc-modal .v8588-modal-head .crumb{color:var(--muted,#8fa1b8)!important}
+body > #v8588-enc-modal .v8590-ver{font-size:10px;font-weight:900;letter-spacing:.7px;color:var(--accent,#f97316);margin-left:8px}
+body > #v8588-enc-modal .v8588-modal-close{flex:0 0 auto!important}
+body > #v8588-enc-modal .v8588-modal-body{
+  flex:1 1 auto!important; min-height:0!important; width:100%!important; max-width:100%!important;
+  box-sizing:border-box!important; overflow-y:auto!important; overflow-x:hidden!important;
+  padding:12px!important; background:var(--bg,#0b1220)!important;
+}
+body > #v8588-enc-modal #v813-form,
+body > #v8588-enc-modal .v813-form-grid{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+body > #v8588-enc-modal #v813-form{overflow:hidden!important;border-radius:12px!important;background:var(--card,#101a2a)!important;border:1px solid var(--border,#26364f)!important}
+body > #v8588-enc-modal .v813-form-grid{display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr))!important}
+body > #v8588-enc-modal .v813-field{min-width:0!important;max-width:100%!important;box-sizing:border-box!important;background:var(--card,#101a2a)!important;color:var(--text,#f4f7fb)!important}
+body > #v8588-enc-modal .v813-field label{color:var(--muted-strong,#a9b7c9)!important}
+body > #v8588-enc-modal .v813-field input,
+body > #v8588-enc-modal .v813-field select,
+body > #v8588-enc-modal .v813-field textarea,
+body > #v8588-enc-modal .v813-multi summary{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+body > #v8588-enc-modal .v813-team-picker,
+body > #v8588-enc-modal .v813-mapwrap{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+body > #v8588-enc-modal .v813-mapwrap{grid-template-columns:minmax(0,1fr) minmax(180px,240px) minmax(160px,auto)!important}
+body > #v8588-enc-modal .v813-map{width:100%!important;max-width:240px!important}
+body > #v8588-enc-modal .v813-actions{position:sticky!important;bottom:0!important;z-index:50!important;background:var(--card,#101a2a)!important;border-top:1px solid var(--border,#26364f)!important}
+@media(max-width:1200px){
+ body > #v8588-enc-modal .v813-span-1{grid-column:span 2!important}
+ body > #v8588-enc-modal .v813-span-2{grid-column:span 3!important}
+ body > #v8588-enc-modal .v813-span-3{grid-column:span 4!important}
+ body > #v8588-enc-modal .v813-span-4, body > #v8588-enc-modal .v813-span-5, body > #v8588-enc-modal .v813-span-6{grid-column:span 6!important}
+ body > #v8588-enc-modal .v813-span-8, body > #v8588-enc-modal .v813-span-12{grid-column:span 12!important}
+ body > #v8588-enc-modal .v813-mapwrap{grid-template-columns:1fr!important}
+ body > #v8588-enc-modal .v813-map{max-width:none!important;height:120px!important}
+}
+@media(max-width:720px){
+ body > #v8588-enc-modal.v8588-modal{padding:5px!important}
+ body > #v8588-enc-modal .v8588-modal-dialog{width:calc(100vw - 10px)!important;max-width:calc(100vw - 10px)!important;max-height:calc(100vh - 10px)!important}
+ body > #v8588-enc-modal .v813-span-1, body > #v8588-enc-modal .v813-span-2, body > #v8588-enc-modal .v813-span-3,
+ body > #v8588-enc-modal .v813-span-4, body > #v8588-enc-modal .v813-span-5, body > #v8588-enc-modal .v813-span-6,
+ body > #v8588-enc-modal .v813-span-8, body > #v8588-enc-modal .v813-span-12{grid-column:span 12!important}
+}
+</style>
+<script id="v8590-encuentros-modal-portal-fix">
+(function(){
+ function install(){
+   var X=window.V81;if(!X){setTimeout(install,60);return}if(X.__v8590)return;X.__v8590=true;
+   function portal(){
+     var m=document.getElementById('v8588-enc-modal');
+     if(m && m.parentElement!==document.body) document.body.appendChild(m);
+     if(m){
+       var crumb=m.querySelector('.crumb');
+       if(crumb && !crumb.querySelector('.v8590-ver')) crumb.insertAdjacentHTML('beforeend','<span class="v8590-ver">V8.5.90</span>');
+     }
+     return m;
+   }
+   var oldOpen=X.openEncounterModal;
+   X.openEncounterModal=function(){
+     var m=portal();
+     if(typeof oldOpen==='function') oldOpen.apply(X,arguments);
+     if(m){m.classList.add('open');m.scrollTop=0;}
+     var b=document.getElementById('v8588-modal-body');if(b){b.scrollTop=0;b.scrollLeft=0;}
+     document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';
+   };
+   var oldClose=X.closeEncounterModal;
+   X.closeEncounterModal=function(){
+     if(typeof oldClose==='function') oldClose.apply(X,arguments);
+     var m=portal();if(m)m.classList.remove('open');
+     document.documentElement.style.overflow='';document.body.style.overflow='';
+   };
+   portal();
+ }
+ install();
 })();
 </script>
 
