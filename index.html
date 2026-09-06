@@ -29309,20 +29309,67 @@ X.activeClubId=function(){
   const nav=Object.values(this.v813.clubs).find(x=>String(this.pick(x,['name','nombre'],'')).toLowerCase().includes('navalcarnero'));
   return nav?nav.id:'';
 };
+X.v8587SeasonKey=function(v){
+  v=String(v||'').trim();
+  const m=v.match(/(20\d{2})\D+(20\d{2}|\d{2})/);
+  if(!m)return v.toLowerCase();
+  const y1=m[1], y2=m[2].length===2?String(y1).slice(0,2)+m[2]:m[2];
+  return y1+'-'+y2;
+};
+X.v8587Team=function(t){
+  if(!t)return null;
+  const o=Object.assign({},t);
+  o.id=o.id||o.equipo_id||'';
+  o.name=o.name||o.nombre||'Equipo';
+  o.category=o.category||o.categoria||'';
+  o.gender=o.gender||o.genero||'';
+  o.club_id=o.club_id||o.clubId||o.club||'';
+  o.season_name=o.season_name||o.temporada||'';
+  if(!o.season_id && o.season_name){
+    const k=this.v8587SeasonKey(o.season_name);
+    const se=Object.values(this.seasons||{}).find(x=>this.v8587SeasonKey(x.name||x.legacy_temporada_id||'')===k);
+    if(se)o.season_id=se.id;
+  }
+  o.logo_url=o.logo_url||o.logo||o.escudo_url||o.image_url||'';
+  o.primary_color=o.primary_color||o.color1||o.color||'#0b4f86';
+  o.secondary_color=o.secondary_color||o.color2||'#ffffff';
+  o.location=o.location||o.localizacion||o.pabellon||o.direccion||'';
+  return o;
+};
+X.v8587Player=function(p){
+  if(!p)return null;
+  const o=Object.assign({},p);
+  o.id=o.id||o.jugador_id||'';
+  o.name=o.name||o.nombre||'';
+  o.team_id=o.team_id||o.equipo_id||o.equipo||'';
+  o.jersey_number=o.jersey_number??o.dorsal??'';
+  return o;
+};
 X.allSeasonTeams=function(){
+  const all=Object.values(this.teams||{}).filter(Boolean);
   const sid=this.activeSeasonId();
-  return Object.values(this.teams).filter(t=>!sid || String(t.season_id||'')===String(sid));
+  if(!sid)return all;
+  let a=all.filter(t=>String(t.season_id||'')===String(sid));
+  if(a.length)return a;
+  const sk=this.v8587SeasonKey(this.activeSeasonName());
+  if(sk){
+    a=all.filter(t=>this.v8587SeasonKey(t.season_name||t.temporada||'')===sk);
+    if(a.length)return a;
+  }
+  // Compatibilidad: equipos históricos sin season_id no deben desaparecer del formulario.
+  return all;
 };
 X.ownTeamsForCategory=function(cat){
   const club=this.activeClubId();
   let a=this.allSeasonTeams();
-  if(club)a=a.filter(t=>String(t.club_id||'')===String(club));
-  if(cat)a=a.filter(t=>String(t.category||'')===String(cat));
+  if(club){const byClub=a.filter(t=>String(t.club_id||'')===String(club));if(byClub.length)a=byClub;}
+  if(cat){const key=String(cat).trim().toLocaleLowerCase('es');const byCat=a.filter(t=>String(t.category||'').trim().toLocaleLowerCase('es')===key);if(byCat.length)a=byCat;else a=[];}
   return a.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
 };
 X.rivalTeamsForCategory=function(cat,ownId){
-  return this.allSeasonTeams().filter(t=>(!cat||String(t.category||'')===String(cat)) && String(t.id)!==String(ownId||''))
-    .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
+  let a=this.allSeasonTeams().filter(t=>String(t.id)!==String(ownId||''));
+  if(cat){const key=String(cat).trim().toLocaleLowerCase('es');const byCat=a.filter(t=>String(t.category||'').trim().toLocaleLowerCase('es')===key);if(byCat.length)a=byCat;else a=[];}
+  return a.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
 };
 X.categoriesForSeason=function(){
   const vals=[];
@@ -29627,10 +29674,30 @@ X.load813=async function(){
     this.json('categories?select=*')
   ]);
   const val=i=>all[i].status==='fulfilled'?(all[i].value||[]):[];
-  this.encounters=val(0);this.teams={};val(1).forEach(t=>this.teams[t.id]=t);
+  this.encounters=val(0);
   this.seasons={};this.seasonByName={};val(2).forEach(s=>{this.seasons[s.id]=s;if(s.name)this.seasonByName[String(s.name).trim()]=s.id;if(s.legacy_temporada_id)this.seasonByName[String(s.legacy_temporada_id).trim()]=s.id});
+
+  // V8.5.88: fusionar catálogo moderno Supabase + catálogo histórico ya cargado en la app.
+  // Evita desplegables vacíos cuando teams no tiene season_id o usa campos legacy en español.
+  this.teams={};
+  const teamRows=[];
+  val(1).forEach(t=>teamRows.push(t));
+  try{((window.DB&&DB.equipos)||[]).forEach(t=>teamRows.push(t));}catch(_e){}
+  teamRows.forEach(raw=>{
+    const t=this.v8587Team(raw);if(!t||!t.id)return;
+    const prev=this.teams[t.id]||{};
+    this.teams[t.id]=this.v8587Team(Object.assign({},t,prev));
+  });
+
   this.scouting={};val(3).forEach(s=>{if(s.encounter_id)this.scouting[s.encounter_id]=s});
-  this.v813.clubs={};val(4).forEach(c=>this.v813.clubs[c.id]=c);this.v813.players=val(5);this.v813.categories=val(6);this.loaded=true;
+  this.v813.clubs={};val(4).forEach(c=>this.v813.clubs[c.id]=c);
+  try{((window.DB&&DB.clubs)||[]).forEach(c=>{if(c&&c.id&&!this.v813.clubs[c.id])this.v813.clubs[c.id]=c;});}catch(_e){}
+
+  const playerMap={};
+  val(5).forEach(raw=>{const p=this.v8587Player(raw);if(p&&p.id)playerMap[p.id]=p;});
+  try{((window.DB&&DB.jugadores)||[]).forEach(raw=>{const p=this.v8587Player(raw);if(p&&p.id&&!playerMap[p.id])playerMap[p.id]=p;});}catch(_e){}
+  this.v813.players=Object.values(playerMap);
+  this.v813.categories=val(6);this.loaded=true;
   this.buildPage();this.render813();
 };
 const oldLoad=X.load.bind(X);
@@ -37801,7 +37868,7 @@ window.v8581RunDiag=async function(){
  var cfg=safe(function(){return !!localStorage.getItem('liga_sb_cfg')},false);
  var token=safe(function(){return !!localStorage.getItem('v8_sb_token')},false);
  var lines=[
-  'BASKET MANAGER · INFORME TÉCNICO V8.5.86',
+  'BASKET MANAGER · INFORME TÉCNICO V8.5.88',
   'Fecha: '+new Date().toLocaleString(),
   'Página activa: '+(activePage()||'ninguna'),
   '',
@@ -38002,6 +38069,162 @@ function msg(t,c){var e=E('v8586-msg');if(e){e.textContent=t;e.className='v8586-
 window.V8586={load:load,pickEncounter:pickEncounter,pickProject:pickProject,createProject:createProject,saveAll:saveAll,setPhase:setPhase,statusChanged:statusChanged,openMatchCenter:openMatchCenter,state:S};
 var prev=window.nav;if(typeof prev==='function'&&!prev.__v8586){var n=function(page){var r=prev.apply(this,arguments);if(String(page)==='scouting')setTimeout(function(){mount();load()},40);return r};n.__v8586=true;window.nav=n}
 window.addEventListener('load',function(){setTimeout(function(){mount();if(E('p-scouting')&&E('p-scouting').classList.contains('active'))load()},120)});
+})();
+</script>
+
+
+<style id="v8588-encuentros-dashboard-modal-css">
+/* V8.5.88 · Encuentros dashboard + CRUD modal */
+#p-encuentros #v813-root{padding:14px 16px 24px;max-width:100%;}
+#p-encuentros .v8588-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;}
+#p-encuentros .v8588-title h2{margin:0;color:#0d3558;font-size:26px;font-weight:950;letter-spacing:-.4px}
+#p-encuentros .v8588-title small{display:block;margin-top:4px;color:#6c8397;font-size:11px;font-weight:800}
+#p-encuentros .v8588-kpis{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:12px;margin-bottom:12px}
+#p-encuentros .v8588-kpi{position:relative;background:#fff;border:1px solid #d7e3eb;border-radius:14px;padding:15px 16px;box-shadow:0 5px 18px rgba(18,54,82,.055);overflow:hidden;min-height:87px}
+#p-encuentros .v8588-kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#173f63}
+#p-encuentros .v8588-kpi .lab{font-size:10px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;color:#688095}
+#p-encuentros .v8588-kpi .num{font-size:29px;line-height:1;margin-top:9px;font-weight:950;color:#103959}
+#p-encuentros .v8588-kpi .sub{font-size:9px;margin-top:6px;color:#8294a4}
+#p-encuentros .v8588-kpi[data-kind="played"]:before{background:#287457}
+#p-encuentros .v8588-kpi[data-kind="pending"]:before{background:#e99324}
+#p-encuentros .v8588-kpi[data-kind="won"]:before{background:#16834f}
+#p-encuentros .v8588-kpi[data-kind="lost"]:before{background:#ba3d3d}
+#p-encuentros .v8588-subkpis{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+#p-encuentros .v8588-subkpi{background:#f7fafc;border:1px solid #dce6ed;border-radius:10px;padding:7px 11px;font-size:10px;color:#60798e;font-weight:800}
+#p-encuentros .v8588-subkpi b{font-size:14px;color:#153e60;margin-left:5px}
+#p-encuentros .v8588-list-card{background:#fff;border:1px solid #d7e3eb;border-radius:14px;box-shadow:0 5px 18px rgba(18,54,82,.05);overflow:hidden}
+#p-encuentros .v8588-list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid #e2eaf0}
+#p-encuentros .v8588-list-head strong{font-size:17px;color:#103959}
+#p-encuentros .v8588-new{background:#f97316!important;color:white!important;border-color:#f97316!important;font-weight:900!important;padding:9px 15px!important;border-radius:9px!important}
+#p-encuentros .v8588-new:hover{filter:brightness(.96)}
+#p-encuentros .v813-filters{padding:11px 14px;border-bottom:1px solid #e5edf2;background:#fbfcfd}
+#p-encuentros .v813-table-wrap{border:0;border-radius:0;box-shadow:none}
+#p-encuentros .v813-iconbtn{width:30px;height:30px;border-radius:7px;font-size:13px}
+
+.v8588-modal{position:fixed;inset:0;z-index:100050;background:rgba(8,28,45,.58);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;padding:22px}
+.v8588-modal.open{display:flex}
+.v8588-modal-dialog{width:min(1460px,97vw);max-height:94vh;background:#fff;border-radius:18px;box-shadow:0 25px 75px rgba(0,0,0,.30);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.6)}
+.v8588-modal-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 19px;border-bottom:1px solid #dfe8ee;background:linear-gradient(180deg,#fff,#f8fafc)}
+.v8588-modal-head .crumb{font-size:10px;font-weight:900;color:#71879a;text-transform:uppercase;letter-spacing:.8px}
+.v8588-modal-head h2{font-size:21px;color:#0f385a;margin:2px 0 0;font-weight:950}
+.v8588-modal-close{border:1px solid #d7e2e9;background:#fff;color:#173d5e;width:35px;height:35px;border-radius:10px;font-size:18px;cursor:pointer;font-weight:900}
+.v8588-modal-body{overflow:auto;background:#eef3f6;padding:13px}
+.v8588-modal-body #v813-form{background:#fff;border:1px solid #d9e4eb;border-radius:12px;overflow:hidden}
+.v8588-modal-body .v813-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #dfe7ed;padding:12px 14px;z-index:4}
+.v8588-view-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:4px}
+.v8588-view-box{background:#fff;border:1px solid #dce6ed;border-radius:10px;padding:11px 12px;min-height:67px}
+.v8588-view-box.w2{grid-column:span 2}.v8588-view-box.w4{grid-column:span 4}
+.v8588-view-box label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.7px;font-weight:900;color:#72879a;margin-bottom:6px}
+.v8588-view-box div{font-size:13px;color:#153a59;font-weight:750;word-break:break-word}
+@media(max-width:1100px){#p-encuentros .v8588-kpis{grid-template-columns:repeat(3,1fr)}.v8588-view-grid{grid-template-columns:repeat(2,1fr)}.v8588-view-box.w4{grid-column:span 2}}
+@media(max-width:720px){#p-encuentros .v8588-head{align-items:flex-start;flex-direction:column}#p-encuentros .v8588-kpis{grid-template-columns:repeat(2,1fr)}.v8588-modal{padding:7px}.v8588-modal-dialog{width:99vw;max-height:97vh}.v8588-view-grid{grid-template-columns:1fr}.v8588-view-box.w2,.v8588-view-box.w4{grid-column:span 1}}
+</style>
+<script id="v8588-encuentros-dashboard-modal">
+(function(){
+'use strict';
+function go(){
+  var X=window.V81;if(!X||!X.v813){setTimeout(go,50);return;}
+  if(X.__v8588)return;X.__v8588=true;
+  function E(v){return X.esc?X.esc(v==null?'':v):String(v==null?'':v).replace(/[&<>\"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]})}
+  function modal(){return document.getElementById('v8588-enc-modal')}
+  X.closeEncounterModal=function(){var m=modal();if(m)m.classList.remove('open');document.body.style.overflow='';};
+  X.openEncounterModal=function(){var m=modal();if(m){m.classList.add('open');document.body.style.overflow='hidden';}};
+
+  X.buildPage=function(){
+    var p=document.getElementById('p-encuentros');if(!p)return;
+    p.innerHTML=`<div id="v813-root">
+      <div class="v8588-head">
+        <div class="v8588-title"><h2>Encuentros</h2><small>Temporada <b id="v813-season">—</b> · Resumen y gestión de partidos</small></div>
+        <button class="v813-btn v8588-new" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
+      </div>
+      <div class="v8588-kpis">
+        <div class="v8588-kpi" data-kind="total"><div class="lab">Encuentros</div><div class="num" id="v8588-k-total">0</div><div class="sub">Total de la selección</div></div>
+        <div class="v8588-kpi" data-kind="played"><div class="lab">Jugados</div><div class="num" id="v8588-k-played">0</div><div class="sub">Partidos finalizados</div></div>
+        <div class="v8588-kpi" data-kind="pending"><div class="lab">Pendientes</div><div class="num" id="v8588-k-pending">0</div><div class="sub">Por disputar</div></div>
+        <div class="v8588-kpi" data-kind="won"><div class="lab">Ganados</div><div class="num" id="v8588-k-won">0</div><div class="sub">Victorias</div></div>
+        <div class="v8588-kpi" data-kind="lost"><div class="lab">Perdidos</div><div class="num" id="v8588-k-lost">0</div><div class="sub">Derrotas</div></div>
+      </div>
+      <div class="v8588-subkpis"><span class="v8588-subkpi">Local <b id="v813-k-local">0</b></span><span class="v8588-subkpi">Visitante <b id="v813-k-away">0</b></span><span class="v8588-subkpi">Programados <b id="v813-k-prog">0</b></span><span class="v8588-subkpi">Finalizados <b id="v813-k-fin">0</b></span></div>
+      <div class="v8588-list-card">
+        <div class="v8588-list-head"><strong>Listado de encuentros (<span id="v813-total-title">0</span>)</strong><span style="font-size:10px;color:#72879a">Ver · Modificar · Borrar</span></div>
+        <div class="v813-filters">
+          <div class="v813-filter"><label>Categoría</label><select id="fsel-cat-enc" onchange="V81.v813.page=1;V81.render813()"></select></div>
+          <div class="v813-filter"><label>Equipo</label><select id="v813-filter-team" onchange="V81.v813.page=1;V81.render813()"></select></div>
+          <div class="v813-filter"><label>Estado</label><select id="v813-filter-status" onchange="V81.v813.page=1;V81.render813()"><option value="">Todos</option><option>Programado</option><option>Iniciado</option><option>Finalizado</option><option>Cancelado</option></select></div>
+          <div class="v813-filter"><label>Local / Visitante</label><select id="v813-filter-ha" onchange="V81.v813.page=1;V81.render813()"><option value="">Todos</option><option>Local</option><option>Visitante</option></select></div>
+          <div class="v813-filter"><label>Buscar</label><input id="v813-filter-q" placeholder="⌕ Buscar..." oninput="V81.v813.page=1;V81.render813()"></div>
+          <button class="v813-btn" onclick="V81.clear813Filters()">Limpiar</button>
+        </div>
+        <div class="v813-table-wrap"><table class="v813-table"><thead><tr><th>Jornada</th><th>Fecha</th><th>Hora</th><th>Local</th><th>Visitante</th><th>Resultado</th><th>Pabellón</th><th>Estado</th><th>L/V</th><th>Acciones</th></tr></thead><tbody id="v813-tbody"></tbody></table></div>
+        <div class="v813-pager"><span id="v813-page-info"></span><div class="v813-pages" id="v813-pages"></div></div>
+      </div>
+      <div class="v8588-modal" id="v8588-enc-modal" onclick="if(event.target===this)V81.closeEncounterModal()">
+        <div class="v8588-modal-dialog" role="dialog" aria-modal="true">
+          <div class="v8588-modal-head"><div><div class="crumb">Encuentros › <span id="v813-breadcrumb">Nuevo encuentro</span></div><h2 id="v813-form-title">Nuevo encuentro</h2></div><button class="v8588-modal-close" onclick="V81.closeEncounterModal()">✕</button></div>
+          <div class="v8588-modal-body" id="v8588-modal-body"><div id="v813-form"></div></div>
+        </div>
+      </div>
+    </div>`;
+    var se=document.getElementById('v813-season');if(se)se.textContent=X.activeSeasonName()||'—';
+    X.refresh813Filters();X.render813();
+  };
+
+  X.newEncounter=function(){
+    if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede añadir encuentros.');return;}
+    X.initFormState(null);X.render813Form();X.openEncounterModal();
+  };
+  X.editEncounter=function(id){
+    if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede modificar encuentros.');return;}
+    var e=(X.encounters||[]).find(function(x){return String(x.id)===String(id)});if(!e)return;
+    X.initFormState(e);X.render813Form();X.openEncounterModal();
+  };
+  X.cancel813=function(){X.closeEncounterModal();};
+
+  X.viewEncounter=function(id){
+    var e=(X.encounters||[]).find(function(x){return String(x.id)===String(id)});if(!e)return;
+    var ht=X.teams[e.home_team_id]||{name:X.homeName(e)},at=X.teams[e.away_team_id]||{name:X.awayName(e)};
+    var result=(e.home_score!=null&&e.away_score!=null)?(e.home_score+' - '+e.away_score):'—';
+    var body=document.getElementById('v8588-modal-body'),title=document.getElementById('v813-form-title'),crumb=document.getElementById('v813-breadcrumb');
+    if(title)title.textContent='Ver encuentro';if(crumb)crumb.textContent='Ver encuentro';
+    function box(k,v,c){return '<div class="v8588-view-box '+(c||'')+'"><label>'+E(k)+'</label><div>'+v+'</div></div>'}
+    body.innerHTML='<div class="v8588-view-grid">'+
+      box('Jornada',E(e.round_label||'—'))+box('Fecha',E(e.game_date||'—'))+box('Hora',E((e.game_time||'').slice(0,5)||'—'))+box('Estado',E(e.status||'—'))+
+      box('Local',X.teamCell813(ht,e.home_color),'w2')+box('Visitante',X.teamCell813(at,e.away_color),'w2')+
+      box('Resultado',E(result))+box('Nuestro equipo',E(e.home_away||'—'))+box('Categoría',E(e.category||'—'))+box('Temporada',E(X.activeSeasonName()||'—'))+
+      box('Pabellón / localización',E(e.location||'—'),'w4')+box('Notas',E(e.notes||'—'),'w4')+
+      '</div><div class="v813-actions"><button class="v813-btn" onclick="V81.closeEncounterModal()">Cerrar</button><button class="v813-btn blue" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎ Modificar</button></div>';
+    X.openEncounterModal();
+  };
+
+  X.render813=function(){
+    var rows=X.get813Rows(),total=rows.length;
+    function set(id,v){var n=document.getElementById(id);if(n)n.textContent=v}
+    var played=rows.filter(function(x){return x.status==='Finalizado'});
+    var won=0,lost=0;
+    played.forEach(function(e){
+      if(e.home_score==null||e.away_score==null||Number(e.home_score)===Number(e.away_score))return;
+      var ownHome=e.home_away==='Local';var own=ownHome?Number(e.home_score):Number(e.away_score);var opp=ownHome?Number(e.away_score):Number(e.home_score);
+      if(own>opp)won++;else if(own<opp)lost++;
+    });
+    set('v813-total-title',total);set('v8588-k-total',total);set('v8588-k-played',played.length);set('v8588-k-pending',rows.filter(function(x){return x.status!=='Finalizado'&&x.status!=='Cancelado'}).length);set('v8588-k-won',won);set('v8588-k-lost',lost);
+    set('v813-k-fin',played.length);set('v813-k-prog',rows.filter(function(x){return x.status==='Programado'}).length);set('v813-k-local',rows.filter(function(x){return x.home_away==='Local'}).length);set('v813-k-away',rows.filter(function(x){return x.home_away==='Visitante'}).length);
+    var max=Math.max(1,Math.ceil(total/X.v813.pageSize));if(X.v813.page>max)X.v813.page=max;var start=(X.v813.page-1)*X.v813.pageSize,pageRows=rows.slice(start,start+X.v813.pageSize),tb=document.getElementById('v813-tbody');if(!tb)return;
+    tb.innerHTML=pageRows.map(function(e){var ht=X.teams[e.home_team_id]||{name:X.homeName(e)},at=X.teams[e.away_team_id]||{name:X.awayName(e)},res=(e.home_score!=null&&e.away_score!=null)?('<b>'+E(e.home_score)+' - '+E(e.away_score)+'</b>'):'—';return '<tr><td><b>'+E(e.round_label||'—')+'</b></td><td>'+E(e.game_date||'—')+'</td><td>'+E((e.game_time||'').slice(0,5)||'—')+'</td><td>'+X.teamCell813(ht,e.home_color)+'</td><td>'+X.teamCell813(at,e.away_color)+'</td><td>'+res+'</td><td>'+E(e.location||'—')+'</td><td><span class="v813-status '+E(e.status||'')+'">'+E(e.status||'—')+'</span></td><td>'+E(e.home_away||'—')+'</td><td style="white-space:nowrap"><button class="v813-iconbtn" title="Ver encuentro" onclick="V81.viewEncounter(\''+E(e.id)+'\')">◉</button><button class="v813-iconbtn" title="Modificar" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎</button><button class="v813-iconbtn delete" title="Borrar" onclick="V81.deleteEncounter(\''+E(e.id)+'\')">🗑</button></td></tr>'}).join('')||'<tr><td colspan="10" style="text-align:center;padding:26px">No hay encuentros con estos filtros.</td></tr>';
+    set('v813-page-info',total?('Mostrando '+(start+1)+' a '+Math.min(start+X.v813.pageSize,total)+' de '+total+' encuentros'):'0 encuentros');
+    var pg=document.getElementById('v813-pages'),ph='';for(var i=1;i<=max;i++){if(max>7&&i>3&&i<max-2){if(i===4)ph+='<span style="padding:5px">…</span>';continue}ph+='<button class="v813-page '+(i===X.v813.page?'active':'')+'" onclick="V81.v813.page='+i+';V81.render813()">'+i+'</button>'}if(pg)pg.innerHTML=ph;
+  };
+
+  /* Tras guardar correctamente, refrescamos dashboard y cerramos modal cuando el registro aparece en memoria. */
+  var oldSave=X.saveEncounter813;
+  X.saveEncounter813=async function(){
+    var before=(X.encounters||[]).length,wasId=X.v813.formState&&X.v813.formState.id;
+    await oldSave.apply(X,arguments);
+    var after=(X.encounters||[]).length;
+    if((wasId&& (X.encounters||[]).some(function(e){return String(e.id)===String(wasId)}))||(!wasId&&after>before)){X.closeEncounterModal();X.render813();}
+  };
+  document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&modal()&&modal().classList.contains('open'))X.closeEncounterModal()});
+}
+go();
 })();
 </script>
 
