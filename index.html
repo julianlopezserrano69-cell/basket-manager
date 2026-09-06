@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.83 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.84 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -8281,7 +8281,7 @@ Valoraciones:   ID | Fecha | JugadorID | Referencia | Ataque | Defensa | Fisico 
 <!-- CALENDARIO -->
 
 <div id="p-calidad-datos" class="page">
- <div class="page-hd"><div><h1>Calidad de datos</h1><p>Control de Biblioteca, Entrenamientos, Equipos y Jugadores</p></div><div><button class="btn btn-secondary" onclick="v8579Refresh()">↻ Actualizar</button><button class="btn btn-secondary" onclick="v8581OpenDiag()">⚙ Diagnóstico técnico</button><span id="v8582-integrity-badge" class="v8582-integrity-badge">Comprobando integridad…</span><span id="v8583-nav-badge" class="v8582-integrity-badge ok">✓ Navegación consolidada</span> <button class="btn btn-primary" onclick="v8579Export()">⬇ Exportar CSV</button></div></div>
+ <div class="page-hd"><div><h1>Calidad de datos</h1><p>Control de Biblioteca, Entrenamientos, Equipos y Jugadores</p></div><div><button class="btn btn-secondary" onclick="v8579Refresh()">↻ Actualizar</button><button class="btn btn-secondary" onclick="v8581OpenDiag()">⚙ Diagnóstico técnico</button><span id="v8582-integrity-badge" class="v8582-integrity-badge">Comprobando integridad…</span><span id="v8584-nav-badge" class="v8582-integrity-badge ok">✓ Navegación consolidada</span> <button class="btn btn-primary" onclick="v8579Export()">⬇ Exportar CSV</button></div></div>
  <div class="v8579-score"><div class="v8579-ring" id="v8579-ring"><b id="v8579-score">—</b><span>CALIDAD</span></div><div><h2>Estado general</h2><p id="v8579-score-text">Analizando…</p><div id="v8579-summary"></div></div></div>
  <div id="v8579-kpis" class="v8579-kpis"></div>
  <div class="v8579-panel"><div class="v8579-head"><div><b id="v8579-title">Todas las incidencias</b><span id="v8579-sub"></span></div><div style="display:flex;gap:7px;flex-wrap:wrap"><button id="v8580-fix-first" class="btn btn-primary btn-sm" onclick="v8580FixFirst()">✏️ Corregir primero</button><button class="btn btn-secondary btn-sm" onclick="v8579Filter('')">Ver todas</button></div></div>
@@ -36640,7 +36640,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.83 acción entrenamiento',action,id,err);
+    console.error('V8.5.84 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36851,7 +36851,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.83 fundament',name,e);
+    console.warn('V8.5.84 fundament',name,e);
   }
 }
 
@@ -36943,7 +36943,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.83 import',item,e);
+        console.error('V8.5.84 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36954,7 +36954,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.83 reload',e)}
+    }catch(e){console.warn('V8.5.84 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37155,7 +37155,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.83 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.84 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37279,7 +37279,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.83 Drive import',r,e);
+        console.error('V8.5.84 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37290,7 +37290,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.83 reload',e)}
+    }catch(e){console.warn('V8.5.84 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37311,81 +37311,6 @@ window.v8574ImportAll=async function(){
 
 })();
 </script>
-
-<script id="v8575-navigation-guard">
-(function(){
-'use strict';
-
-/*
- V8.5.83
- Guardia final de navegación.
- Algunas extensiones históricas de Biblioteca usan display inline para páginas
- fuera del array original. Esta capa deja siempre visible la página solicitada
- después de cualquier wrapper de nav(), evitando pantallas vacías.
-*/
-function v8575EnsurePage(page){
-  var wanted='p-'+page;
-  document.querySelectorAll('.page').forEach(function(el){
-    if(el.id===wanted){
-      el.classList.add('active');
-      el.style.removeProperty('display');
-    }else{
-      el.classList.remove('active');
-      /* La Biblioteca es la única página histórica que puede conservar display inline. */
-      if(el.id==='p-biblioteca-ejercicios') el.style.display='none';
-      else el.style.removeProperty('display');
-    }
-  });
-
-  var target=document.getElementById(wanted);
-  if(target){
-    /* Defensa adicional: si alguna regla/capa sigue ocultándola, mostrarla. */
-    if(window.getComputedStyle && getComputedStyle(target).display==='none'){
-      target.style.setProperty('display','block','important');
-    }
-  }
-
-  document.querySelectorAll('.nav-item,.nav-sub').forEach(function(el){
-    if(el.id==='nav-'+page) el.classList.add('active');
-    else if(el.id && el.id.indexOf('nav-')===0) el.classList.remove('active');
-  });
-}
-
-var previousNav=window.nav;
-if(typeof previousNav==='function' && !previousNav.__v8575){
-  var guarded=function(page){
-    var result=previousNav.apply(this,arguments);
-
-    /* Esperar a que terminen wrappers/renderizadores anteriores. */
-    setTimeout(function(){v8575EnsurePage(page)},0);
-    setTimeout(function(){v8575EnsurePage(page)},60);
-
-    return result;
-  };
-  guarded.__v8575=true;
-  guarded.__previous=previousNav;
-  window.nav=guarded;
-}
-
-/* Reparación específica inmediata si Equipos ya estaba seleccionado al cargar. */
-document.addEventListener('DOMContentLoaded',function(){
-  setTimeout(function(){
-    var navEq=document.getElementById('nav-equipos');
-    if(navEq && navEq.classList.contains('active')) v8575EnsurePage('equipos');
-  },250);
-});
-
-/* También protegemos el click por si algún navegador/PWA conserva un handler anterior. */
-document.addEventListener('click',function(ev){
-  var n=ev.target && ev.target.closest ? ev.target.closest('#nav-equipos') : null;
-  if(!n)return;
-  setTimeout(function(){v8575EnsurePage('equipos')},80);
-},true);
-
-window.v8575EnsurePage=v8575EnsurePage;
-})();
-</script>
-
 <script id="v8577-equipos-filtro-definitivo">
 (function(){
 'use strict';
@@ -37505,7 +37430,7 @@ window.v8577SelectEquipoCategoria=function(cat,source,ev){
     }
   }
 
-  console.log('[V8.5.83 Equipos]',cat||'Todas','=>',data.length,'equipos');
+  console.log('[V8.5.84 Equipos]',cat||'Todas','=>',data.length,'equipos');
   return false;
 };
 
@@ -37704,7 +37629,7 @@ window.v8578ConfirmTraining=async function(){
     updateBulk78();
     if(typeof window.toast==='function')toast(added+' ejercicio'+(added===1?'':'s')+' añadido'+(added===1?'':'s')+(skipped?' · '+skipped+' ya estaban en el plan':''),'s');
   }catch(e){
-    console.error('V8.5.83 add to training',e);
+    console.error('V8.5.84 add to training',e);
     alert('No se pudieron añadir los ejercicios.\n\n'+(e&&e.message||e));
   }finally{
     btn.disabled=false;btn.textContent='Añadir y abrir Plan de Sesión';
@@ -37780,7 +37705,7 @@ function analyse(){V8579.issues=[];var ex=EX(),tr=TR(),tm=TM(),pl=PL(),pn=PN(),b
 function kpis(){E('v8579-kpis').innerHTML=V8579.metrics.map(function(m){return '<button class="v8579-kpi '+(V8579.active===m.id?'active':'')+'" onclick="v8579Filter(\''+m.id+'\')"><span>'+m.icon+'</span><span class="n">'+m.count+'</span><span class="l">'+X(m.label)+'</span><span class="h">Pulsa para ver registros</span></button>'}).join('')}
 window.v8579Filter=function(id){V8579.active=id;kpis();v8579Details()};window.v8579Details=function(){var q=N(E('v8579-q').value),d=E('v8579-domain').value,s=E('v8579-sev').value,rows=V8579.issues.filter(function(i){return (!V8579.active||i.type===V8579.active)&&(!d||i.domain===d)&&(!s||i.sev===s)&&(!q||N(i.domain+' '+i.name+' '+i.detail).indexOf(q)>=0)}),m=V8579.metrics.find(function(x){return x.id===V8579.active});E('v8579-title').textContent=m?m.label:'Todas las incidencias';E('v8579-sub').textContent=rows.length+' registros';E('v8579-body').innerHTML=rows.length?rows.map(function(i){return '<tr><td>'+X(i.domain)+'</td><td>'+X(i.type)+'</td><td><b>'+X(i.name)+'</b></td><td>'+X(i.detail)+'</td><td><span class="v8579-pill '+i.sev+'">'+i.sev.toUpperCase()+'</span></td><td><button class="btn btn-secondary btn-sm" onclick="v8579Go(\''+X(i.page)+'\')">Abrir</button></td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;padding:24px;color:#86efac">✓ Sin incidencias con estos filtros.</td></tr>'};
 window.v8579Go=function(page){if(typeof window.nav==='function')window.nav(page)};window.v8579Refresh=async function(){try{if(typeof window.v8546ReloadLibraryFromSupabase==='function')await window.v8546ReloadLibraryFromSupabase()}catch(e){}analyse();kpis();v8579Details()};window.v8579Export=function(){var r=[['Modulo','Incidencia','Registro','Detalle','Prioridad']];V8579.issues.forEach(function(i){r.push([i.domain,i.type,i.name,i.detail,i.sev])});function c(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}var b=new Blob(['\uFEFF'+r.map(function(x){return x.map(c).join(';')}).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='basket_manager_calidad_datos_'+new Date().toISOString().slice(0,10)+'.csv';a.click()};
-var old=window.nav;if(typeof old==='function'&&!old.__v8579){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos')setTimeout(function(){analyse();kpis();v8579Details()},120);return r};w.__v8579=true;window.nav=w}document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(E('p-calidad-datos')&&E('p-calidad-datos').classList.contains('active')){analyse();kpis();v8579Details()}},400)});})();</script><script id="v8580-quality-actions-js">(function(){'use strict';
+document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(E('p-calidad-datos')&&E('p-calidad-datos').classList.contains('active')){analyse();kpis();v8579Details()}},400)});})();</script><script id="v8580-quality-actions-js">(function(){'use strict';
 window.V8580=window.V8580||{visible:[]};
 function E(id){return document.getElementById(id)} function N(s){return String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()} function X(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function EX(id){return (window.V8521&&V8521.exercises||[]).find(function(x){return String(x.id)===String(id)})} function TR(id){return (window.DB&&DB.entrenamientos||[]).find(function(x){return String(x.id)===String(id)})} function TM(id){return (window.DB&&DB.equipos||[]).find(function(x){return String(x.id)===String(id)})} function PL(id){return (window.DB&&DB.jugadores||[]).find(function(x){return String(x.id)===String(id)})}
@@ -37794,13 +37719,13 @@ window.v8580Fix=function(n){var rr=V8580.visible&&V8580.visible.length?V8580.vis
  if(i.domain==='Entrenamientos'){if(!TR(i.id)){alert('No se encuentra el entrenamiento. Pulsa Actualizar.');return}if(typeof window.nav==='function')window.nav('entrenamientos');setTimeout(function(){if(i.type==='no-plan'&&typeof window.v8521OpenSessionPlan==='function')window.v8521OpenSessionPlan(i.id);else if(typeof window.v824EditTraining==='function')window.v824EditTraining(i.id);showBack()},140);return}
  if(i.domain==='Equipos'){var t=TM(i.id);if(!t){alert('No se encuentra el equipo.');return}if(typeof window.nav==='function')window.nav('equipos');setTimeout(function(){if(typeof window.openModal==='function')window.openModal('equipo',t);showBack()},140);return}
  if(i.domain==='Jugadores'){var p=PL(i.id);if(!p){alert('No se encuentra el jugador.');return}if(typeof window.nav==='function')window.nav('jugadores');setTimeout(function(){if(typeof window.openModal==='function')window.openModal('jugador',p);showBack()},140);return}
- }catch(e){console.error('V8.5.83',e);alert('No se pudo abrir el registro.\n\n'+(e.message||e))}};
+ }catch(e){console.error('V8.5.84',e);alert('No se pudo abrir el registro.\n\n'+(e.message||e))}};
 function back(){if(E('v8580-back-quality'))return;var b=document.createElement('button');b.id='v8580-back-quality';b.className='btn btn-primary';b.textContent='🩺 Volver a Calidad';b.style.cssText='position:fixed;right:18px;bottom:18px;z-index:980;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35)';b.onclick=function(){if(typeof window.nav==='function')window.nav('calidad-datos');b.style.display='none'};document.body.appendChild(b)}
-var old=window.nav;if(typeof old==='function'&&!old.__v8580){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos'){var b=E('v8580-back-quality');if(b)b.style.display='none';setTimeout(function(){if(typeof window.v8579Refresh==='function')window.v8579Refresh()},180)}return r};w.__v8580=true;window.nav=w}
+
 document.addEventListener('DOMContentLoaded',back);})();</script>
 <div class="modal-overlay" id="m-v8581-diag" style="z-index:999">
   <div class="modal" style="width:min(980px,96vw)">
-    <div class="modal-hd"><div><div class="modal-title">⚙ DIAGNÓSTICO TÉCNICO</div><div style="font-size:8px;color:var(--muted);margin-top:3px">Estado interno de Basket Manager · V8.5.83</div></div><button class="modal-close" onclick="v8581CloseDiag()">×</button></div>
+    <div class="modal-hd"><div><div class="modal-title">⚙ DIAGNÓSTICO TÉCNICO</div><div style="font-size:8px;color:var(--muted);margin-top:3px">Estado interno de Basket Manager · V8.5.84</div></div><button class="modal-close" onclick="v8581CloseDiag()">×</button></div>
     <div class="modal-bd">
       <div id="v8581-health-cards" class="v8581-health-cards"></div>
       <div class="v8581-diag-actions"><button class="btn btn-secondary btn-sm" onclick="v8581RunDiag()">↻ Repetir diagnóstico</button><button class="btn btn-secondary btn-sm" onclick="v8581CopyDiag()">📋 Copiar informe</button><button class="btn btn-primary btn-sm" onclick="v8581DownloadDiag()">⬇ Descargar informe</button></div>
@@ -37865,7 +37790,7 @@ window.v8581RunDiag=async function(){
  var cfg=safe(function(){return !!localStorage.getItem('liga_sb_cfg')},false);
  var token=safe(function(){return !!localStorage.getItem('v8_sb_token')},false);
  var lines=[
-  'BASKET MANAGER · INFORME TÉCNICO V8.5.83',
+  'BASKET MANAGER · INFORME TÉCNICO V8.5.84',
   'Fecha: '+new Date().toLocaleString(),
   'Página activa: '+(activePage()||'ninguna'),
   '',
@@ -37890,14 +37815,14 @@ window.v8581RunDiag=async function(){
   '- Registros Service Worker: '+sw.registrations,
   '- Scopes Service Worker: '+(sw.scopes&&sw.scopes.length?sw.scopes.join(' | '):'—'),
 
-  '- Navegación consolidada V8.5.83: '+(window.__BM_NAV_CORE_8583?'Sí':'No'),
+  '- Navegación consolidada V8.5.84: '+(window.__BM_NAV_CORE_8584?'Sí':'No'),
   '- Página guardada sesión: '+(function(){try{return sessionStorage.getItem('bm_last_page')||'—'}catch(e){return '—'}})(),
 
   '',
   'ERRORES CAPTURADOS EN ESTA SESIÓN: '+V8581.errors.length
  ];
  V8581.errors.slice(-10).forEach(function(x,n){lines.push((n+1)+'. ['+x.type+'] '+x.message+(x.file?' · '+x.file+':'+x.line:''))});
- if(!V8581.errors.length)lines.push('- Ningún error JavaScript capturado desde el arranque de V8.5.83.');
+ if(!V8581.errors.length)lines.push('- Ningún error JavaScript capturado desde el arranque de V8.5.84.');
  V8581.lastReport=lines.join('\n');
  var text=E('v8581-diag-text');if(text)text.textContent=V8581.lastReport;
  var health=[
@@ -37926,13 +37851,13 @@ function check(){
 }
 window.v8582CheckIntegrity=check;
 document.addEventListener('DOMContentLoaded',function(){setTimeout(check,400)});
-var old=window.nav;if(typeof old==='function'&&!old.__v8582){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos')setTimeout(check,200);return r};w.__v8582=true;window.nav=w}
+
 })();
 </script>
 <script id="v8583-navigation-core-js">
 (function(){
 'use strict';
-if(window.__BM_NAV_CORE_8583)return; window.__BM_NAV_CORE_8583=true;
+if(window.__BM_NAV_CORE_8584)return; window.__BM_NAV_CORE_8584=true;
 
 window.V8583=window.V8583||{};
 V8583.aliases={
@@ -37975,10 +37900,10 @@ function ensure83(page){
 window.v8583EnsurePage=ensure83;
 
 var previousNav=window.nav;
-if(typeof previousNav==='function'&&!previousNav.__v8583){
+if(typeof previousNav==='function'&&!previousNav.__v8584){
   var consolidated=function(page){
     var normalized=norm83(page),result;
-    try{result=previousNav.apply(this,[normalized].concat([].slice.call(arguments,1)))}catch(e){console.error('V8.5.83 nav wrapper',e)}
+    try{result=previousNav.apply(this,[normalized].concat([].slice.call(arguments,1)))}catch(e){console.error('V8.5.84 nav core',e)}
     setTimeout(function(){
       ensure83(normalized);
 
@@ -37987,15 +37912,20 @@ if(typeof previousNav==='function'&&!previousNav.__v8583){
         try{
           if(typeof window.v8577SyncEquipoCategoriaUI==='function')window.v8577SyncEquipoCategoriaUI();
           if(typeof window.filterEq==='function')window.filterEq();
-        }catch(e){console.warn('V8.5.83 equipos refresh',e)}
+        }catch(e){console.warn('V8.5.84 equipos refresh',e)}
       }
       if(normalized==='calidad-datos'){
-        try{if(typeof window.v8582CheckIntegrity==='function')window.v8582CheckIntegrity()}catch(e){}
+        try{
+          var backBtn=document.getElementById('v8580-back-quality');
+          if(backBtn)backBtn.style.display='none';
+          if(typeof window.v8582CheckIntegrity==='function')window.v8582CheckIntegrity();
+          if(typeof window.v8579Refresh==='function')window.v8579Refresh();
+        }catch(e){console.warn('V8.5.84 calidad refresh',e)}
       }
     },0);
     return result;
   };
-  consolidated.__v8583=true;
+  consolidated.__v8584=true;
   consolidated.__previous=previousNav;
   window.nav=consolidated;
 }
