@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.81 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.82 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -3768,11 +3768,11 @@ body.mode-mobile #p-plan-entrenamientos .plan-form{grid-template-columns:1fr;}
 #ball-anim-wrap {
   position:fixed; top:0; left:230px; right:0; height:48px; pointer-events:none; z-index:900; overflow:hidden;
 }
-#ball-anim {
+#ball-roll-anim {
   position:absolute; top:50%; width:38px; height:38px;
   opacity:0;
 }
-#ball-anim.rolling {
+#ball-roll-anim.rolling {
   animation: ballRoll 10s ease-in-out forwards;
 }
 </style>
@@ -6383,6 +6383,10 @@ body.v8537-ready{overflow:auto}
 </style><style id="v8581-stability-css">
 .v8581-health-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}.v8581-health{padding:11px;border:1px solid #304963;border-radius:10px;background:#091625}.v8581-health b{display:block;font-size:17px}.v8581-health span{font-size:7.5px;color:#8fa5bd}.v8581-health.ok b{color:#86efac}.v8581-health.warn b{color:#fde68a}.v8581-health.bad b{color:#fca5a5}.v8581-diag-actions{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.v8581-diag-text{max-height:52vh;overflow:auto;white-space:pre-wrap;background:#050d17;border:1px solid #2b425d;border-radius:10px;padding:12px;color:#c8d6e6;font-size:8px;line-height:1.55}
 @media(max-width:760px){.v8581-health-cards{grid-template-columns:repeat(2,1fr)}}
+</style><style id="v8582-cleanup-css">
+.v8582-integrity-badge{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #35506d;border-radius:999px;background:#0a1727;color:#9fb5cd;font-size:8px;font-weight:800}
+.v8582-integrity-badge.ok{border-color:rgba(34,197,94,.45);color:#86efac;background:rgba(34,197,94,.08)}
+.v8582-integrity-badge.warn{border-color:rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.08)}
 </style></head>
 <body>
 <div id="bm-intro-splash" aria-hidden="true">
@@ -6562,7 +6566,7 @@ body.v8537-ready{overflow:auto}
 </script>
 
 <div id="ball-anim-wrap">
-  <svg id="ball-anim" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <svg id="ball-roll-anim" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
     <circle cx="50" cy="50" r="48" fill="#ef4444" stroke="#c2410c" stroke-width="3"/>
     <path d="M50,2 Q80,50 50,98" fill="none" stroke="#c2410c" stroke-width="4"/>
     <path d="M50,2 Q20,50 50,98" fill="none" stroke="#c2410c" stroke-width="4"/>
@@ -7463,7 +7467,7 @@ window.addEventListener('DOMContentLoaded', function(){
           <option value="">Todos los clubs</option>
         </select>
       </div>
-      <input class="search-box" id="q-ent" placeholder="Buscar entrenador..." oninput="filterEntrenadores()" style="border:1px solid var(--border);max-width:260px">
+      <input class="search-box" id="q-entrenadores" placeholder="Buscar entrenador..." oninput="filterEntrenadores()" style="border:1px solid var(--border);max-width:260px">
       <select class="fsel" id="fsel-eq-entrenador" onchange="filterEntrenadores()"><option value="">Todos los equipos</option></select>
     </div>
     <div class="card-bd" style="padding:0;flex:1;min-height:0;display:flex;flex-direction:column;">
@@ -8277,7 +8281,7 @@ Valoraciones:   ID | Fecha | JugadorID | Referencia | Ataque | Defensa | Fisico 
 <!-- CALENDARIO -->
 
 <div id="p-calidad-datos" class="page">
- <div class="page-hd"><div><h1>Calidad de datos</h1><p>Control de Biblioteca, Entrenamientos, Equipos y Jugadores</p></div><div><button class="btn btn-secondary" onclick="v8579Refresh()">↻ Actualizar</button><button class="btn btn-secondary" onclick="v8581OpenDiag()">⚙ Diagnóstico técnico</button> <button class="btn btn-primary" onclick="v8579Export()">⬇ Exportar CSV</button></div></div>
+ <div class="page-hd"><div><h1>Calidad de datos</h1><p>Control de Biblioteca, Entrenamientos, Equipos y Jugadores</p></div><div><button class="btn btn-secondary" onclick="v8579Refresh()">↻ Actualizar</button><button class="btn btn-secondary" onclick="v8581OpenDiag()">⚙ Diagnóstico técnico</button><span id="v8582-integrity-badge" class="v8582-integrity-badge">Comprobando integridad…</span> <button class="btn btn-primary" onclick="v8579Export()">⬇ Exportar CSV</button></div></div>
  <div class="v8579-score"><div class="v8579-ring" id="v8579-ring"><b id="v8579-score">—</b><span>CALIDAD</span></div><div><h2>Estado general</h2><p id="v8579-score-text">Analizando…</p><div id="v8579-summary"></div></div></div>
  <div id="v8579-kpis" class="v8579-kpis"></div>
  <div class="v8579-panel"><div class="v8579-head"><div><b id="v8579-title">Todas las incidencias</b><span id="v8579-sub"></span></div><div style="display:flex;gap:7px;flex-wrap:wrap"><button id="v8580-fix-first" class="btn btn-primary btn-sm" onclick="v8580FixFirst()">✏️ Corregir primero</button><button class="btn btn-secondary btn-sm" onclick="v8579Filter('')">Ver todas</button></div></div>
@@ -14499,7 +14503,7 @@ function saveEntrenador() {
   crudSafe('links entrenadores-equipos',function(){refreshEquiposEntrenadorLinks();});
   crudSafe('rebuild club entrenador',function(){rebuildEntrenadorClubFilter();});
   crudSafe('rebuild team entrenador',function(){rebuildEntrenadorTeamFilter();});
-  var q=document.getElementById('q-ent'),fc=document.getElementById('fsel-club-entrenadores'),fe=document.getElementById('fsel-eq-entrenador');
+  var q=document.getElementById('q-entrenadores'),fc=document.getElementById('fsel-club-entrenadores'),fe=document.getElementById('fsel-eq-entrenador');
   // V8.5.27: después de guardar no ocultar el nuevo entrenador por filtros.
   if(q) q.value='';
   if(fc) fc.value='';
@@ -14623,7 +14627,7 @@ function renderEntrenadores(data) {
   tbody.innerHTML = rows.join('');
 }
 function filterEntrenadores() {
-  var q = (document.getElementById('q-ent')||{}).value || '';
+  var q = (document.getElementById('q-entrenadores')||{}).value || '';
   var club = (document.getElementById('fsel-club-entrenadores')||{}).value || '';
   var eq = (document.getElementById('fsel-eq-entrenador')||{}).value || '';
   var lq = q.toLowerCase();
@@ -17757,7 +17761,7 @@ function finalizeLogin() {
 }
 
 function rollBall() {
-  var ball = document.getElementById('ball-anim');
+  var ball = document.getElementById('ball-roll-anim');
   if (!ball) return;
   // Clone and replace to fully reset animation
   var clone = ball.cloneNode(true);
@@ -36636,7 +36640,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.81 acción entrenamiento',action,id,err);
+    console.error('V8.5.82 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36847,7 +36851,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.81 fundament',name,e);
+    console.warn('V8.5.82 fundament',name,e);
   }
 }
 
@@ -36939,7 +36943,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.81 import',item,e);
+        console.error('V8.5.82 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36950,7 +36954,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.81 reload',e)}
+    }catch(e){console.warn('V8.5.82 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37151,7 +37155,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.81 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.82 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37275,7 +37279,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.81 Drive import',r,e);
+        console.error('V8.5.82 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37286,7 +37290,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.81 reload',e)}
+    }catch(e){console.warn('V8.5.82 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37313,7 +37317,7 @@ window.v8574ImportAll=async function(){
 'use strict';
 
 /*
- V8.5.81
+ V8.5.82
  Guardia final de navegación.
  Algunas extensiones históricas de Biblioteca usan display inline para páginas
  fuera del array original. Esta capa deja siempre visible la página solicitada
@@ -37501,7 +37505,7 @@ window.v8577SelectEquipoCategoria=function(cat,source,ev){
     }
   }
 
-  console.log('[V8.5.81 Equipos]',cat||'Todas','=>',data.length,'equipos');
+  console.log('[V8.5.82 Equipos]',cat||'Todas','=>',data.length,'equipos');
   return false;
 };
 
@@ -37700,7 +37704,7 @@ window.v8578ConfirmTraining=async function(){
     updateBulk78();
     if(typeof window.toast==='function')toast(added+' ejercicio'+(added===1?'':'s')+' añadido'+(added===1?'':'s')+(skipped?' · '+skipped+' ya estaban en el plan':''),'s');
   }catch(e){
-    console.error('V8.5.81 add to training',e);
+    console.error('V8.5.82 add to training',e);
     alert('No se pudieron añadir los ejercicios.\n\n'+(e&&e.message||e));
   }finally{
     btn.disabled=false;btn.textContent='Añadir y abrir Plan de Sesión';
@@ -37790,13 +37794,13 @@ window.v8580Fix=function(n){var rr=V8580.visible&&V8580.visible.length?V8580.vis
  if(i.domain==='Entrenamientos'){if(!TR(i.id)){alert('No se encuentra el entrenamiento. Pulsa Actualizar.');return}if(typeof window.nav==='function')window.nav('entrenamientos');setTimeout(function(){if(i.type==='no-plan'&&typeof window.v8521OpenSessionPlan==='function')window.v8521OpenSessionPlan(i.id);else if(typeof window.v824EditTraining==='function')window.v824EditTraining(i.id);showBack()},140);return}
  if(i.domain==='Equipos'){var t=TM(i.id);if(!t){alert('No se encuentra el equipo.');return}if(typeof window.nav==='function')window.nav('equipos');setTimeout(function(){if(typeof window.openModal==='function')window.openModal('equipo',t);showBack()},140);return}
  if(i.domain==='Jugadores'){var p=PL(i.id);if(!p){alert('No se encuentra el jugador.');return}if(typeof window.nav==='function')window.nav('jugadores');setTimeout(function(){if(typeof window.openModal==='function')window.openModal('jugador',p);showBack()},140);return}
- }catch(e){console.error('V8.5.81',e);alert('No se pudo abrir el registro.\n\n'+(e.message||e))}};
+ }catch(e){console.error('V8.5.82',e);alert('No se pudo abrir el registro.\n\n'+(e.message||e))}};
 function back(){if(E('v8580-back-quality'))return;var b=document.createElement('button');b.id='v8580-back-quality';b.className='btn btn-primary';b.textContent='🩺 Volver a Calidad';b.style.cssText='position:fixed;right:18px;bottom:18px;z-index:980;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35)';b.onclick=function(){if(typeof window.nav==='function')window.nav('calidad-datos');b.style.display='none'};document.body.appendChild(b)}
 var old=window.nav;if(typeof old==='function'&&!old.__v8580){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos'){var b=E('v8580-back-quality');if(b)b.style.display='none';setTimeout(function(){if(typeof window.v8579Refresh==='function')window.v8579Refresh()},180)}return r};w.__v8580=true;window.nav=w}
 document.addEventListener('DOMContentLoaded',back);})();</script>
 <div class="modal-overlay" id="m-v8581-diag" style="z-index:999">
   <div class="modal" style="width:min(980px,96vw)">
-    <div class="modal-hd"><div><div class="modal-title">⚙ DIAGNÓSTICO TÉCNICO</div><div style="font-size:8px;color:var(--muted);margin-top:3px">Estado interno de Basket Manager · V8.5.81</div></div><button class="modal-close" onclick="v8581CloseDiag()">×</button></div>
+    <div class="modal-hd"><div><div class="modal-title">⚙ DIAGNÓSTICO TÉCNICO</div><div style="font-size:8px;color:var(--muted);margin-top:3px">Estado interno de Basket Manager · V8.5.82</div></div><button class="modal-close" onclick="v8581CloseDiag()">×</button></div>
     <div class="modal-bd">
       <div id="v8581-health-cards" class="v8581-health-cards"></div>
       <div class="v8581-diag-actions"><button class="btn btn-secondary btn-sm" onclick="v8581RunDiag()">↻ Repetir diagnóstico</button><button class="btn btn-secondary btn-sm" onclick="v8581CopyDiag()">📋 Copiar informe</button><button class="btn btn-primary btn-sm" onclick="v8581DownloadDiag()">⬇ Descargar informe</button></div>
@@ -37852,8 +37856,8 @@ function scriptStats(){
  return {scripts:document.scripts.length,styles:document.querySelectorAll('style').length,pages:document.querySelectorAll('.page').length};
 }
 async function swInfo(){
- var o={supported:'serviceWorker' in navigator,controller:!!navigator.serviceWorker&&!!navigator.serviceWorker.controller,registrations:0};
- if(o.supported){try{o.registrations=(await navigator.serviceWorker.getRegistrations()).length}catch(e){}}
+ var o={supported:'serviceWorker' in navigator,controller:!!navigator.serviceWorker&&!!navigator.serviceWorker.controller,registrations:0,scopes:[]};
+ if(o.supported){try{var rr=await navigator.serviceWorker.getRegistrations();o.registrations=rr.length;o.scopes=rr.map(function(r){return r.scope||''})}catch(e){}}
  return o;
 }
 window.v8581RunDiag=async function(){
@@ -37861,7 +37865,7 @@ window.v8581RunDiag=async function(){
  var cfg=safe(function(){return !!localStorage.getItem('liga_sb_cfg')},false);
  var token=safe(function(){return !!localStorage.getItem('v8_sb_token')},false);
  var lines=[
-  'BASKET MANAGER · INFORME TÉCNICO V8.5.81',
+  'BASKET MANAGER · INFORME TÉCNICO V8.5.82',
   'Fecha: '+new Date().toLocaleString(),
   'Página activa: '+(activePage()||'ninguna'),
   '',
@@ -37884,11 +37888,12 @@ window.v8581RunDiag=async function(){
   '- Service Worker soportado: '+(sw.supported?'Sí':'No'),
   '- Service Worker controla la página: '+(sw.controller?'Sí':'No'),
   '- Registros Service Worker: '+sw.registrations,
+  '- Scopes Service Worker: '+(sw.scopes&&sw.scopes.length?sw.scopes.join(' | '):'—'),
   '',
   'ERRORES CAPTURADOS EN ESTA SESIÓN: '+V8581.errors.length
  ];
  V8581.errors.slice(-10).forEach(function(x,n){lines.push((n+1)+'. ['+x.type+'] '+x.message+(x.file?' · '+x.file+':'+x.line:''))});
- if(!V8581.errors.length)lines.push('- Ningún error JavaScript capturado desde el arranque de V8.5.81.');
+ if(!V8581.errors.length)lines.push('- Ningún error JavaScript capturado desde el arranque de V8.5.82.');
  V8581.lastReport=lines.join('\n');
  var text=E('v8581-diag-text');if(text)text.textContent=V8581.lastReport;
  var health=[
@@ -37904,6 +37909,20 @@ window.v8581OpenDiag=function(){E('m-v8581-diag').classList.add('open');v8581Run
 window.v8581CloseDiag=function(){E('m-v8581-diag').classList.remove('open')};
 window.v8581CopyDiag=async function(){if(!V8581.lastReport)await v8581RunDiag();try{await navigator.clipboard.writeText(V8581.lastReport);if(typeof toast==='function')toast('Informe copiado','s')}catch(e){alert(V8581.lastReport)}};
 window.v8581DownloadDiag=async function(){if(!V8581.lastReport)await v8581RunDiag();var b=new Blob([V8581.lastReport],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='basket_manager_diagnostico_v8_5_81.txt';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},500)};
+})();
+</script><script id="v8582-cleanup-phase1-js">
+(function(){'use strict';
+if(window.__BM_CLEANUP_8582)return;window.__BM_CLEANUP_8582=true;
+function E(id){return document.getElementById(id)}
+function dupIds(){var s={},d=[];document.querySelectorAll('[id]').forEach(function(x){if(s[x.id])d.push(x.id);else s[x.id]=1});return Array.from(new Set(d))}
+function check(){
+ var d=dupIds(),b=E('v8582-integrity-badge');if(!b)return;
+ if(!d.length){b.textContent='✓ Integridad HTML: sin IDs duplicados';b.className='v8582-integrity-badge ok'}
+ else{b.textContent='⚠ IDs duplicados: '+d.join(', ');b.className='v8582-integrity-badge warn'}
+}
+window.v8582CheckIntegrity=check;
+document.addEventListener('DOMContentLoaded',function(){setTimeout(check,400)});
+var old=window.nav;if(typeof old==='function'&&!old.__v8582){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos')setTimeout(check,200);return r};w.__v8582=true;window.nav=w}
 })();
 </script></body>
 </html>
