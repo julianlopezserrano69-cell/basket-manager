@@ -7284,8 +7284,7 @@ window.addEventListener('DOMContentLoaded', function(){
     <div class="nav-item" id="nav-scouting" onclick="nav('scouting')"><span class="nav-icon">🔎</span> Scouting</div>
 
     <div class="nav-sec">Agenda</div>
-    <div class="nav-sub" id="nav-calidad-datos" onclick="nav('calidad-datos')"><span>🩺</span><span>Calidad de datos</span></div>
-<div class="nav-item" id="nav-calendario" onclick="nav('calendario')"><span class="nav-icon">📅</span> Calendario</div>
+    <div class="nav-item" id="nav-calendario" onclick="nav('calendario')"><span class="nav-icon">📅</span> Calendario</div>
     <div class="nav-item" id="nav-directo" onclick="nav('directo')"><span class="nav-icon">🔴</span> Partido en Directo</div>
     <div class="nav-sec">Informes</div>
     <div class="nav-item" id="nav-informes" onclick="nav('informes')"><span class="nav-icon">📈</span> Informes</div>
@@ -7303,6 +7302,7 @@ window.addEventListener('DOMContentLoaded', function(){
     <div class="nav-sec">Tips</div>
     <div class="nav-item" id="nav-tips" onclick="nav('tips')"><span class="nav-icon">💡</span> Fundamentos</div>
     <div class="nav-sec">Sistema</div>
+    <div class="nav-item" id="nav-calidad-datos" onclick="nav('calidad-datos')"><span class="nav-icon">🩺</span> Calidad de datos</div>
     <div class="nav-item" id="nav-temporadas" onclick="nav('temporadas')"><span class="nav-icon">📅</span> Temporadas</div>
     <div class="nav-item" id="nav-config" onclick="nav('config')"><span class="nav-icon">⚙</span> Configuracion</div>
     <div id="nav-changepass" class="nav-item" onclick="openChangePass()" style="font-size:12px;display:none;"><span class="nav-icon">🔐</span> Cambiar contraseña</div>
@@ -38162,7 +38162,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.114</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.115</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38333,7 +38333,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.114</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.115</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40260,7 +40260,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.114';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.115';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
