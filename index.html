@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.72 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.74 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -11,6 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.3.1/dist/tus.min.js"></script>
 <script>
 Chart.register(ChartDataLabels);
 // Disable datalabels globally — only opt-in per chart
@@ -6264,6 +6265,75 @@ body.v8537-ready{overflow:auto}
 <style id="v8568-scout-css">#p-scouting{padding:0}.v8568-scout-wrap{padding:22px 24px 34px}.v8568-scout-hero{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 24px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(135deg,var(--surface),var(--surface2))}.v8568-eyebrow{font-size:9px;font-weight:800;letter-spacing:1.4px;color:#60a5fa;margin-bottom:5px}.v8568-hero-actions{display:flex;gap:9px}.v8568-tabs{display:flex;gap:7px;overflow-x:auto;padding:14px 0 12px}.v8568-tabs button{white-space:nowrap;border:1px solid var(--border);background:var(--surface2);color:var(--muted);border-radius:8px;padding:8px 11px;font-size:10px;font-weight:700;cursor:pointer}.v8568-tabs button.active,.v8568-tabs button:hover{background:#15345a;color:#fff;border-color:#2f6fac}.v8568-view{display:none}.v8568-view.active{display:block}.v8568-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:12px}.v8568-kpis article,.v8568-panel,.v8568-module{border:1px solid var(--border);background:var(--surface);border-radius:12px}.v8568-kpis article{padding:15px}.v8568-kpis span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase}.v8568-kpis strong{display:block;font-size:27px;color:var(--text);margin:4px 0}.v8568-kpis small{font-size:8px;color:var(--muted)}.v8568-main-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:11px}.v8568-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:11px}.v8568-panel{padding:15px;min-height:125px}.v8568-panel b{font-size:11px}.v8568-panel p,.v8568-placeholder{font-size:9px;color:var(--muted);line-height:1.5}.v8568-head{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:9px;margin-bottom:10px}.v8568-head span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.v8568-mini{border:1px solid #315b87;background:#132b47;color:#a9d2ff;border-radius:6px;padding:5px 8px;font-size:8px}.v8568-empty{text-align:center;color:var(--muted);font-size:25px;padding:11px}.v8568-empty b,.v8568-empty span{display:block;font-size:9px;margin-top:5px}.v8568-empty b{color:var(--text)}.v8568-bars label{display:flex;justify-content:space-between;font-size:8px;color:var(--muted);margin:8px 0 4px}.v8568-bars i{display:block;height:5px;background:var(--surface2);border-radius:99px}.v8568-module{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:22px}.v8568-module-icon{width:54px;height:54px;border:1px solid #28527f;background:#142b47;border-radius:13px;display:grid;place-items:center;font-size:24px}.v8568-module h2{margin:0;font-size:19px}.v8568-module p{margin:5px 0 0;color:var(--muted);font-size:10px}.v8568-module>span{font-size:8px;font-weight:800;color:#93c5fd;border:1px solid #2b6da8;border-radius:99px;padding:6px 9px}@media(max-width:1050px){.v8568-kpis{grid-template-columns:repeat(2,1fr)}.v8568-main-grid,.v8568-grid3{grid-template-columns:1fr}}@media(max-width:700px){.v8568-scout-wrap{padding:14px}.v8568-scout-hero{align-items:flex-start;flex-direction:column}.v8568-kpis{grid-template-columns:1fr 1fr}.v8568-module{grid-template-columns:1fr}}</style>
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+
+<style id="v8573-video-import-css">
+.v8573-library-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.v8573-intro{border:1px solid #304763;background:#0b1727;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.v8573-intro b{display:block;color:#e8eef8;font-size:11px;margin-bottom:4px}
+.v8573-intro span{color:#8fa4be;font-size:9px;line-height:1.55}
+.v8573-drop{display:flex;align-items:center;gap:12px;border:1px dashed #426181;background:#091626;border-radius:12px;padding:16px;cursor:pointer;transition:.15s}
+.v8573-drop:hover{border-color:var(--accent);background:#0d1d31}
+.v8573-drop input{display:none}
+.v8573-drop strong{color:#f2f6fb;font-size:11px}
+.v8573-drop span{color:#8ba0b9;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v8573-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+.v8573-summary>div{background:#0a1626;border:1px solid #2f4661;border-radius:10px;padding:10px 12px}
+.v8573-summary span{display:block;color:#7f94ad;font-size:8px;letter-spacing:.8px}
+.v8573-summary b{display:block;color:#f2f5fa;font-size:18px;margin-top:3px}
+.v8573-options{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0;color:#9fb0c5;font-size:9px}
+.v8573-options label{display:flex;align-items:center;gap:6px}
+.v8573-options input{accent-color:var(--accent)}
+.v8573-preview{max-height:260px;overflow:auto;border:1px solid #263d59;border-radius:10px;margin-top:10px}
+.v8573-row{display:grid;grid-template-columns:minmax(260px,1.6fr) 150px 110px 95px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid #20344d;font-size:9px}
+.v8573-row:last-child{border-bottom:none}
+.v8573-row .name{color:#e4ebf5;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v8573-row .meta{color:#8da1ba}
+.v8573-row .lvl{color:#93c5fd}
+.v8573-row .sz{text-align:right;color:#94a3b8}
+.v8573-progress-wrap{margin-top:13px;border:1px solid #304865;background:#0a1626;border-radius:11px;padding:12px}
+.v8573-progress-head{display:flex;justify-content:space-between;gap:10px;font-size:9px;color:#dce6f2;margin-bottom:7px}
+.v8573-progress{height:8px;background:#08111f;border:1px solid #2a405c;border-radius:999px;overflow:hidden}
+.v8573-progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,#f97316,#facc15);transition:width .2s}
+.v8573-progress-file{font-size:8px;color:#8ea3bb;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v8573-import-stats{display:flex;gap:15px;flex-wrap:wrap;margin-top:9px;color:#9cb0c7;font-size:8px}
+.v8573-log{margin-top:10px;max-height:190px;overflow:auto;background:#07111e;border:1px solid #263d57;border-radius:9px;padding:9px;font-family:monospace;font-size:8px;line-height:1.5;color:#9fb2ca}
+.v8573-log .ok{color:#86efac}.v8573-log .err{color:#fca5a5}.v8573-log .skip{color:#fde68a}
+@media(max-width:760px){.v8573-summary{grid-template-columns:1fr 1fr}.v8573-row{grid-template-columns:1fr 85px}.v8573-row .meta,.v8573-row .lvl{display:none}}
+</style>
+
+<style id="v8574-drive-import-css">
+#v8574-drive-import .modal{width:min(1120px,96vw);max-height:92vh}
+.v8574-intro{background:#0a1727;border:1px solid #2c4562;border-radius:11px;padding:13px 15px;margin-bottom:12px}
+.v8574-intro b{display:block;color:#eef4fb;font-size:11px;margin-bottom:4px}
+.v8574-intro span{display:block;color:#91a7c0;font-size:9px;line-height:1.55}
+.v8574-filebox{display:flex;align-items:center;gap:12px;border:1px dashed #486789;background:#081525;border-radius:12px;padding:16px;cursor:pointer}
+.v8574-filebox:hover{border-color:#60a5fa;background:#0b1b2e}
+.v8574-filebox input{display:none}
+.v8574-filebox strong{font-size:11px;color:#f2f6fb}
+.v8574-filebox span{font-size:9px;color:#8fa5be;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v8574-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.v8574-summary>div{border:1px solid #2d4561;border-radius:10px;background:#091625;padding:10px}
+.v8574-summary span{display:block;color:#8298b1;font-size:8px;letter-spacing:.7px}
+.v8574-summary b{display:block;color:#f2f5fa;font-size:18px;margin-top:3px}
+.v8574-options{display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 11px;color:#9cb0c7;font-size:9px}
+.v8574-options label{display:flex;gap:6px;align-items:center}
+.v8574-options input{accent-color:#f97316}
+.v8574-table-wrap{border:1px solid #273e59;border-radius:10px;overflow:auto;max-height:315px}
+.v8574-table{width:100%;border-collapse:collapse;font-size:8.5px}
+.v8574-table th{position:sticky;top:0;z-index:1;background:#0d1d30;color:#9fb2c8;text-align:left;padding:8px;border-bottom:1px solid #34506f}
+.v8574-table td{padding:7px 8px;border-bottom:1px solid #1f334b;color:#dce6f1;vertical-align:top}
+.v8574-table td.path{color:#7f96b1;max-width:330px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v8574-table td.url{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#93c5fd}
+.v8574-progressbox{display:none;margin-top:12px;border:1px solid #304966;background:#091625;border-radius:10px;padding:11px}
+.v8574-progress-head{display:flex;justify-content:space-between;color:#dce7f2;font-size:9px;margin-bottom:7px}
+.v8574-progress{height:8px;border-radius:999px;overflow:hidden;background:#07111e;border:1px solid #29415d}
+.v8574-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#facc15);transition:width .18s}
+.v8574-progress-file{font-size:8px;color:#8ba2bc;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v8574-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:8px;color:#9eb1c7}
+.v8574-log{display:none;max-height:190px;overflow:auto;margin-top:10px;background:#06101d;border:1px solid #263b55;border-radius:9px;padding:9px;font:8px/1.5 monospace;color:#9fb2c8}
+.v8574-log .ok{color:#86efac}.v8574-log .upd{color:#93c5fd}.v8574-log .skip{color:#fde68a}.v8574-log .err{color:#fca5a5}
+@media(max-width:760px){.v8574-summary{grid-template-columns:1fr 1fr}.v8574-table th:nth-child(1),.v8574-table td:nth-child(1),.v8574-table th:nth-child(5),.v8574-table td:nth-child(5){display:none}}
+</style>
 </head>
 <body>
 <div id="bm-intro-splash" aria-hidden="true">
@@ -33172,7 +33242,7 @@ else setTimeout(init8518,0);
       <h1 style="margin-bottom:5px">BIBLIOTECA DE EJERCICIOS</h1>
       <div class="page-sub">Ejercicios reutilizables para construir sesiones de entrenamiento</div>
     </div>
-    <button class="btn btn-primary" onclick="v8521OpenExercise()">+ Añadir Ejercicio</button>
+    <div class="v8573-library-actions"><button type="button" class="btn btn-secondary" onclick="v8574OpenImport()">☁️ Importar catálogo Google Drive</button><button class="btn btn-primary" onclick="v8521OpenExercise()">+ Añadir Ejercicio</button></div>
   </div>
 
   <div class="v8521-ex-kpis">
@@ -36501,10 +36571,674 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.72 acción entrenamiento',action,id,err);
+    console.error('V8.5.74 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
+
+})();
+</script>
+
+<div class="modal-overlay" id="m-v8573-video-import" style="z-index:980">
+  <div class="modal" style="width:min(1050px,96vw);max-height:92vh">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title">IMPORTAR CARPETA DE VÍDEOS</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">
+          Carpeta → Fundamento · Subcarpeta → Nivel · MP4 → Ejercicio + URL + QR
+        </div>
+      </div>
+      <button class="modal-close" onclick="v8573CloseImport()">×</button>
+    </div>
+
+    <div class="modal-bd">
+      <div class="v8573-intro">
+        <b>Selecciona la carpeta raíz de vídeos.</b>
+        <span>Ejemplo: Todos/Bote/Basico/ejercicio.mp4. La importación conserva la estructura, sube los MP4 a Supabase Storage y crea/actualiza automáticamente los ejercicios de Biblioteca.</span>
+      </div>
+
+      <label class="v8573-drop">
+        <input id="v8573-folder" type="file" accept="video/mp4,.mp4" webkitdirectory directory multiple onchange="v8573PreviewFolder()">
+        <strong>📁 Seleccionar carpeta de vídeos</strong>
+        <span id="v8573-folder-label">No se ha seleccionado ninguna carpeta.</span>
+      </label>
+
+      <div id="v8573-summary" class="v8573-summary" style="display:none">
+        <div><span>VÍDEOS</span><b id="v8573-count">0</b></div>
+        <div><span>TAMAÑO</span><b id="v8573-size">0 MB</b></div>
+        <div><span>FUNDAMENTOS</span><b id="v8573-funds">0</b></div>
+        <div><span>NIVELES</span><b id="v8573-levels">0</b></div>
+      </div>
+
+      <div class="v8573-options">
+        <label><input type="checkbox" id="v8573-update-existing" checked> Actualizar ejercicios existentes si vuelvo a importar la misma ruta</label>
+        <label><input type="checkbox" id="v8573-skip-uploaded" checked> Omitir vídeo si ya existe en Storage</label>
+      </div>
+
+      <div id="v8573-preview" class="v8573-preview"></div>
+
+      <div id="v8573-progress-wrap" class="v8573-progress-wrap" style="display:none">
+        <div class="v8573-progress-head"><b id="v8573-progress-title">Preparando...</b><span id="v8573-progress-pct">0%</span></div>
+        <div class="v8573-progress"><i id="v8573-progress-bar"></i></div>
+        <div id="v8573-progress-file" class="v8573-progress-file"></div>
+        <div class="v8573-import-stats">
+          <span>✅ Importados: <b id="v8573-ok">0</b></span>
+          <span>↻ Actualizados: <b id="v8573-updated">0</b></span>
+          <span>⏭ Omitidos: <b id="v8573-skipped">0</b></span>
+          <span>❌ Errores: <b id="v8573-errors">0</b></span>
+        </div>
+      </div>
+
+      <div id="v8573-log" class="v8573-log" style="display:none"></div>
+    </div>
+
+    <div class="modal-ft">
+      <button class="btn btn-secondary" onclick="v8573CloseImport()">Cerrar</button>
+      <button id="v8573-start-btn" class="btn btn-primary" onclick="v8573StartImport()" disabled>🚀 Importar todos los vídeos</button>
+    </div>
+  </div>
+</div>
+
+<script id="v8573-video-import-js">
+(function(){
+'use strict';
+
+window.V8573={files:[],running:false,stats:{ok:0,updated:0,skipped:0,errors:0}};
+
+function E73(id){return document.getElementById(id)}
+function esc73(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt73(n){n=Number(n)||0;if(n>=1024*1024*1024)return (n/1024/1024/1024).toFixed(2)+' GB';if(n>=1024*1024)return (n/1024/1024).toFixed(1)+' MB';if(n>=1024)return (n/1024).toFixed(1)+' KB';return n+' B'}
+function safe73(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').toLowerCase()}
+function hash73(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function level73(s){var x=String(s||'').trim().toLowerCase();if(x==='basico'||x==='básico')return 'Básico';if(x==='intermedio')return 'Intermedio';if(x==='avanzado')return 'Avanzado';return s||'Básico'}
+function fund73(s){var x=String(s||'').trim();if(/^pases$/i.test(x))return 'Pase';return x}
+function token73(){return sessionStorage.getItem('v8_sb_token')||''}
+function auth73(){return {'apikey':SB.key,'Authorization':'Bearer '+token73()}}
+function log73(msg,cls){var box=E73('v8573-log');if(!box)return;box.style.display='block';var d=document.createElement('div');d.className=cls||'';d.textContent=msg;box.appendChild(d);box.scrollTop=box.scrollHeight}
+function pct73(i,total,label,file){
+  var p=total?Math.round(i/total*100):0;
+  E73('v8573-progress-wrap').style.display='block';
+  E73('v8573-progress-bar').style.width=p+'%';
+  E73('v8573-progress-pct').textContent=p+'%';
+  E73('v8573-progress-title').textContent=label||'Importando...';
+  E73('v8573-progress-file').textContent=file||'';
+}
+function stats73(){['ok','updated','skipped','errors'].forEach(function(k){var e=E73('v8573-'+k);if(e)e.textContent=V8573.stats[k]||0})}
+
+function meta73(file){
+  var rel=String(file.webkitRelativePath||file.name).replace(/\\/g,'/');
+  var parts=rel.split('/').filter(Boolean);
+  // webkitRelativePath starts with selected root folder.
+  if(parts.length>=4)parts.shift();
+  var fundament=parts.length>=3?fund73(parts[0]):'Vídeo';
+  var level=parts.length>=3?level73(parts[1]):'Básico';
+  var name=String(file.name||'').replace(/\.[^.]+$/,'').trim();
+  var key=[fundament,level,name].join('|').toLowerCase();
+  var id='vid-'+safe73(fundament).slice(0,20)+'-'+hash73(key);
+  var storagePath='videos/'+safe73(fundament)+'/'+safe73(level)+'/'+safe73(name)+'.mp4';
+  return {file:file,relativePath:rel,fundament:fundament,level:level,name:name,id:id,storagePath:storagePath};
+}
+
+window.v8573OpenImport=function(){
+  var m=E73('m-v8573-video-import');if(m)m.classList.add('open');
+};
+window.v8573CloseImport=function(){
+  if(V8573.running){if(!confirm('Hay una importación en curso. ¿Quieres cerrar la ventana?'))return}
+  var m=E73('m-v8573-video-import');if(m)m.classList.remove('open');
+};
+
+window.v8573PreviewFolder=function(){
+  var inp=E73('v8573-folder');
+  var files=Array.from(inp&&inp.files||[]).filter(function(f){return /\.mp4$/i.test(f.name)});
+  V8573.files=files.map(meta73);
+  var btn=E73('v8573-start-btn');
+  if(btn)btn.disabled=!V8573.files.length;
+
+  if(!V8573.files.length){
+    E73('v8573-folder-label').textContent='No se encontraron archivos MP4.';
+    E73('v8573-summary').style.display='none';
+    E73('v8573-preview').innerHTML='';
+    return;
+  }
+
+  var root=(V8573.files[0].relativePath.split('/')[0]||'Carpeta');
+  E73('v8573-folder-label').textContent=root+' · '+V8573.files.length+' vídeos';
+  E73('v8573-summary').style.display='grid';
+  E73('v8573-count').textContent=V8573.files.length;
+  E73('v8573-size').textContent=fmt73(V8573.files.reduce(function(a,x){return a+(x.file.size||0)},0));
+  E73('v8573-funds').textContent=new Set(V8573.files.map(function(x){return x.fundament})).size;
+  E73('v8573-levels').textContent=new Set(V8573.files.map(function(x){return x.level})).size;
+
+  E73('v8573-preview').innerHTML=V8573.files.map(function(x){
+    return '<div class="v8573-row">'+
+      '<div class="name" title="'+esc73(x.relativePath)+'">'+esc73(x.name)+'</div>'+
+      '<div class="meta">'+esc73(x.fundament)+'</div>'+
+      '<div class="lvl">'+esc73(x.level)+'</div>'+
+      '<div class="sz">'+fmt73(x.file.size)+'</div>'+
+    '</div>';
+  }).join('');
+};
+
+async function exists73(path){
+  try{
+    var u=SB.url+'/storage/v1/object/info/exercise-media/'+path.split('/').map(encodeURIComponent).join('/');
+    var r=await fetch(u,{headers:auth73()});
+    return r.ok;
+  }catch(e){return false}
+}
+
+function public73(path){
+  return SB.url+'/storage/v1/object/public/exercise-media/'+path.split('/').map(encodeURIComponent).join('/');
+}
+
+async function uploadStandard73(item){
+  var url=SB.url+'/storage/v1/object/exercise-media/'+item.storagePath.split('/').map(encodeURIComponent).join('/');
+  var headers=auth73();
+  headers['Content-Type']=item.file.type||'video/mp4';
+  headers['x-upsert']='true';
+  var r=await fetch(url,{method:'POST',headers:headers,body:item.file});
+  if(!r.ok)throw new Error('Storage HTTP '+r.status+': '+await r.text());
+  return public73(item.storagePath);
+}
+
+async function uploadTus73(item){
+  if(!window.tus||!tus.Upload)return uploadStandard73(item);
+  var project=String(SB.url||'').replace(/\/$/,'');
+  var endpoint=project.replace(/\.supabase\.co$/i,'.storage.supabase.co')+'/storage/v1/upload/resumable';
+  return await new Promise(function(resolve,reject){
+    var up=new tus.Upload(item.file,{
+      endpoint:endpoint,
+      retryDelays:[0,3000,5000,10000,20000],
+      headers:{authorization:'Bearer '+token73(),'x-upsert':'true'},
+      uploadDataDuringCreation:true,
+      removeFingerprintOnSuccess:true,
+      chunkSize:6*1024*1024,
+      metadata:{
+        bucketName:'exercise-media',
+        objectName:item.storagePath,
+        contentType:item.file.type||'video/mp4',
+        cacheControl:'3600'
+      },
+      onError:function(err){reject(err)},
+      onProgress:function(sent,total){
+        var sub=total?Math.round(sent/total*100):0;
+        E73('v8573-progress-file').textContent=item.name+' · subiendo '+sub+'%';
+      },
+      onSuccess:function(){resolve(public73(item.storagePath))}
+    });
+    up.findPreviousUploads().then(function(prev){
+      if(prev&&prev.length)up.resumeFromPreviousUpload(prev[0]);
+      up.start();
+    }).catch(function(){up.start()});
+  });
+}
+
+async function upsertFundament73(name){
+  if(!name)return;
+  try{
+    await window.v8547Rest('exercise_fundaments?on_conflict=name',{
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
+    });
+  }catch(e){
+    console.warn('V8.5.74 fundament',name,e);
+  }
+}
+
+async function existingExercise73(id){
+  try{
+    var r=await window.v8547Rest('exercise_library?id=eq.'+encodeURIComponent(id)+'&select=id,video_url');
+    return Array.isArray(r)&&r.length?r[0]:null;
+  }catch(e){return null}
+}
+
+async function saveExercise73(item,videoUrl){
+  var row={
+    id:item.id,
+    name:item.name,
+    fundament:item.fundament,
+    level:item.level,
+    duration_min:10,
+    players:'Todos',
+    material:'Vídeo',
+    objective:'Recurso audiovisual para trabajar '+item.fundament+'.',
+    description:'Vídeo técnico: '+item.name+'.',
+    coaching_points:'',
+    image_url:null,
+    animation_url:null,
+    video_url:videoUrl,
+    notes:'Importado automáticamente desde '+item.relativePath,
+    updated_at:new Date().toISOString()
+  };
+  await window.v8547Rest('exercise_library?on_conflict=id',{
+    method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify(row)
+  });
+}
+
+window.v8573StartImport=async function(){
+  if(V8573.running||!V8573.files.length)return;
+  if(!window.SB||!SB.url||!SB.key){alert('Supabase no está configurado.');return}
+  if(!token73()){alert('No hay una sesión Supabase activa. Cierra sesión y vuelve a entrar.');return}
+
+  var totalBytes=V8573.files.reduce(function(a,x){return a+(x.file.size||0)},0);
+  var msg='Se van a importar '+V8573.files.length+' vídeos ('+fmt73(totalBytes)+').\n\n'+
+          'Los archivos se subirán al bucket exercise-media y se crearán/actualizarán los ejercicios en Supabase.\n\n¿Continuar?';
+  if(!confirm(msg))return;
+
+  V8573.running=true;
+  V8573.stats={ok:0,updated:0,skipped:0,errors:0};
+  stats73();
+  E73('v8573-log').innerHTML='';
+  E73('v8573-log').style.display='block';
+  E73('v8573-start-btn').disabled=true;
+
+  try{
+    var fundaments=Array.from(new Set(V8573.files.map(function(x){return x.fundament})));
+    for(var f=0;f<fundaments.length;f++)await upsertFundament73(fundaments[f]);
+
+    for(var i=0;i<V8573.files.length;i++){
+      var item=V8573.files[i];
+      pct73(i,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
+      try{
+        var existing=await existingExercise73(item.id);
+        var shouldSkipUpload=E73('v8573-skip-uploaded').checked;
+        var isStored=shouldSkipUpload ? await exists73(item.storagePath) : false;
+        var url='';
+
+        if(isStored){
+          url=public73(item.storagePath);
+          log73('⏭ Storage ya contiene: '+item.relativePath,'skip');
+        }else{
+          // TUS for large files, standard upload for smaller ones.
+          url=(item.file.size>6*1024*1024)?await uploadTus73(item):await uploadStandard73(item);
+        }
+
+        if(existing && !E73('v8573-update-existing').checked){
+          V8573.stats.skipped++;
+          log73('⏭ Ejercicio existente, omitido: '+item.name,'skip');
+          stats73();
+          continue;
+        }
+
+        await saveExercise73(item,url);
+        if(existing){
+          V8573.stats.updated++;
+          log73('↻ Actualizado: '+item.name,'ok');
+        }else{
+          V8573.stats.ok++;
+          log73('✅ Importado: '+item.name,'ok');
+        }
+      }catch(e){
+        V8573.stats.errors++;
+        log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
+        console.error('V8.5.74 import',item,e);
+      }
+      stats73();
+      pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
+    }
+
+    pct73(V8573.files.length,V8573.files.length,'Importación finalizada','Recargando Biblioteca desde Supabase...');
+    try{
+      if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
+      if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
+      if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
+    }catch(e){console.warn('V8.5.74 reload',e)}
+
+    var finalMsg='Importación terminada.\n\n'+
+      'Nuevos: '+V8573.stats.ok+'\n'+
+      'Actualizados: '+V8573.stats.updated+'\n'+
+      'Omitidos: '+V8573.stats.skipped+'\n'+
+      'Errores: '+V8573.stats.errors;
+    alert(finalMsg);
+    if(typeof toast==='function')toast('Importación de vídeos terminada','s');
+  }finally{
+    V8573.running=false;
+    E73('v8573-start-btn').disabled=false;
+  }
+};
+
+})();
+</script>
+
+<div class="modal-overlay" id="v8574-drive-import" style="z-index:990">
+  <div class="modal">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title">☁️ IMPORTAR CATÁLOGO GOOGLE DRIVE</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">CSV generado desde tu carpeta “Todos” de Google Drive</div>
+      </div>
+      <button class="modal-close" onclick="v8574CloseImport()">×</button>
+    </div>
+
+    <div class="modal-bd">
+      <div class="v8574-intro">
+        <b>Los vídeos permanecen en Google Drive.</b>
+        <span>Basket Manager solo guarda en Supabase la ficha del ejercicio y la URL pública de Google Drive. El QR se genera automáticamente a partir de esa URL. Si el ejercicio ya existe con el mismo Nombre + Fundamento + Nivel, se actualiza su vídeo sin borrar sus pizarras ni el resto de información.</span>
+      </div>
+
+      <label class="v8574-filebox">
+        <input id="v8574-csv" type="file" accept=".csv,text/csv" onchange="v8574LoadCsv()">
+        <strong>📄 Seleccionar basket_manager_videos.csv</strong>
+        <span id="v8574-file-label">Ningún CSV seleccionado.</span>
+      </label>
+
+      <div id="v8574-summary" class="v8574-summary" style="display:none">
+        <div><span>REGISTROS</span><b id="v8574-k-total">0</b></div>
+        <div><span>FUNDAMENTOS</span><b id="v8574-k-fund">0</b></div>
+        <div><span>BÁSICO</span><b id="v8574-k-basic">0</b></div>
+        <div><span>INTERMEDIO</span><b id="v8574-k-inter">0</b></div>
+        <div><span>AVANZADO</span><b id="v8574-k-adv">0</b></div>
+      </div>
+
+      <div class="v8574-options">
+        <label><input id="v8574-match-existing" type="checkbox" checked> Actualizar ejercicio existente si coincide Nombre + Fundamento + Nivel</label>
+        <label><input id="v8574-update-url" type="checkbox" checked> Actualizar URL si vuelvo a importar el catálogo</label>
+      </div>
+
+      <div id="v8574-preview" class="v8574-table-wrap" style="display:none"></div>
+
+      <div id="v8574-progressbox" class="v8574-progressbox">
+        <div class="v8574-progress-head"><b id="v8574-progress-title">Preparando…</b><span id="v8574-progress-pct">0%</span></div>
+        <div class="v8574-progress"><i id="v8574-progress-bar"></i></div>
+        <div id="v8574-progress-file" class="v8574-progress-file"></div>
+        <div class="v8574-stats">
+          <span>✅ Nuevos: <b id="v8574-s-new">0</b></span>
+          <span>↻ Actualizados: <b id="v8574-s-upd">0</b></span>
+          <span>⏭ Omitidos: <b id="v8574-s-skip">0</b></span>
+          <span>❌ Errores: <b id="v8574-s-err">0</b></span>
+        </div>
+      </div>
+
+      <div id="v8574-log" class="v8574-log"></div>
+    </div>
+
+    <div class="modal-ft">
+      <button class="btn btn-secondary" onclick="v8574CloseImport()">Cerrar</button>
+      <button id="v8574-import-btn" class="btn btn-primary" onclick="v8574ImportAll()" disabled>🚀 Importar catálogo completo</button>
+    </div>
+  </div>
+</div>
+
+<script id="v8574-drive-import-js">
+(function(){
+'use strict';
+
+window.V8574={rows:[],running:false,stats:{new:0,upd:0,skip:0,err:0}};
+
+function E74(id){return document.getElementById(id)}
+function esc74(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function clean74(s){return String(s==null?'':s).replace(/\s+/g,' ').trim()}
+function key74(s){return clean74(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+function normLevel74(s){var x=key74(s);if(x==='basico')return 'Básico';if(x==='intermedio')return 'Intermedio';if(x==='avanzado')return 'Avanzado';return clean74(s)}
+function normFund74(s){var x=clean74(s);if(/^pases$/i.test(x))return 'Pase';return x}
+function driveId74(url){var m=String(url||'').match(/\/d\/([^/]+)/);return m?m[1]:''}
+function safeId74(s){return String(s||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,90)}
+function stats74(){['new','upd','skip','err'].forEach(function(k){var e=E74('v8574-s-'+k);if(e)e.textContent=V8574.stats[k]||0})}
+function log74(msg,cls){var box=E74('v8574-log');box.style.display='block';var d=document.createElement('div');d.className=cls||'';d.textContent=msg;box.appendChild(d);box.scrollTop=box.scrollHeight}
+function prog74(done,total,title,file){
+  var p=total?Math.round(done/total*100):0;
+  E74('v8574-progressbox').style.display='block';
+  E74('v8574-progress-bar').style.width=p+'%';
+  E74('v8574-progress-pct').textContent=p+'%';
+  E74('v8574-progress-title').textContent=title||'Importando…';
+  E74('v8574-progress-file').textContent=file||'';
+}
+
+function parseCsv74(text){
+  text=String(text||'').replace(/^\uFEFF/,'');
+  var rows=[], row=[], field='', quoted=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(quoted){
+      if(c==='"' && text[i+1]==='"'){field+='"';i++}
+      else if(c==='"'){quoted=false}
+      else field+=c;
+    }else{
+      if(c==='"')quoted=true;
+      else if(c===','){row.push(field);field=''}
+      else if(c==='\n'){
+        row.push(field);field='';
+        if(row.some(function(x){return x!==''}))rows.push(row);
+        row=[];
+      }else if(c!=='\r')field+=c;
+    }
+  }
+  row.push(field);
+  if(row.some(function(x){return x!==''}))rows.push(row);
+  if(!rows.length)return [];
+  var head=rows.shift().map(function(x){return clean74(x).toLowerCase()});
+  return rows.map(function(r){
+    var o={};head.forEach(function(k,idx){o[k]=r[idx]==null?'':r[idx]});return o;
+  });
+}
+
+function normalizeRow74(r){
+  var view=clean74(r.view_url);
+  var preview=clean74(r.preview_url);
+  var fid=clean74(r.file_id)||driveId74(view)||driveId74(preview);
+  return {
+    relative_path:clean74(r.relative_path),
+    fundament:normFund74(r.fundament),
+    level:normLevel74(r.level),
+    name:clean74(r.name),
+    file_id:fid,
+    view_url:view,
+    preview_url:preview
+  };
+}
+
+window.v8574OpenImport=function(){
+  var m=E74('v8574-drive-import');if(m)m.classList.add('open');
+};
+window.v8574CloseImport=function(){
+  if(V8574.running){if(!confirm('Hay una importación en curso. ¿Quieres cerrar la ventana?'))return}
+  var m=E74('v8574-drive-import');if(m)m.classList.remove('open');
+};
+
+window.v8574LoadCsv=async function(){
+  var input=E74('v8574-csv');
+  var file=input&&input.files&&input.files[0];
+  if(!file)return;
+  E74('v8574-file-label').textContent=file.name;
+  try{
+    var text=await file.text();
+    var parsed=parseCsv74(text).map(normalizeRow74).filter(function(r){
+      return r.name&&r.fundament&&r.level&&r.view_url&&/^https?:\/\//i.test(r.view_url);
+    });
+    V8574.rows=parsed;
+    if(!parsed.length)throw new Error('El CSV no contiene registros válidos con name, fundament, level y view_url.');
+
+    E74('v8574-summary').style.display='grid';
+    E74('v8574-k-total').textContent=parsed.length;
+    E74('v8574-k-fund').textContent=new Set(parsed.map(function(r){return r.fundament})).size;
+    E74('v8574-k-basic').textContent=parsed.filter(function(r){return r.level==='Básico'}).length;
+    E74('v8574-k-inter').textContent=parsed.filter(function(r){return r.level==='Intermedio'}).length;
+    E74('v8574-k-adv').textContent=parsed.filter(function(r){return r.level==='Avanzado'}).length;
+
+    var html='<table class="v8574-table"><thead><tr>'+
+      '<th>Ruta Drive</th><th>Fundamento</th><th>Nivel</th><th>Ejercicio</th><th>URL</th>'+
+      '</tr></thead><tbody>'+
+      parsed.map(function(r){
+        return '<tr><td class="path" title="'+esc74(r.relative_path)+'">'+esc74(r.relative_path)+'</td>'+
+          '<td>'+esc74(r.fundament)+'</td><td>'+esc74(r.level)+'</td>'+
+          '<td><b>'+esc74(r.name)+'</b></td>'+
+          '<td class="url" title="'+esc74(r.view_url)+'">'+esc74(r.view_url)+'</td></tr>';
+      }).join('')+'</tbody></table>';
+    E74('v8574-preview').innerHTML=html;
+    E74('v8574-preview').style.display='block';
+    E74('v8574-import-btn').disabled=false;
+  }catch(e){
+    V8574.rows=[];
+    E74('v8574-import-btn').disabled=true;
+    E74('v8574-summary').style.display='none';
+    E74('v8574-preview').style.display='none';
+    alert('No se pudo leer el CSV.\n\n'+(e.message||e));
+  }
+};
+
+async function ensureFund74(name){
+  try{
+    await window.v8547Rest('exercise_fundaments?on_conflict=name',{
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
+    });
+  }catch(e){console.warn('V8.5.74 fundamento',name,e)}
+}
+
+function match74(existing,r){
+  var nk=key74(r.name), fk=key74(r.fundament), lk=key74(r.level);
+  return (existing||[]).find(function(x){
+    return key74(x.name)===nk && key74(x.fundament)===fk && key74(x.level)===lk;
+  })||null;
+}
+
+function note74(r,old){
+  var marker='[Google Drive]';
+  var line=marker+' file_id='+r.file_id+' | preview='+r.preview_url+' | ruta='+r.relative_path;
+  var prev=clean74(old||'');
+  if(prev.indexOf(marker)>=0){
+    prev=prev.replace(/\[Google Drive\][^\n]*/g,line);
+    return prev;
+  }
+  return prev ? prev+'\n'+line : line;
+}
+
+async function updateExisting74(ex,r){
+  var body={
+    video_url:r.view_url,
+    notes:note74(r,ex.notes),
+    updated_at:new Date().toISOString()
+  };
+  await window.v8547Rest('exercise_library?id=eq.'+encodeURIComponent(ex.id),{
+    method:'PATCH',
+    headers:{'Prefer':'return=minimal'},
+    body:JSON.stringify(body)
+  });
+}
+
+async function createNew74(r){
+  var id='gdrive-'+safeId74(r.file_id||r.name);
+  var row={
+    id:id,
+    name:r.name,
+    fundament:r.fundament,
+    level:r.level,
+    duration_min:10,
+    players:'Todos',
+    material:'Vídeo',
+    objective:'Recurso audiovisual para trabajar '+r.fundament+'.',
+    description:'Vídeo técnico: '+r.name+'.',
+    coaching_points:'',
+    image_url:null,
+    animation_url:null,
+    video_url:r.view_url,
+    notes:note74(r,''),
+    updated_at:new Date().toISOString()
+  };
+  await window.v8547Rest('exercise_library?on_conflict=id',{
+    method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify(row)
+  });
+}
+
+window.v8574ImportAll=async function(){
+  if(V8574.running||!V8574.rows.length)return;
+  if(!window.v8547Rest){alert('La conexión con Supabase no está disponible.');return}
+
+  if(!confirm(
+    'Se van a procesar '+V8574.rows.length+' vídeos de Google Drive.\n\n'+
+    'Los MP4 NO se subirán a Supabase Storage.\n'+
+    'Solo se guardará la ficha del ejercicio y su URL de Google Drive.\n\n¿Continuar?'
+  ))return;
+
+  V8574.running=true;
+  V8574.stats={new:0,upd:0,skip:0,err:0};
+  stats74();
+  E74('v8574-log').innerHTML='';
+  E74('v8574-log').style.display='block';
+  E74('v8574-import-btn').disabled=true;
+
+  try{
+    prog74(0,V8574.rows.length,'Leyendo Biblioteca actual…','');
+    var existing=await window.v8547Rest('exercise_library?select=id,name,fundament,level,video_url,notes');
+    existing=Array.isArray(existing)?existing:[];
+
+    var funds=Array.from(new Set(V8574.rows.map(function(r){return r.fundament})));
+    for(var f=0;f<funds.length;f++)await ensureFund74(funds[f]);
+
+    for(var i=0;i<V8574.rows.length;i++){
+      var r=V8574.rows[i];
+      prog74(i,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
+      try{
+        var ex=E74('v8574-match-existing').checked ? match74(existing,r) : null;
+
+        if(ex){
+          if(!E74('v8574-update-url').checked && clean74(ex.video_url)){
+            V8574.stats.skip++;
+            log74('⏭ Ya tiene vídeo: '+r.name,'skip');
+          }else{
+            await updateExisting74(ex,r);
+            ex.video_url=r.view_url;ex.notes=note74(r,ex.notes);
+            V8574.stats.upd++;
+            log74('↻ Actualizado: '+r.fundament+' / '+r.level+' / '+r.name,'upd');
+          }
+        }else{
+          // First check deterministic Drive id to make the import idempotent even if matching is disabled.
+          var did='gdrive-'+safeId74(r.file_id||r.name);
+          var byId=existing.find(function(x){return String(x.id)===did});
+          if(byId){
+            if(E74('v8574-update-url').checked){
+              await updateExisting74(byId,r);
+              V8574.stats.upd++;
+              log74('↻ Actualizado por ID Drive: '+r.name,'upd');
+            }else{
+              V8574.stats.skip++;
+              log74('⏭ Ya importado: '+r.name,'skip');
+            }
+          }else{
+            await createNew74(r);
+            existing.push({id:did,name:r.name,fundament:r.fundament,level:r.level,video_url:r.view_url,notes:note74(r,'')});
+            V8574.stats.new++;
+            log74('✅ Nuevo: '+r.fundament+' / '+r.level+' / '+r.name,'ok');
+          }
+        }
+      }catch(e){
+        V8574.stats.err++;
+        log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
+        console.error('V8.5.74 Drive import',r,e);
+      }
+      stats74();
+      prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
+    }
+
+    prog74(V8574.rows.length,V8574.rows.length,'Importación finalizada','Recargando Biblioteca desde Supabase…');
+    try{
+      if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
+      if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
+      if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
+    }catch(e){console.warn('V8.5.74 reload',e)}
+
+    alert(
+      'Importación Google Drive terminada.\n\n'+
+      'Nuevos: '+V8574.stats.new+'\n'+
+      'Actualizados: '+V8574.stats.upd+'\n'+
+      'Omitidos: '+V8574.stats.skip+'\n'+
+      'Errores: '+V8574.stats.err+'\n\n'+
+      'Los QR se generan automáticamente desde video_url.'
+    );
+    if(typeof toast==='function')toast('Catálogo Google Drive importado','s');
+  }catch(e){
+    alert('No se pudo completar la importación.\n\n'+(e.message||e));
+  }finally{
+    V8574.running=false;
+    E74('v8574-import-btn').disabled=false;
+  }
+};
 
 })();
 </script>
