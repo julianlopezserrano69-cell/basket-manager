@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- Basket Manager V8.5.78 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
+<!-- Basket Manager V8.5.79 · FIX Ver/Modificar Entrenamientos GitHub/PWA -->
 
 <head>
 <meta charset="UTF-8">
@@ -6377,7 +6377,8 @@ body.v8537-ready{overflow:auto}
 .v8578-choice-summary b{color:#ffb36f}
 @media(max-width:720px){.v8578-training-toolbar{grid-template-columns:1fr}.v8578-training-row{grid-template-columns:28px 1fr 72px}.v8578-training-row .v8578-teamcol{grid-column:2/-1}.v8578-training-status{display:none}}
 </style>
-</head>
+<style id="v8579-css">
+.v8579-score{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center;padding:17px;margin-bottom:13px;border:1px solid #304965;border-radius:14px;background:#0a1727}.v8579-ring{width:90px;height:90px;border-radius:50%;border:8px solid #334b67;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#07111d}.v8579-ring b{font-size:23px}.v8579-ring span{font-size:7px;color:#91a5bd}.v8579-score h2{margin:0 0 4px;font-size:15px}.v8579-score p,#v8579-summary{font-size:8.5px;color:#93a8c1}#v8579-summary{margin-top:8px}.v8579-kpis{display:grid;grid-template-columns:repeat(4,minmax(155px,1fr));gap:9px;margin-bottom:13px}.v8579-kpi{background:#0a1727;border:1px solid #2e4662;border-radius:11px;padding:12px;text-align:left;color:inherit;cursor:pointer}.v8579-kpi:hover,.v8579-kpi.active{border-color:#ff7417}.v8579-kpi .n{float:right;font-size:22px;font-weight:900}.v8579-kpi .l{display:block;margin-top:8px;font-size:9px;font-weight:800}.v8579-kpi .h{font-size:7.5px;color:#8198b2}.v8579-panel{border:1px solid #2d4560;border-radius:12px;background:#091625;padding:12px}.v8579-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.v8579-head b{font-size:11px}.v8579-head span{display:block;font-size:8px;color:#899fb8}.v8579-filters{display:grid;grid-template-columns:1fr 190px 170px;gap:8px;margin-bottom:9px}.v8579-filters input,.v8579-filters select{background:#071321;border:1px solid #314964;color:#e6edf6;border-radius:8px;padding:8px;font-size:8.5px}.v8579-table{width:100%;min-width:900px;border-collapse:collapse;font-size:8.5px}.v8579-table th,.v8579-table td{padding:8px;border-bottom:1px solid #20354d;text-align:left}.v8579-table th{color:#8fa5bd}.v8579-pill{padding:3px 7px;border-radius:999px;font-size:7px;font-weight:800}.v8579-pill.alta{color:#fca5a5;background:#ef444426}.v8579-pill.media{color:#fde68a;background:#f59e0b26}.v8579-pill.baja{color:#93c5fd;background:#3b82f626}@media(max-width:950px){.v8579-kpis{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.v8579-kpis,.v8579-filters,.v8579-score{grid-template-columns:1fr}}</style></head>
 <body>
 <div id="bm-intro-splash" aria-hidden="true">
   <div class="bm-intro-bg"></div>
@@ -7162,7 +7163,8 @@ window.addEventListener('DOMContentLoaded', function(){
     <div class="nav-item" id="nav-scouting" onclick="nav('scouting')"><span class="nav-icon">🔎</span> Scouting</div>
 
     <div class="nav-sec">Agenda</div>
-    <div class="nav-item" id="nav-calendario" onclick="nav('calendario')"><span class="nav-icon">📅</span> Calendario</div>
+    <div class="nav-sub" id="nav-calidad-datos" onclick="nav('calidad-datos')"><span>🩺</span><span>Calidad de datos</span></div>
+<div class="nav-item" id="nav-calendario" onclick="nav('calendario')"><span class="nav-icon">📅</span> Calendario</div>
     <div class="nav-item" id="nav-directo" onclick="nav('directo')"><span class="nav-icon">🔴</span> Partido en Directo</div>
     <div class="nav-sec">Informes</div>
     <div class="nav-item" id="nav-informes" onclick="nav('informes')"><span class="nav-icon">📈</span> Informes</div>
@@ -8268,6 +8270,15 @@ Valoraciones:   ID | Fecha | JugadorID | Referencia | Ataque | Defensa | Fisico 
 </div>
 
 <!-- CALENDARIO -->
+
+<div id="p-calidad-datos" class="page">
+ <div class="page-hd"><div><h1>Calidad de datos</h1><p>Control de Biblioteca, Entrenamientos, Equipos y Jugadores</p></div><div><button class="btn btn-secondary" onclick="v8579Refresh()">↻ Actualizar</button> <button class="btn btn-primary" onclick="v8579Export()">⬇ Exportar CSV</button></div></div>
+ <div class="v8579-score"><div class="v8579-ring" id="v8579-ring"><b id="v8579-score">—</b><span>CALIDAD</span></div><div><h2>Estado general</h2><p id="v8579-score-text">Analizando…</p><div id="v8579-summary"></div></div></div>
+ <div id="v8579-kpis" class="v8579-kpis"></div>
+ <div class="v8579-panel"><div class="v8579-head"><div><b id="v8579-title">Todas las incidencias</b><span id="v8579-sub"></span></div><button class="btn btn-secondary btn-sm" onclick="v8579Filter('')">Ver todas</button></div>
+ <div class="v8579-filters"><input id="v8579-q" placeholder="🔎 Buscar..." oninput="v8579Details()"><select id="v8579-domain" onchange="v8579Details()"><option value="">Todos los módulos</option><option>Biblioteca</option><option>Entrenamientos</option><option>Equipos</option><option>Jugadores</option></select><select id="v8579-sev" onchange="v8579Details()"><option value="">Todas las prioridades</option><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select></div>
+ <div class="tbl-wrap"><table class="v8579-table"><thead><tr><th>Módulo</th><th>Incidencia</th><th>Registro</th><th>Detalle</th><th>Prioridad</th><th>Acción</th></tr></thead><tbody id="v8579-body"></tbody></table></div></div>
+</div>
 <div id="p-calendario" class="page">
   <!-- Header simplificado solo con título -->
   <div class="ph">
@@ -36620,7 +36631,7 @@ document.addEventListener('click',function(ev){
       throw new Error('No está disponible la función Borrar entrenamiento.');
     }
   }catch(err){
-    console.error('V8.5.78 acción entrenamiento',action,id,err);
+    console.error('V8.5.79 acción entrenamiento',action,id,err);
     alert('No se pudo ejecutar la acción del entrenamiento.\n\n'+(err && err.message || err));
   }
 },true);
@@ -36831,7 +36842,7 @@ async function upsertFundament73(name){
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
   }catch(e){
-    console.warn('V8.5.78 fundament',name,e);
+    console.warn('V8.5.79 fundament',name,e);
   }
 }
 
@@ -36923,7 +36934,7 @@ window.v8573StartImport=async function(){
       }catch(e){
         V8573.stats.errors++;
         log73('❌ '+item.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.78 import',item,e);
+        console.error('V8.5.79 import',item,e);
       }
       stats73();
       pct73(i+1,V8573.files.length,'Importando '+(i+1)+' de '+V8573.files.length,item.relativePath);
@@ -36934,7 +36945,7 @@ window.v8573StartImport=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.78 reload',e)}
+    }catch(e){console.warn('V8.5.79 reload',e)}
 
     var finalMsg='Importación terminada.\n\n'+
       'Nuevos: '+V8573.stats.ok+'\n'+
@@ -37135,7 +37146,7 @@ async function ensureFund74(name){
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({name:name,active:true,updated_at:new Date().toISOString()})
     });
-  }catch(e){console.warn('V8.5.78 fundamento',name,e)}
+  }catch(e){console.warn('V8.5.79 fundamento',name,e)}
 }
 
 function match74(existing,r){
@@ -37259,7 +37270,7 @@ window.v8574ImportAll=async function(){
       }catch(e){
         V8574.stats.err++;
         log74('❌ '+r.name+' · '+(e&&e.message||e),'err');
-        console.error('V8.5.78 Drive import',r,e);
+        console.error('V8.5.79 Drive import',r,e);
       }
       stats74();
       prog74(i+1,V8574.rows.length,'Procesando '+(i+1)+' de '+V8574.rows.length,r.relative_path);
@@ -37270,7 +37281,7 @@ window.v8574ImportAll=async function(){
       if(typeof v8546ReloadLibraryFromSupabase==='function')await v8546ReloadLibraryFromSupabase();
       if(typeof v8521RenderLibrary==='function')v8521RenderLibrary();
       if(typeof v8548LoadFundaments==='function')await v8548LoadFundaments(true);
-    }catch(e){console.warn('V8.5.78 reload',e)}
+    }catch(e){console.warn('V8.5.79 reload',e)}
 
     alert(
       'Importación Google Drive terminada.\n\n'+
@@ -37297,7 +37308,7 @@ window.v8574ImportAll=async function(){
 'use strict';
 
 /*
- V8.5.78
+ V8.5.79
  Guardia final de navegación.
  Algunas extensiones históricas de Biblioteca usan display inline para páginas
  fuera del array original. Esta capa deja siempre visible la página solicitada
@@ -37485,7 +37496,7 @@ window.v8577SelectEquipoCategoria=function(cat,source,ev){
     }
   }
 
-  console.log('[V8.5.78 Equipos]',cat||'Todas','=>',data.length,'equipos');
+  console.log('[V8.5.79 Equipos]',cat||'Todas','=>',data.length,'equipos');
   return false;
 };
 
@@ -37684,7 +37695,7 @@ window.v8578ConfirmTraining=async function(){
     updateBulk78();
     if(typeof window.toast==='function')toast(added+' ejercicio'+(added===1?'':'s')+' añadido'+(added===1?'':'s')+(skipped?' · '+skipped+' ya estaban en el plan':''),'s');
   }catch(e){
-    console.error('V8.5.78 add to training',e);
+    console.error('V8.5.79 add to training',e);
     alert('No se pudieron añadir los ejercicios.\n\n'+(e&&e.message||e));
   }finally{
     btn.disabled=false;btn.textContent='Añadir y abrir Plan de Sesión';
@@ -37745,5 +37756,20 @@ if(typeof oldRender78==='function'&&!oldRender78.__v8578){
 document.addEventListener('DOMContentLoaded',function(){setTimeout(updateBulk78,300)});
 })();
 </script>
-</body>
+<script id="v8579-js">(function(){'use strict';
+window.V8579={issues:[],active:'',metrics:[]};
+function E(i){return document.getElementById(i)} function N(s){return String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()} function X(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function A(type,domain,name,detail,sev,id,page){V8579.issues.push({type:type,domain:domain,name:name||'—',detail:detail,sev:sev,id:id||'',page:page||''})}
+function EX(){return window.V8521&&Array.isArray(V8521.exercises)?V8521.exercises:[]} function TR(){return window.DB&&Array.isArray(DB.entrenamientos)?DB.entrenamientos:[]} function TM(){return window.DB&&Array.isArray(DB.equipos)?DB.equipos:[]} function PL(){return window.DB&&Array.isArray(DB.jugadores)?DB.jugadores:[]} function PN(){return window.V8521&&Array.isArray(V8521.plans)?V8521.plans:[]} function BD(){return window.V8521&&Array.isArray(V8521.boards)?V8521.boards:[]}
+function analyse(){V8579.issues=[];var ex=EX(),tr=TR(),tm=TM(),pl=PL(),pn=PN(),bd=BD(),seen={};
+ ex.forEach(function(x){var name=x.name||x.nombre||'Ejercicio',k=[N(name),N(x.fundament),N(x.level)].join('|');if(!String(x.video_url||'').trim())A('no-video','Biblioteca',name,'Sin vídeo asociado.','baja',x.id,'biblioteca-ejercicios');else if(!/^https?:\/\//i.test(x.video_url))A('bad-video','Biblioteca',name,'URL de vídeo no válida.','alta',x.id,'biblioteca-ejercicios');if(!String(x.fundament||'').trim())A('no-fund','Biblioteca',name,'Falta fundamento.','media',x.id,'biblioteca-ejercicios');if(!String(x.level||'').trim())A('no-level','Biblioteca',name,'Falta nivel.','media',x.id,'biblioteca-ejercicios');if(!String(x.image_url||'').trim()&&!bd.some(function(b){return String(b.exercise_id)===String(x.id)}))A('no-board','Biblioteca',name,'Sin pizarra/diagrama.','baja',x.id,'biblioteca-ejercicios');if(k!=='||'){if(seen[k])A('duplicate','Biblioteca',name,'Posible duplicado de '+(seen[k].name||seen[k].nombre)+'.','alta',x.id,'biblioteca-ejercicios');else seen[k]=x}});
+ tr.forEach(function(t){var team=tm.find(function(x){return String(x.id)===String(t.equipo)}),name=(team&&team.nombre?team.nombre+' · ':'')+(t.fecha||'Entrenamiento');if(!t.microciclo_id)A('no-micro','Entrenamientos',name,'Sin microciclo asignado.','media',t.id,'entrenamientos');if(!pn.some(function(p){return String(p.training_id)===String(t.id)}))A('no-plan','Entrenamientos',name,'Sin Plan de Sesión.','media',t.id,'entrenamientos')});
+ tm.forEach(function(t){var m=[];if(!String(t.nombre||'').trim())m.push('nombre');if(!String(t.categoria||'').trim())m.push('categoría');if(!String(t.genero||'').trim())m.push('género');if(!t.club_id)m.push('club');if(m.length)A('incomplete','Equipos',t.nombre||'Equipo sin nombre','Falta: '+m.join(', ')+'.','media',t.id,'equipos')});
+ pl.forEach(function(p){var m=[];if(!String(p.nombre||'').trim())m.push('nombre');if(!p.equipo_id&&!p.equipo)m.push('equipo');if(p.dorsal==null||String(p.dorsal).trim()==='')m.push('dorsal');if(m.length)A('incomplete','Jugadores',p.nombre||'Jugador sin nombre','Falta: '+m.join(', ')+'.','media',p.id,'jugadores')});
+ var defs=[['no-video','🎬','Ejercicios sin vídeo','baja'],['no-board','🏀','Ejercicios sin pizarra','baja'],['no-fund','🧩','Sin fundamento','media'],['no-level','📶','Sin nivel','media'],['duplicate','⧉','Posibles duplicados','alta'],['no-micro','🔄','Entrenos sin microciclo','media'],['no-plan','📋','Entrenos sin plan','media'],['incomplete','⚠️','Datos incompletos','media']];V8579.metrics=defs.map(function(d){return {id:d[0],icon:d[1],label:d[2],sev:d[3],count:V8579.issues.filter(function(i){return i.type===d[0]}).length}});
+ var base=Math.max(1,ex.length+tr.length+tm.length+pl.length),w=V8579.issues.reduce(function(a,i){return a+(i.sev==='alta'?3:i.sev==='media'?1.5:.5)},0),score=Math.max(0,Math.min(100,Math.round(100-w/base*10)));E('v8579-score').textContent=score+'%';E('v8579-ring').style.borderColor=score>=90?'#22c55e':score>=75?'#f59e0b':'#ef4444';E('v8579-score-text').textContent=score>=90?'Muy buen estado. Solo quedan ajustes menores.':score>=75?'Buen estado, con algunos registros a revisar.':'Hay varias incidencias que conviene corregir.';E('v8579-summary').innerHTML='<b>'+ex.length+'</b> ejercicios · <b>'+tr.length+'</b> entrenamientos · <b>'+tm.length+'</b> equipos · <b>'+pl.length+'</b> jugadores · <b>'+V8579.issues.length+'</b> incidencias'}
+function kpis(){E('v8579-kpis').innerHTML=V8579.metrics.map(function(m){return '<button class="v8579-kpi '+(V8579.active===m.id?'active':'')+'" onclick="v8579Filter(\''+m.id+'\')"><span>'+m.icon+'</span><span class="n">'+m.count+'</span><span class="l">'+X(m.label)+'</span><span class="h">Pulsa para ver registros</span></button>'}).join('')}
+window.v8579Filter=function(id){V8579.active=id;kpis();v8579Details()};window.v8579Details=function(){var q=N(E('v8579-q').value),d=E('v8579-domain').value,s=E('v8579-sev').value,rows=V8579.issues.filter(function(i){return (!V8579.active||i.type===V8579.active)&&(!d||i.domain===d)&&(!s||i.sev===s)&&(!q||N(i.domain+' '+i.name+' '+i.detail).indexOf(q)>=0)}),m=V8579.metrics.find(function(x){return x.id===V8579.active});E('v8579-title').textContent=m?m.label:'Todas las incidencias';E('v8579-sub').textContent=rows.length+' registros';E('v8579-body').innerHTML=rows.length?rows.map(function(i){return '<tr><td>'+X(i.domain)+'</td><td>'+X(i.type)+'</td><td><b>'+X(i.name)+'</b></td><td>'+X(i.detail)+'</td><td><span class="v8579-pill '+i.sev+'">'+i.sev.toUpperCase()+'</span></td><td><button class="btn btn-secondary btn-sm" onclick="v8579Go(\''+X(i.page)+'\')">Abrir</button></td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;padding:24px;color:#86efac">✓ Sin incidencias con estos filtros.</td></tr>'};
+window.v8579Go=function(page){if(typeof window.nav==='function')window.nav(page)};window.v8579Refresh=async function(){try{if(typeof window.v8546ReloadLibraryFromSupabase==='function')await window.v8546ReloadLibraryFromSupabase()}catch(e){}analyse();kpis();v8579Details()};window.v8579Export=function(){var r=[['Modulo','Incidencia','Registro','Detalle','Prioridad']];V8579.issues.forEach(function(i){r.push([i.domain,i.type,i.name,i.detail,i.sev])});function c(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}var b=new Blob(['\uFEFF'+r.map(function(x){return x.map(c).join(';')}).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='basket_manager_calidad_datos_'+new Date().toISOString().slice(0,10)+'.csv';a.click()};
+var old=window.nav;if(typeof old==='function'&&!old.__v8579){var w=function(page){var r=old.apply(this,arguments);if(page==='calidad-datos')setTimeout(function(){analyse();kpis();v8579Details()},120);return r};w.__v8579=true;window.nav=w}document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(E('p-calidad-datos')&&E('p-calidad-datos').classList.contains('active')){analyse();kpis();v8579Details()}},400)});})();</script></body>
 </html>
