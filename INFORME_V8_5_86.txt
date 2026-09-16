@@ -1,0 +1,23 @@
+BASKET MANAGER V8.5.86 · SCOUTING FASE 2
+
+Base: V8.5.85 validada (0 errores JavaScript, navegación consolidada e integridad HTML activa).
+
+NOVEDADES
+- Centro de Scouting Fase 2 funcional.
+- Selección de encuentro desde Supabase.
+- Selección/creación de scouting_project asociado al encuentro.
+- Estados independientes Prepartido / Durante / Postpartido.
+- Editor estructurado de 6 secciones por fase.
+- Lectura y escritura sobre scouting_phase_sections.
+- Acceso al Centro de Partido existente.
+- KPIs de encuentros, proyectos, fase activa y secciones completadas.
+- Diagnóstico actualizado a V8.5.86 e indicador de Scouting Fase 2.
+
+VALIDACIÓN RECOMENDADA
+1. Abrir Scouting.
+2. Seleccionar un encuentro.
+3. Crear/abrir proyecto.
+4. Escribir una sección de Prepartido y guardar.
+5. Recargar y comprobar persistencia.
+6. Cambiar estados de las tres fases y guardar.
+7. Descargar diagnóstico técnico y confirmar 0 errores JS.

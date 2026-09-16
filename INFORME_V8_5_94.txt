@@ -1,0 +1,7 @@
+BASKET MANAGER · V8.5.94
+
+- Convocatorias transformadas a listas fijas con scroll y checkbox compacto.
+- Quintetos transformados a listas fijas con scroll, limitados a 5 jugadores y dependientes de la convocatoria.
+- Capitanes transformados a lista fija con scroll y selección única mediante checkbox.
+- Se mantiene el tema oscuro homogéneo de Encuentros.
+- Service Worker actualizado a basket-manager-v8.5.94.

@@ -1,0 +1,14 @@
+BASKET MANAGER V8.5.87 · FIX DESPLEGABLES ENCUENTROS
+
+Base: V8.5.86 Scouting Fase 2.
+
+Corrección principal:
+- Nuevo Encuentro vuelve a cargar Categoría, Equipo (Club) y Rival.
+- Se fusionan equipos de Supabase (teams) con DB.equipos ya cargados por la aplicación.
+- Compatibilidad entre campos modernos e históricos: name/nombre, category/categoria, gender/genero, season_id/temporada.
+- Si los equipos históricos no tienen season_id, dejan de quedar excluidos por el filtro de temporada.
+- Compatibilidad de temporada 2026-27 / 2026-2027.
+- Club activo solo restringe la lista cuando realmente encuentra equipos de ese club.
+- Jugadores y clubes también tienen fallback a DB para convocatorias, quintetos y capitanes.
+
+Scouting Fase 2 se mantiene sin cambios funcionales.

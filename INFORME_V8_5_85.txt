@@ -1,0 +1,30 @@
+BASKET MANAGER V8.5.85 · LIMPIEZA TÉCNICA FASE 4
+
+Objetivo
+Cerrar la etapa de limpieza técnica con una intervención pequeña y segura antes de volver al desarrollo funcional de Scouting.
+
+Cambios
+- Captura de errores JavaScript protegida para instalarse una sola vez.
+- Los avisos ResizeObserver propios del navegador dejan de contarse como errores de la aplicación.
+- Navegación consolidada actualizada a V8.5.85.
+- Diagnóstico ampliado para confirmar navegación, captura de errores e integridad runtime.
+- No se toca lógica de negocio.
+
+Se mantiene intacto
+- Equipos y filtros.
+- Entrenamientos y planes.
+- Biblioteca → Entrenamiento.
+- Google Drive.
+- PDFs.
+- Calidad de datos.
+- Scouting.
+- Supabase.
+
+Comparativa
+- Scripts: 111 → 111
+- CSS: 104 → 104
+- Referencias window.nav: 50 → 50
+- Tamaño index.html: 10.40 MB → 10.40 MB
+
+Decisión
+Con esta versión se pausa la limpieza estructural. Si V8.5.85 valida correctamente, la siguiente versión será Scouting Fase 2.

@@ -1,0 +1,10 @@
+BASKET MANAGER · V8.5.92
+Encuentros · diseño alineado con Equipos
+
+- Dashboard oscuro con la estética del módulo Equipos.
+- Selector Club centrado.
+- KPIs Total/Jugados/Pendientes/Ganados/Perdidos.
+- Misma tabla de encuentros, filtros, paginación y CRUD.
+- Modal Nuevo/Modificar al estilo Nuevo Equipo.
+- Herencia automática de logo, colores y localización.
+- Service Worker V8.5.92.

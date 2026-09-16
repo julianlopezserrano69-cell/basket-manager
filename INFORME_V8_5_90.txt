@@ -1,0 +1,5 @@
+V8.5.90 · Fix real modal Encuentros
+- Modal movido a document.body al abrir para usar viewport real.
+- Cache Service Worker actualizado a basket-manager-v8.5.90.
+- Indicador visual V8.5.90 en cabecera del modal.
+- Layout responsive y tema heredado de variables globales.

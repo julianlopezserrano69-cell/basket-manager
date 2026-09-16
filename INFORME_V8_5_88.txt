@@ -1,0 +1,12 @@
+BASKET MANAGER V8.5.88 · ENCUENTROS DASHBOARD + CRUD MODAL
+
+- Recuperada pantalla principal de Encuentros tipo dashboard.
+- KPIs: Total, Jugados, Pendientes, Ganados y Perdidos.
+- KPIs secundarios: Local, Visitante, Programados y Finalizados.
+- Tabla de encuentros con filtros y buscador.
+- Nuevo encuentro se abre en modal grande centrado.
+- Ver encuentro se abre en modal de solo lectura.
+- Modificar encuentro reutiliza el formulario completo en modal centrado.
+- Borrar mantiene confirmación de seguridad existente.
+- Se conserva el fix V8.5.87 de categorías/equipos/rivales y compatibilidad legacy.
+- Se conserva Scouting Fase 2.

@@ -1,0 +1,10 @@
+BASKET MANAGER V8.5.91 · REDISEÑO COMPLETO DE ENCUENTROS
+
+- Dashboard Encuentros unificado con el estilo claro del resto de la aplicación.
+- Modal de Nuevo/Modificar encuentro completamente rediseñado por secciones.
+- Eliminado el tema oscuro accidental de V8.5.90.
+- Colores de equipos: prioridad absoluta a color1/color2 (primary/secondary) del club asociado.
+- Logo y pabellón siguen heredándose del club/equipo.
+- Formulario responsive sin scroll horizontal.
+- Tabla de encuentros compactada para reducir scroll horizontal en escritorio.
+- Cache Service Worker actualizada a basket-manager-v8.5.91.

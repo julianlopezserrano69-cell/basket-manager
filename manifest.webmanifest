@@ -1,7 +1,7 @@
 {
   "name": "Basket Manager",
   "short_name": "Basket Manager",
-  "description": "Gestión integral de baloncesto: equipos, entrenamientos, planificación, scouting e informes.",
+  "description": "Gestión integral de baloncesto: equipos, entrenamientos, planificación, scouting, asistencia e informes.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -18,13 +18,13 @@
       "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }

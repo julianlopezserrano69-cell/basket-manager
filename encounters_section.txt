@@ -1,0 +1,961 @@
+    if(!window.SB||!SB.url||!SB.key)return Promise.reject('Supabase no configurado');
+    opts=opts||{};
+    var token=sessionStorage.getItem('v8_sb_token')||V8_AUTH.token||'';
+    var defaults={headers:{
+      'apikey':SB.key,
+      'Authorization':'Bearer '+(token||SB.key),
+      'Content-Type':'application/json',
+      'Prefer':'return=representation'
+    }};
+    return fetch(SB.url+'/rest/v1/'+path,Object.assign({},defaults,opts,{headers:Object.assign({},defaults.headers,opts.headers||{})}));
+  };
+
+  // Complemento al cierre de sesión existente.
+  var legacyLogoutNow=window.doLogoutNow;
+  window.doLogoutNow=function(){
+    var c=cfg(), token=sessionStorage.getItem('v8_sb_token')||'';
+    if(c.url&&c.key&&token){
+      fetch(c.url+'/auth/v1/logout',{method:'POST',headers:{'apikey':c.key,'Authorization':'Bearer '+token}}).catch(function(){});
+    }
+    sessionStorage.removeItem('v8_sb_token');sessionStorage.removeItem('v8_sb_refresh');sessionStorage.removeItem('v8_sb_user');sessionStorage.removeItem('v8_profile');
+    V8_AUTH.token='';V8_AUTH.refreshToken='';V8_AUTH.user=null;V8_AUTH.profile=null;
+    if(typeof legacyLogoutNow==='function')return legacyLogoutNow();
+  };
+
+  // Nunca restaurar una sesión local antigua sin JWT de Supabase.
+  window.addEventListener('load',function(){
+    var localLogged=sessionStorage.getItem('cbNav_logged')==='1';
+    var jwt=sessionStorage.getItem('v8_sb_token');
+    if(localLogged&&!jwt){
+      sessionStorage.removeItem('cbNav_logged');sessionStorage.removeItem('cbNav_role');
+      var ov=document.getElementById('login-overlay');if(ov)ov.style.display='flex';
+    }
+    var st=document.getElementById('v8-auth-mode');if(st)st.textContent='V8.1 · Auth + Centro de Partido';
+  });
+})();
+</script>
+
+<script id="v81-enc-script">
+(function(){
+'use strict';
+
+const V81={
+  encounters:[],teams:{},seasons:{},seasonByName:{},scouting:{},current:null,loaded:false,
+
+  esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));},
+  async json(path){
+    const r=await window.sbFetch(path,{method:'GET'});
+    if(!r.ok){const t=await r.text();throw new Error('HTTP '+r.status+' '+t);}
+    return r.json();
+  },
+  teamName(id,fallback){
+    return (id&&this.teams[id]&&this.teams[id].name)||fallback||'—';
+  },
+  ownName(e){return this.teamName(e.team_id,'Equipo');},
+  oppName(e){return this.teamName(e.opponent_team_id,e.opponent_name||'Rival');},
+  homeName(e){return this.teamName(e.home_team_id,e.home_away==='Local'?this.ownName(e):this.oppName(e));},
+  awayName(e){return this.teamName(e.away_team_id,e.home_away==='Visitante'?this.ownName(e):this.oppName(e));},
+
+  page(){
+    const p=document.getElementById('p-encuentros');
+    if(!p)return;
+    if(!document.getElementById('v81-enc-root')){
+      p.innerHTML=`
+      <div id="v81-enc-root">
+        <div class="ph" style="align-items:flex-start;gap:12px;flex-wrap:wrap">
+          <div><div class="pt">Encuentros</div><div class="ps">Centro de Partido · datos modernos Supabase</div></div>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <span class="badge b-green">V8.1.2</span>
+            <button class="btn btn-primary btn-sm" onclick="V81.newEncounter()">＋ Añadir encuentro</button>
+            <button class="btn btn-secondary btn-sm" onclick="V81.load(true)">↻ Recargar</button>
+          </div>
+        </div>
+        <div class="v81-kpis">
+          <div class="v81-kpi"><small>Total</small><strong id="v81-k-total">—</strong></div>
+          <div class="v81-kpi"><small>Finalizados</small><strong id="v81-k-fin">—</strong></div>
+          <div class="v81-kpi"><small>Programados</small><strong id="v81-k-prog">—</strong></div>
+          <div class="v81-kpi"><small>Local</small><strong id="v81-k-local">—</strong></div>
+          <div class="v81-kpi"><small>Visitante</small><strong id="v81-k-away">—</strong></div>
+        </div>
+        <div class="card">
+          <div class="card-hd" style="flex-wrap:wrap;gap:8px">
+            <div class="v81-toolbar">
+              <div style="padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--muted-strong);font-weight:800;">
+                📅 <span id="v81-season-label">—</span>
+              </div>
+              <select id="fsel-cat-enc" onchange="V81.onCategoryChange()">
+                <option value="">Todas las categorías</option>
+              </select>
+              <select id="v81-team" onchange="V81.render()">
+                <option value="">Todos los equipos</option>
+              </select>
+              <select id="v81-status" onchange="V81.render()"><option value="">Todos los estados</option><option>Programado</option><option>Iniciado</option><option>Finalizado</option><option>Cancelado</option></select>
+              <select id="v81-ha" onchange="V81.render()"><option value="">Local / Visitante</option><option>Local</option><option>Visitante</option></select>
+              <input id="v81-q" placeholder="Buscar equipo/rival..." oninput="V81.render()">
+            </div>
+          </div>
+          <div class="card-bd" style="padding:0">
+            <div id="v81-list-status" style="padding:10px 14px;color:var(--muted)">Cargando encuentros...</div>
+            <div class="v81-table-wrap">
+              <table class="v81-table"><thead><tr>
+                <th>Fecha</th><th>Hora</th><th>Local</th><th>Marcador</th><th>Visitante</th><th>Categoría</th><th>Estado</th><th>Jornada</th><th>Centro</th>
+              </tr></thead><tbody id="v81-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+    this.ensureOverlay();
+  },
+
+  ensureOverlay(){
+    if(document.getElementById('v81-center-overlay'))return;
+    document.body.insertAdjacentHTML('beforeend',`
+    <div id="v81-center-overlay" onclick="if(event.target===this)V81.closeCenter()">
+      <div class="v81-center">
+        <div class="v81-center-head">
+          <div class="v81-center-title"><small>CENTRO DE PARTIDO · COACHBOOK V8.1</small><h2 id="v81-center-h">Encuentro</h2></div>
+          <button class="v81-close" onclick="V81.closeCenter()">✕</button>
+        </div>
+        <div class="v81-tabs">
+          <button class="v81-tab active" data-v81-tab="summary" onclick="V81.tab('summary')">Resumen</button>
+          <button class="v81-tab" data-v81-tab="roster" onclick="V81.tab('roster')">Convocatoria</button>
+          <button class="v81-tab" data-v81-tab="stats" onclick="V81.tab('stats')">Estadísticas</button>
+          <button class="v81-tab" data-v81-tab="scouting" onclick="V81.tab('scouting')">Scouting</button>
+          <button class="v81-tab" data-v81-tab="gameplan" onclick="V81.tab('gameplan')">Game Plan</button>
+        </div>
+        <div class="v81-body">
+          <section id="v81-panel-summary" class="v81-panel active"></section>
+          <section id="v81-panel-roster" class="v81-panel"></section>
+          <section id="v81-panel-stats" class="v81-panel"></section>
+          <section id="v81-panel-scouting" class="v81-panel"></section>
+          <section id="v81-panel-gameplan" class="v81-panel"></section>
+        </div>
+      </div>
+    </div>`);
+    if(!document.getElementById('v812-edit-overlay')){
+      document.body.insertAdjacentHTML('beforeend',`
+      <div id="v812-edit-overlay" onclick="if(event.target===this)V81.closeEdit()" style="position:fixed;inset:0;background:rgba(1,7,15,.78);z-index:10060;display:none;align-items:center;justify-content:center;padding:16px">
+        <div style="width:min(900px,96vw);max-height:94vh;overflow:auto;background:#071526;border:1px solid #23415a;border-radius:18px;box-shadow:0 30px 90px rgba(0,0,0,.55)">
+          <div class="v81-center-head"><div class="v81-center-title"><small>ENCUENTROS · V8.1.2</small><h2 id="v812-edit-title">Nuevo encuentro</h2></div><button class="v81-close" onclick="V81.closeEdit()">✕</button></div>
+          <div style="padding:16px;background:#eef3f6;color:#173b60">
+            <input type="hidden" id="v812-id">
+            <div class="v81-grid">
+              <div class="v81-card v81-span-12"><h3>Datos principales</h3>
+                <div class="v81-meta" style="grid-template-columns:repeat(3,minmax(160px,1fr))">
+                  <div><small>Equipo</small><select id="v812-team" style="width:100%;padding:8px"></select></div>
+                  <div><small>Categoría</small><input id="v812-category" style="width:100%;padding:8px"></div>
+                  <div><small>Género</small><select id="v812-gender" style="width:100%;padding:8px"><option value="MASC">Masc.</option><option value="FEM">Fem.</option></select></div>
+                  <div><small>Rival</small><input id="v812-opponent" style="width:100%;padding:8px"></div>
+                  <div><small>Local / Visitante</small><select id="v812-ha" style="width:100%;padding:8px"><option>Local</option><option>Visitante</option></select></div>
+                  <div><small>Estado</small><select id="v812-status" style="width:100%;padding:8px"><option>Programado</option><option>Iniciado</option><option>Finalizado</option><option>Cancelado</option></select></div>
+                  <div><small>Fecha</small><input id="v812-date" type="date" style="width:100%;padding:8px"></div>
+                  <div><small>Hora</small><input id="v812-time" type="time" style="width:100%;padding:8px"></div>
+                  <div><small>Jornada</small><input id="v812-round" style="width:100%;padding:8px"></div>
+                  <div><small>Pabellón / cancha</small><input id="v812-location" style="width:100%;padding:8px"></div>
+                  <div><small>Local puntos</small><input id="v812-home-score" type="number" min="0" style="width:100%;padding:8px"></div>
+                  <div><small>Visitante puntos</small><input id="v812-away-score" type="number" min="0" style="width:100%;padding:8px"></div>
+                </div>
+              </div>
+              <div class="v81-card v81-span-12"><h3>Notas</h3><textarea id="v812-notes" rows="4" style="width:100%;padding:9px"></textarea></div>
+              <div class="v81-card v81-span-12" style="display:flex;justify-content:flex-end;gap:8px">
+                <button class="btn btn-secondary" onclick="V81.closeEdit()">Cancelar</button>
+                <button class="btn btn-primary" onclick="V81.saveEncounter()">💾 Guardar encuentro</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`);
+    }
+  },
+
+  async load(force){
+    this.page();
+    const st=document.getElementById('v81-list-status');
+    if(st)st.textContent='Cargando 49 encuentros desde Supabase...';
+    try{
+      const [encs,teams,seasons,scouts]=await Promise.all([
+        this.json('encounters?select=*&legacy_encuentro_id=not.is.null&order=game_date.desc,game_time.desc'),
+        this.json('teams?select=id,name,club_id,season_id,category,gender'),
+        this.json('seasons?select=id,name,legacy_temporada_id'),
+        this.json('scouting_projects?select=id,encounter_id,name,pregame_status,ingame_status,postgame_status')
+      ]);
+      this.encounters=encs||[];
+      this.teams={}; (teams||[]).forEach(t=>this.teams[t.id]=t);
+      this.seasons={}; this.seasonByName={};
+      (seasons||[]).forEach(s=>{
+        this.seasons[s.id]=s;
+        if(s.name) this.seasonByName[String(s.name).trim()]=s.id;
+        if(s.legacy_temporada_id) this.seasonByName[String(s.legacy_temporada_id).trim()]=s.id;
+      });
+      this.scouting={}; (scouts||[]).forEach(s=>{if(s.encounter_id)this.scouting[s.encounter_id]=s;});
+      this.loaded=true;
+      this.refreshFilterOptions(true);
+      this.render();
+      if(st)st.textContent=`${this.filteredBySeason().length} encuentros de la temporada activa · ${Object.keys(this.scouting).length} proyectos Scouting cargados`;
+    }catch(e){
+      if(st)st.innerHTML='<span class="v81-error">No se pudieron cargar los encuentros: '+this.esc(e.message||e)+'</span>';
+    }
+  },
+
+  activeSeasonName(){
+    try{
+      if(typeof window._curTmp==='function'){
+        const v=String(window._curTmp()||'').trim();
+        if(v) return v;
+      }
+    }catch(e){}
+    const main=document.getElementById('temporada-filter');
+    if(main && main.value) return String(main.value).trim();
+    const login=document.getElementById('login-season');
+    if(login && login.value) return String(login.value).trim();
+    try{
+      const ls=localStorage.getItem('liga_tmp_activa');
+      if(ls) return String(ls).trim();
+    }catch(e){}
+    return '';
+  },
+
+  activeSeasonId(){
+    const name=this.activeSeasonName();
+    if(name && this.seasonByName[name]) return this.seasonByName[name];
+    // fallback: if only one season exists among encounters, use it
+    const ids=[...new Set(this.encounters.map(e=>e.season_id).filter(Boolean))];
+    return ids.length===1 ? ids[0] : '';
+  },
+
+  filteredBySeason(){
+    const sid=this.activeSeasonId();
+    const sname=this.activeSeasonName();
+    const label=document.getElementById('v81-season-label');
+    if(label) label.textContent=sname || (sid && this.seasons[sid] ? this.seasons[sid].name : 'Todas');
+    if(!sid) return this.encounters.slice();
+    return this.encounters.filter(e=>String(e.season_id||'')===String(sid));
+  },
+
+  refreshFilterOptions(preserve){
+    const seasonRows=this.filteredBySeason();
+    const catSel=document.getElementById('fsel-cat-enc');
+    const teamSel=document.getElementById('v81-team');
+    if(!catSel || !teamSel) return;
+
+    const prevCat=preserve ? String(catSel.value||'') : '';
+    const prevTeam=preserve ? String(teamSel.value||'') : '';
+
+    const cats=[...new Set(seasonRows.map(e=>String(e.category||'').trim()).filter(Boolean))]
+      .sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+
+    const ownTeamIds=[...new Set(seasonRows.map(e=>e.team_id).filter(Boolean))];
+    const teamItems=ownTeamIds
+      .map(id=>this.teams[id]||{id,name:id})
+      .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
+
+    catSel.innerHTML='<option value="">Todas las categorías</option>'+
+      cats.map(c=>`<option value="${this.esc(c)}">${this.esc(c)}</option>`).join('');
+
+    teamSel.innerHTML='<option value="">Todos los equipos</option>'+
+      teamItems.map(t=>`<option value="${this.esc(t.id)}">${this.esc(t.name||t.id)}</option>`).join('');
+
+    if(prevCat && cats.includes(prevCat)) catSel.value=prevCat;
+    else catSel.value='';
+
+    if(prevTeam && ownTeamIds.map(String).includes(String(prevTeam))) teamSel.value=prevTeam;
+    else teamSel.value='';
+
+    try{
+      if(typeof window.updateMenuCategoriaActive==='function')
+        window.updateMenuCategoriaActive('encuentros',catSel.value||'');
+    }catch(e){}
+  },
+
+  onSeasonChange(){
+    this.refreshFilterOptions(false);
+    this.render();
+  },
+
+  onCategoryChange(){
+    try{
+      if(typeof window.updateMenuCategoriaActive==='function')
+        window.updateMenuCategoriaActive('encuentros',(document.getElementById('fsel-cat-enc')||{}).value||'');
+    }catch(e){}
+    this.render();
+  },
+
+  render(){
+    const b=document.getElementById('v81-tbody'); if(!b)return;
+    const q=String((document.getElementById('v81-q')||{}).value||'').toLowerCase().trim();
+    const category=(document.getElementById('fsel-cat-enc')||{}).value||'';
+    const teamId=(document.getElementById('v81-team')||{}).value||'';
+    const status=(document.getElementById('v81-status')||{}).value||'';
+    const ha=(document.getElementById('v81-ha')||{}).value||'';
+
+    const seasonRows=this.filteredBySeason();
+
+    const rows=seasonRows.filter(e=>{
+      if(category && String(e.category||'')!==String(category)) return false;
+      if(teamId && String(e.team_id||'')!==String(teamId)) return false;
+      if(status&&e.status!==status)return false;
+      if(ha&&e.home_away!==ha)return false;
+      const hay=[this.homeName(e),this.awayName(e),e.category,e.round_label,e.location].join(' ').toLowerCase();
+      return !q||hay.includes(q);
+    });
+
+    // Los cards reflejan EXACTAMENTE la selección actual de temporada/categoría/equipo
+    // y también los filtros Estado/Local-Visitante/búsqueda.
+    const cardRows=rows;
+    const set=(id,val)=>{const x=document.getElementById(id);if(x)x.textContent=val;};
+    set('v81-k-total',cardRows.length);
+    set('v81-k-fin',cardRows.filter(e=>e.status==='Finalizado').length);
+    set('v81-k-prog',cardRows.filter(e=>e.status==='Programado').length);
+    set('v81-k-local',cardRows.filter(e=>e.home_away==='Local').length);
+    set('v81-k-away',cardRows.filter(e=>e.home_away==='Visitante').length);
+
+    const st=document.getElementById('v81-list-status');
+    if(st){
+      const teamTxt=teamId&&this.teams[teamId]?this.teams[teamId].name:'Todos los equipos';
+      st.textContent=`${rows.length} encuentros · Temporada ${this.activeSeasonName()||'—'} · ${category||'Todas las categorías'} · ${teamTxt}`;
+    }
+
+    b.innerHTML=rows.map(e=>{
+      const hs=e.home_score==null?'—':e.home_score, as=e.away_score==null?'—':e.away_score;
+      const scouting=this.scouting[e.id];
+      return `<tr>
+        <td style="white-space:nowrap">${this.esc(e.game_date||'')}</td>
+        <td style="white-space:nowrap">${this.esc((e.game_time||'').slice(0,5))}</td>
+        <td><b>${this.esc(this.homeName(e))}</b></td>
+        <td class="v81-score">${this.esc(hs)} - ${this.esc(as)}</td>
+        <td><b>${this.esc(this.awayName(e))}</b></td>
+        <td>${this.esc(e.category||'—')}</td>
+        <td><span class="v81-status ${this.esc(e.status||'')}">${this.esc(e.status||'—')}</span></td>
+        <td>${this.esc(e.round_label||'—')}</td>
+        <td style="white-space:nowrap">
+          <button class="v81-center-btn" onclick="V81.openCenter('${this.esc(e.id)}')">👁 Ver</button>
+          <button class="v81-center-btn" onclick="V81.editEncounter('${this.esc(e.id)}')" style="margin-left:4px">✏ Modificar</button>
+          <button class="v81-center-btn" onclick="V81.deleteEncounter('${this.esc(e.id)}')" style="margin-left:4px;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10);color:#f87171">🗑</button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="9"><div class="v81-empty">No hay encuentros con estos filtros.</div></td></tr>';
+  },
+
+  isReadOnly(){
+    try{
+      const u=String((window.currentUser||window._currentUser||'')+' '+(localStorage.getItem('v8_auth_user')||'')).toLowerCase();
+      return u.includes('read') || u.includes('hotmail.com');
+    }catch(e){return false;}
+  },
+
+  fillEditTeams(selected){
+    const sel=document.getElementById('v812-team'); if(!sel)return;
+    const rows=this.filteredBySeason();
+    const ids=[...new Set(rows.map(e=>e.team_id).filter(Boolean))];
+    // Include season teams even if they have no encounters yet.
+    Object.values(this.teams).forEach(t=>{
+      const sid=this.activeSeasonId();
+      if((!sid || String(t.season_id||'')===String(sid)) && !ids.map(String).includes(String(t.id))) ids.push(t.id);
+    });
+    const items=ids.map(id=>this.teams[id]||{id,name:id}).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es'));
+    sel.innerHTML=items.map(t=>`<option value="${this.esc(t.id)}">${this.esc(t.name||t.id)}</option>`).join('');
+    if(selected) sel.value=selected;
+  },
+
+  newEncounter(){
+    if(this.isReadOnly()){alert('El usuario Solo lectura no puede añadir encuentros.');return;}
+    this.ensureOverlay();
+    document.getElementById('v812-edit-title').textContent='Añadir encuentro';
+    document.getElementById('v812-id').value='';
+    this.fillEditTeams((document.getElementById('v81-team')||{}).value||'');
+    document.getElementById('v812-category').value=(document.getElementById('fsel-cat-enc')||{}).value||'';
+    document.getElementById('v812-gender').value='MASC';
+    document.getElementById('v812-opponent').value='';
+    document.getElementById('v812-ha').value='Local';
+    document.getElementById('v812-status').value='Programado';
+    document.getElementById('v812-date').value='';
+    document.getElementById('v812-time').value='';
+    document.getElementById('v812-round').value='';
+    document.getElementById('v812-location').value='';
+    document.getElementById('v812-home-score').value='';
+    document.getElementById('v812-away-score').value='';
+    document.getElementById('v812-notes').value='';
+    document.getElementById('v812-edit-overlay').style.display='flex';
+  },
+
+  editEncounter(id){
+    if(this.isReadOnly()){alert('El usuario Solo lectura no puede modificar encuentros.');return;}
+    const e=this.encounters.find(x=>String(x.id)===String(id)); if(!e)return;
+    this.ensureOverlay();
+    document.getElementById('v812-edit-title').textContent='Modificar encuentro';
+    document.getElementById('v812-id').value=e.id;
+    this.fillEditTeams(e.team_id);
+    document.getElementById('v812-category').value=e.category||'';
+    document.getElementById('v812-gender').value=e.gender||'MASC';
+    document.getElementById('v812-opponent').value=this.oppName(e)==='—'?'':this.oppName(e);
+    document.getElementById('v812-ha').value=e.home_away||'Local';
+    document.getElementById('v812-status').value=e.status||'Programado';
+    document.getElementById('v812-date').value=e.game_date||'';
+    document.getElementById('v812-time').value=(e.game_time||'').slice(0,5);
+    document.getElementById('v812-round').value=e.round_label||'';
+    document.getElementById('v812-location').value=e.location||'';
+    document.getElementById('v812-home-score').value=e.home_score??'';
+    document.getElementById('v812-away-score').value=e.away_score??'';
+    document.getElementById('v812-notes').value=e.notes||'';
+    document.getElementById('v812-edit-overlay').style.display='flex';
+  },
+
+  closeEdit(){const x=document.getElementById('v812-edit-overlay');if(x)x.style.display='none';},
+
+  async saveEncounter(){
+    if(this.isReadOnly()){alert('El usuario Solo lectura no puede guardar encuentros.');return;}
+    const id=document.getElementById('v812-id').value;
+    const teamId=document.getElementById('v812-team').value;
+    const team=this.teams[teamId]||{};
+    const ha=document.getElementById('v812-ha').value;
+    const opp=document.getElementById('v812-opponent').value.trim();
+    const num=idv=>{const v=document.getElementById(idv).value;return v===''?null:Number(v);};
+    if(!teamId){alert('Selecciona un equipo.');return;}
+    if(!opp){alert('Indica el equipo rival.');return;}
+    if(!document.getElementById('v812-date').value){alert('Indica la fecha.');return;}
+    const payload={
+      team_id:teamId,
+      club_id:team.club_id||null,
+      season_id:this.activeSeasonId()||team.season_id||null,
+      category:document.getElementById('v812-category').value.trim()||team.category||null,
+      gender:document.getElementById('v812-gender').value,
+      opponent_name:opp,
+      home_away:ha,
+      status:document.getElementById('v812-status').value,
+      game_date:document.getElementById('v812-date').value,
+      game_time:document.getElementById('v812-time').value||null,
+      round_label:document.getElementById('v812-round').value.trim()||null,
+      location:document.getElementById('v812-location').value.trim()||null,
+      home_score:num('v812-home-score'),
+      away_score:num('v812-away-score'),
+      notes:document.getElementById('v812-notes').value.trim()||null,
+      legacy_encuentro_id:id ? (this.encounters.find(x=>String(x.id)===String(id))||{}).legacy_encuentro_id||null : 'V812-'+Date.now()
+    };
+    // Maintain explicit home/away team ids when possible.
+    if(ha==='Local'){payload.home_team_id=teamId;payload.away_team_id=null;}
+    else {payload.home_team_id=null;payload.away_team_id=teamId;}
+    try{
+      const path=id?'encounters?id=eq.'+encodeURIComponent(id):'encounters';
+      const r=await window.sbFetch(path,{
+        method:id?'PATCH':'POST',
+        headers:{'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify(payload)
+      });
+      if(!r.ok) throw new Error(await r.text());
+      this.closeEdit();
+      await this.load(true);
+      alert(id?'Encuentro modificado correctamente.':'Encuentro añadido correctamente.');
+    }catch(err){alert('No se pudo guardar el encuentro:\\n'+(err.message||err));}
+  },
+
+  async deleteEncounter(id){
+    if(this.isReadOnly()){alert('El usuario Solo lectura no puede borrar encuentros.');return;}
+    const e=this.encounters.find(x=>String(x.id)===String(id)); if(!e)return;
+    const label=this.homeName(e)+' vs '+this.awayName(e)+' · '+(e.game_date||'');
+    if(!confirm('¿Borrar definitivamente este encuentro?\\n\\n'+label+'\\n\\nEsta acción no se puede deshacer.')) return;
+    try{
+      const r=await window.sbFetch('encounters?id=eq.'+encodeURIComponent(id),{method:'DELETE'});
+      if(!r.ok) throw new Error(await r.text());
+      await this.load(true);
+    }catch(err){alert('No se pudo borrar el encuentro. Puede tener datos relacionados (scouting, estadísticas, convocatoria, etc.).\\n\\n'+(err.message||err));}
+  },
+
+  tab(name){
+    document.querySelectorAll('.v81-tab').forEach(x=>x.classList.toggle('active',x.dataset.v81Tab===name));
+    document.querySelectorAll('.v81-panel').forEach(x=>x.classList.toggle('active',x.id==='v81-panel-'+name));
+  },
+
+  closeCenter(){document.getElementById('v81-center-overlay')?.classList.remove('open');},
+
+  async openCenter(id){
+    const e=this.encounters.find(x=>String(x.id)===String(id)); if(!e)return;
+    this.current=e;
+    this.ensureOverlay();
+    document.getElementById('v81-center-h').textContent=this.homeName(e)+' vs '+this.awayName(e);
+    document.getElementById('v81-center-overlay').classList.add('open');
+    this.tab('summary');
+    this.renderSummary(e);
+    ['roster','stats','scouting','gameplan'].forEach(n=>{
+      const x=document.getElementById('v81-panel-'+n); if(x)x.innerHTML='<div class="v81-empty">Cargando...</div>';
+    });
+    await Promise.allSettled([
+      this.loadRoster(e),this.loadStats(e),this.loadScouting(e),this.loadGamePlan(e)
+    ]);
+  },
+
+  renderSummary(e){
+    const sc=this.scouting[e.id];
+    const hs=e.home_score==null?'—':e.home_score, as=e.away_score==null?'—':e.away_score;
+    document.getElementById('v81-panel-summary').innerHTML=`
+    <div class="v81-grid">
+      <div class="v81-card v81-span-12">
+        <div class="v81-teamhero">
+          <div><div class="name">${this.esc(this.homeName(e))}</div><small>LOCAL</small></div>
+          <div class="score">${this.esc(hs)} - ${this.esc(as)}</div>
+          <div><div class="name">${this.esc(this.awayName(e))}</div><small>VISITANTE</small></div>
+        </div>
+      </div>
+      <div class="v81-card v81-span-8"><h3>Datos del encuentro</h3>
+        <div class="v81-meta">
+          <div><small>Fecha</small><b>${this.esc(e.game_date||'—')}</b></div>
+          <div><small>Hora</small><b>${this.esc((e.game_time||'').slice(0,5)||'—')}</b></div>
+          <div><small>Categoría</small><b>${this.esc(e.category||'—')}</b></div>
+          <div><small>Género</small><b>${this.esc(e.gender||'—')}</b></div>
+          <div><small>Jornada</small><b>${this.esc(e.round_label||'—')}</b></div>
+          <div><small>Estado</small><b>${this.esc(e.status||'—')}</b></div>
+          <div><small>Local/Visitante</small><b>${this.esc(e.home_away||'—')}</b></div>
+          <div><small>Cancha</small><b>${this.esc(e.location||'—')}</b></div>
+        </div>
+      </div>
+      <div class="v81-card v81-span-4"><h3>Scouting</h3>
+        ${sc?`<div class="v81-meta" style="grid-template-columns:1fr">
+          <div><small>Proyecto</small><b>${this.esc(sc.name||'Scouting')}</b></div>
+          <div><small>Pre / Durante / Post</small><b>${this.esc(sc.pregame_status||'draft')} · ${this.esc(sc.ingame_status||'draft')} · ${this.esc(sc.postgame_status||'draft')}</b></div>
+        </div>`:'<div class="v81-empty">Sin proyecto Scouting asociado.</div>'}
+      </div>
+      <div class="v81-card v81-span-12"><h3>Notas</h3><div>${this.esc(e.notes||'Sin notas.')}</div></div>
+    </div>`;
+  },
+
+  async loadRoster(e){
+    const el=document.getElementById('v81-panel-roster');
+    try{
+      const rows=await this.json('encounter_roster?select=*&encounter_id=eq.'+encodeURIComponent(e.id)+'&order=side,jersey_number');
+      if(!rows.length){el.innerHTML='<div class="v81-card"><div class="v81-empty">Todavía no hay convocatoria normalizada para este encuentro.</div></div>';return;}
+      el.innerHTML=`<div class="v81-card"><h3>Convocatoria</h3><table class="v81-simple-table"><thead><tr><th>Lado</th><th>Dorsal</th><th>Jugador</th><th>Convocado</th><th>Titular</th><th>Capitán</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${this.esc(r.side||'')}</td><td>${this.esc(r.jersey_number??'')}</td><td>${this.esc(r.player_name||r.name||r.player_id||'')}</td><td>${r.called===false?'No':'Sí'}</td><td>${r.starter?'Sí':'—'}</td><td>${r.captain?'Sí':'—'}</td></tr>`).join('')}</tbody></table></div>`;
+    }catch(err){el.innerHTML='<div class="v81-error">Convocatoria no disponible todavía: '+this.esc(err.message||err)+'</div>';}
+  },
+
+  async loadStats(e){
+    const el=document.getElementById('v81-panel-stats');
+    try{
+      const [team,player]=await Promise.all([
+        this.json('v_encounter_team_kpis?select=*&encounter_id=eq.'+encodeURIComponent(e.id)+'&order=period,team_id'),
+        this.json('v_encounter_player_kpis?select=*&encounter_id=eq.'+encodeURIComponent(e.id)+'&order=period,pts.desc')
+      ]);
+      let h='<div class="v81-grid">';
+      h+=`<div class="v81-card v81-span-12"><h3>Estadísticas de equipo</h3>${team.length?`<table class="v81-simple-table"><thead><tr><th>Periodo</th><th>Equipo</th><th>PTS</th><th>T2%</th><th>T3%</th><th>TL%</th><th>REB</th><th>AST</th><th>TOV</th><th>eFG%</th><th>TS%</th></tr></thead><tbody>${team.map(r=>`<tr><td>${this.esc(r.period)}</td><td>${this.esc(this.teamName(r.team_id,r.team_id))}</td><td>${this.esc(r.pts??0)}</td><td>${this.esc(r.t2_pct??'—')}</td><td>${this.esc(r.t3_pct??'—')}</td><td>${this.esc(r.tl_pct??'—')}</td><td>${this.esc(r.reb??0)}</td><td>${this.esc(r.ast??0)}</td><td>${this.esc(r.tov??0)}</td><td>${this.esc(r.efg_pct??'—')}</td><td>${this.esc(r.ts_pct??'—')}</td></tr>`).join('')}</tbody></table>`:'<div class="v81-empty">Sin estadísticas de equipo cargadas.</div>'}</div>`;
+      h+=`<div class="v81-card v81-span-12"><h3>Estadísticas por jugador</h3>${player.length?`<table class="v81-simple-table"><thead><tr><th>Periodo</th><th>Jugador</th><th>PTS</th><th>T2%</th><th>T3%</th><th>TL%</th><th>REB</th><th>AST</th><th>TOV</th><th>+/−</th></tr></thead><tbody>${player.slice(0,100).map(r=>`<tr><td>${this.esc(r.period)}</td><td>${this.esc(r.player_id||'')}</td><td>${this.esc(r.pts??0)}</td><td>${this.esc(r.t2_pct??'—')}</td><td>${this.esc(r.t3_pct??'—')}</td><td>${this.esc(r.tl_pct??'—')}</td><td>${this.esc(r.reb??0)}</td><td>${this.esc(r.ast??0)}</td><td>${this.esc(r.tov??0)}</td><td>${this.esc(r.plus_minus??0)}</td></tr>`).join('')}</tbody></table>`:'<div class="v81-empty">Sin estadísticas individuales cargadas.</div>'}</div></div>`;
+      el.innerHTML=h;
+    }catch(err){el.innerHTML='<div class="v81-error">Estadísticas no disponibles: '+this.esc(err.message||err)+'</div>';}
+  },
+
+  async loadScouting(e){
+    const el=document.getElementById('v81-panel-scouting'), sc=this.scouting[e.id];
+    if(!sc){el.innerHTML='<div class="v81-card"><div class="v81-empty">Sin Scouting asociado.</div></div>';return;}
+    try{
+      const sections=await this.json('scouting_phase_sections?select=phase,section_key,title,content,sort_order&project_id=eq.'+encodeURIComponent(sc.id)+'&order=phase,sort_order');
+      el.innerHTML='<div class="v81-grid">'+['pre','during','post'].map(ph=>`<div class="v81-card v81-span-4"><h3>${ph==='pre'?'Prepartido':ph==='during'?'Durante':'Postpartido'}</h3>${sections.filter(x=>x.phase===ph).map(x=>`<div style="margin:8px 0;padding:8px;background:#f4f8fb;border-radius:8px"><b>${this.esc(x.title)}</b><div style="margin-top:4px;color:#60798d">${this.esc(x.content||'Pendiente de completar')}</div></div>`).join('')||'<div class="v81-empty">Sin secciones.</div>'}</div>`).join('')+'</div>';
+    }catch(err){el.innerHTML='<div class="v81-error">Scouting no disponible: '+this.esc(err.message||err)+'</div>';}
+  },
+
+  async loadGamePlan(e){
+    const el=document.getElementById('v81-panel-gameplan'), sc=this.scouting[e.id];
+    if(!sc){el.innerHTML='<div class="v81-card"><div class="v81-empty">Sin Scouting/Game Plan asociado.</div></div>';return;}
+    try{
+      const rows=await this.json('game_plan_items?select=audience,phase,side,priority,title,objective,instruction,active&scouting_project_id=eq.'+encodeURIComponent(sc.id)+'&order=audience,side,priority');
+      const group=(aud,side)=>rows.filter(x=>x.audience===aud&&x.side===side);
+      const table=(arr)=>arr.length?`<table class="v81-simple-table"><thead><tr><th>#</th><th>Clave</th><th>Objetivo</th><th>Instrucción</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${this.esc(x.priority)}</td><td><b>${this.esc(x.title)}</b></td><td>${this.esc(x.objective||'')}</td><td>${this.esc(x.instruction||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="v81-empty">Sin elementos.</div>';
+      el.innerHTML=`<div class="v81-grid">
+        <div class="v81-card v81-span-6"><h3>Staff · Ataque</h3>${table(group('staff','offense'))}</div>
+        <div class="v81-card v81-span-6"><h3>Staff · Defensa</h3>${table(group('staff','defense'))}</div>
+        <div class="v81-card v81-span-6"><h3>Jugadores · Ataque</h3>${table(group('players','offense'))}</div>
+        <div class="v81-card v81-span-6"><h3>Jugadores · Defensa</h3>${table(group('players','defense'))}</div>
+      </div>`;
+    }catch(err){el.innerHTML='<div class="v81-error">Game Plan no disponible: '+this.esc(err.message||err)+'</div>';}
+  }
+};
+
+window.V81=V81;
+const oldNav=window.nav;
+window.nav=function(page){
+  const r=oldNav.apply(this,arguments);
+  if(page==='encuentros') setTimeout(()=>{
+    if(V81.loaded){ V81.refreshFilterOptions(true); V81.render(); }
+    else V81.load(false);
+  },20);
+  return r;
+};
+
+// Al cambiar la temporada global, Encuentros se recalcula inmediatamente.
+if(typeof window.onTmpChange==='function'){
+  const _oldTmpChange=window.onTmpChange;
+  window.onTmpChange=function(v){
+    const r=_oldTmpChange.apply(this,arguments);
+    setTimeout(()=>{ if(window.V81 && V81.loaded) V81.onSeasonChange(); },80);
+    return r;
+  };
+}
+
+// El submenu izquierdo de categorías utiliza exactamente el mismo selector.
+if(typeof window.setMenuCategoria==='function'){
+  const _oldSetMenuCategoria=window.setMenuCategoria;
+  window.setMenuCategoria=function(page,categoria){
+    if(page==='encuentros'){
+      if(typeof window.nav==='function') window.nav('encuentros');
+      setTimeout(()=>{
+        const sel=document.getElementById('fsel-cat-enc');
+        if(sel){
+          const wanted=String(categoria||'').trim();
+          if(wanted && ![...sel.options].some(o=>o.value===wanted)){
+            const op=document.createElement('option'); op.value=wanted; op.textContent=wanted; sel.appendChild(op);
+          }
+          sel.value=wanted;
+        }
+        if(window.V81){ V81.onCategoryChange(); }
+        try{ if(typeof window.updateMenuCategoriaActive==='function') window.updateMenuCategoriaActive('encuentros',wanted); }catch(e){}
+      },90);
+      return;
+    }
+    return _oldSetMenuCategoria.apply(this,arguments);
+  };
+}
+
+// Compatibilidad con el filtro legacy de Encuentros.
+window.filterEnc=function(){ if(window.V81 && V81.loaded) V81.render(); };
+
+window.addEventListener('load',()=>{
+  const badge=document.getElementById('v8-auth-mode');
+  if(badge) badge.textContent='V8.5.27 · CRUD global revisado';
+});
+})();
+</script>
+
+
+<script id="v813-script">
+(function(){
+'use strict';
+if(!window.V81) return;
+const X=window.V81;
+X.v813={clubs:{},players:[],categories:[],page:1,pageSize:5,formState:null,extraLocations:[]};
+
+X.pick=function(o,keys,def){
+  if(!o)return def;
+  for(const k of keys){ if(o[k]!==undefined && o[k]!==null && String(o[k]).trim()!=='') return o[k]; }
+  return def;
+};
+X.clubForTeam=function(t){
+  if(!t)return null;
+  const id=t.club_id||t.club||t.clubId;
+  return id?this.v813.clubs[id]||null:null;
+};
+X.teamLogo=function(t){
+  const c=this.clubForTeam(t);
+  return this.pick(t,['logo_url','logo','logoUrl','escudo_url','shield_url','crest_url','image_url'],
+    this.pick(c,['logo_url','logo','logoUrl','escudo_url','shield_url','crest_url','image_url'],''));
+};
+X.teamColors=function(t){
+  const c=this.clubForTeam(t);
+  const vals=[
+    this.pick(t,['primary_color','color1','color_1','color_principal','home_color'],null),
+    this.pick(t,['secondary_color','color2','color_2','color_secundario','away_color'],null),
+    this.pick(c,['primary_color','color1','color_1','color_principal'],null),
+    this.pick(c,['secondary_color','color2','color_2','color_secundario'],null)
+  ].filter(Boolean);
+  const clean=[...new Set(vals.map(String))].slice(0,2);
+  return clean.length?clean:['#0b4f86','#ffffff'];
+};
+X.teamVenue=function(t){
+  const c=this.clubForTeam(t);
+  return this.pick(t,['location','venue','pabellon','cancha','address','direccion','home_venue'],
+    this.pick(c,['location','venue','pabellon','cancha','address','direccion'],''));
+};
+X.playerTeamId=function(p){ return this.pick(p,['team_id','equipo_id','current_team_id','teamId'],''); };
+X.playerName=function(p){ return this.pick(p,['name','nombre','full_name','display_name'],p.id||'Jugador'); };
+X.playerJersey=function(p){ return this.pick(p,['jersey_number','dorsal','number','numero'],''); };
+X.playersFor=function(teamId){
+  return this.v813.players.filter(p=>String(this.playerTeamId(p))===String(teamId))
+    .sort((a,b)=>{
+      const an=parseInt(this.playerJersey(a),10), bn=parseInt(this.playerJersey(b),10);
+      if(!isNaN(an)&&!isNaN(bn)&&an!==bn)return an-bn;
+      return this.playerName(a).localeCompare(this.playerName(b),'es',{sensitivity:'base'});
+    });
+};
+X.playerLabel=function(p){ const d=this.playerJersey(p); return (d!==''?d+' - ':'')+this.playerName(p); };
+X.logoHTML=function(t,small){
+  const u=this.teamLogo(t), n=(t&&t.name)||'EQ';
+  if(u) return `<img class="${small?'v813-logo-sm':'v813-logo'}" src="${this.esc(u)}" alt="${this.esc(n)}" onerror="this.style.display='none'">`;
+  const ini=n.split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
+  return `<span class="v813-logo-fallback" style="${small?'width:24px;height:24px;font-size:7px;margin-left:6px':''}">${this.esc(ini)}</span>`;
+};
+X.activeClubId=function(){
+  let v='';
+  try{v=localStorage.getItem('bm_club_filtro_global')||'';}catch(e){}
+  if(v && this.v813.clubs[v]) return v;
+  if(v){
+    const c=Object.values(this.v813.clubs).find(x=>String(this.pick(x,['name','nombre'],'')).toLowerCase()===String(v).toLowerCase());
+    if(c)return c.id;
+  }
+  const nav=Object.values(this.v813.clubs).find(x=>String(this.pick(x,['name','nombre'],'')).toLowerCase().includes('navalcarnero'));
+  return nav?nav.id:'';
+};
+X.v8587SeasonKey=function(v){
+  v=String(v||'').trim();
+  const m=v.match(/(20\d{2})\D+(20\d{2}|\d{2})/);
+  if(!m)return v.toLowerCase();
+  const y1=m[1], y2=m[2].length===2?String(y1).slice(0,2)+m[2]:m[2];
+  return y1+'-'+y2;
+};
+X.v8587Team=function(t){
+  if(!t)return null;
+  const o=Object.assign({},t);
+  o.id=o.id||o.equipo_id||'';
+  o.name=o.name||o.nombre||'Equipo';
+  o.category=o.category||o.categoria||'';
+  o.gender=o.gender||o.genero||'';
+  o.club_id=o.club_id||o.clubId||o.club||'';
+  o.season_name=o.season_name||o.temporada||'';
+  if(!o.season_id && o.season_name){
+    const k=this.v8587SeasonKey(o.season_name);
+    const se=Object.values(this.seasons||{}).find(x=>this.v8587SeasonKey(x.name||x.legacy_temporada_id||'')===k);
+    if(se)o.season_id=se.id;
+  }
+  o.logo_url=o.logo_url||o.logo||o.escudo_url||o.image_url||'';
+  o.primary_color=o.primary_color||o.color1||o.color||'#0b4f86';
+  o.secondary_color=o.secondary_color||o.color2||'#ffffff';
+  o.location=o.location||o.localizacion||o.pabellon||o.direccion||'';
+  return o;
+};
+X.v8587Player=function(p){
+  if(!p)return null;
+  const o=Object.assign({},p);
+  o.id=o.id||o.jugador_id||'';
+  o.name=o.name||o.nombre||'';
+  o.team_id=o.team_id||o.equipo_id||o.equipo||'';
+  o.jersey_number=o.jersey_number??o.dorsal??'';
+  return o;
+};
+X.allSeasonTeams=function(){
+  const all=Object.values(this.teams||{}).filter(Boolean);
+  const sid=this.activeSeasonId();
+  if(!sid)return all;
+  let a=all.filter(t=>String(t.season_id||'')===String(sid));
+  if(a.length)return a;
+  const sk=this.v8587SeasonKey(this.activeSeasonName());
+  if(sk){
+    a=all.filter(t=>this.v8587SeasonKey(t.season_name||t.temporada||'')===sk);
+    if(a.length)return a;
+  }
+  // Compatibilidad: equipos históricos sin season_id no deben desaparecer del formulario.
+  return all;
+};
+X.ownTeamsForCategory=function(cat){
+  const club=this.activeClubId();
+  let a=this.allSeasonTeams();
+  if(club){const byClub=a.filter(t=>String(t.club_id||'')===String(club));if(byClub.length)a=byClub;}
+  if(cat){const key=String(cat).trim().toLocaleLowerCase('es');const byCat=a.filter(t=>String(t.category||'').trim().toLocaleLowerCase('es')===key);if(byCat.length)a=byCat;else a=[];}
+  return a.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
+};
+X.rivalTeamsForCategory=function(cat,ownId){
+  let a=this.allSeasonTeams().filter(t=>String(t.id)!==String(ownId||''));
+  if(cat){const key=String(cat).trim().toLocaleLowerCase('es');const byCat=a.filter(t=>String(t.category||'').trim().toLocaleLowerCase('es')===key);if(byCat.length)a=byCat;else a=[];}
+  return a.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es',{sensitivity:'base'}));
+};
+X.categoriesForSeason=function(){
+  const vals=[];
+  this.allSeasonTeams().forEach(t=>{if(t.category)vals.push(String(t.category).trim())});
+  this.filteredBySeason().forEach(e=>{if(e.category)vals.push(String(e.category).trim())});
+  (this.v813.categories||[]).forEach(c=>{const n=this.pick(c,['name','nombre','label'],'');if(n)vals.push(String(n).trim())});
+  return [...new Set(vals.filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+};
+X.encLocations=function(){
+  const vals=this.filteredBySeason().map(e=>e.location).filter(Boolean).concat(this.v813.extraLocations||[]);
+  Object.values(this.teams).forEach(t=>{const x=this.teamVenue(t);if(x)vals.push(x)});
+  return [...new Set(vals.map(x=>String(x).trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));
+};
+X.roundOptions=function(selected){
+  return Array.from({length:30},(_,i)=>`<option value="J${i+1}" ${String(selected||'')===`J${i+1}`?'selected':''}>J${i+1}</option>`).join('');
+};
+X.renderSwatches=function(side,team,selected){
+  const cols=this.teamColors(team);
+  return `<div class="v813-colorbox">${cols.map(c=>`<button type="button" class="v813-swatch ${String(c)===String(selected)?'selected':''}" style="background:${this.esc(c)}" title="${this.esc(c)}" onclick="V81.setKitColor('${side}','${this.esc(c)}')"></button>`).join('')}</div>`;
+};
+X.setKitColor=function(side,c){
+  if(!this.v813.formState)return;
+  if(side==='our')this.v813.formState.ourColor=c; else this.v813.formState.rivalColor=c;
+  this.refreshFormDependent(false);
+};
+X.multiHTML=function(field,players,selected){
+  selected=selected||[];
+  const selSet=new Set(selected.map(String));
+  const chips=players.filter(p=>selSet.has(String(p.id))).map(p=>`<span class="v813-chip">${this.esc(this.playerLabel(p))}</span>`).join('');
+  return `<div class="v813-multi"><details><summary>${chips||'<span class="v813-placeholder">Seleccionar jugadores...</span>'}</summary><div class="v813-multi-menu">${players.map(p=>`<label class="v813-multi-opt"><input type="checkbox" ${selSet.has(String(p.id))?'checked':''} onchange="V81.toggleRoster('${field}','${this.esc(p.id)}',this.checked)"> <span>${this.esc(this.playerLabel(p))}</span></label>`).join('')||'<div class="v813-placeholder" style="padding:8px">No hay jugadores creados para este equipo.</div>'}</div></details></div>`;
+};
+X.toggleRoster=function(field,id,checked){
+  const s=this.v813.formState;if(!s)return;
+  const a=s[field]||[];
+  const ix=a.map(String).indexOf(String(id));
+  if(checked&&ix<0)a.push(id);
+  if(!checked&&ix>=0)a.splice(ix,1);
+  s[field]=a;
+  if(field==='ourCalled')s.ourStarters=(s.ourStarters||[]).filter(x=>a.map(String).includes(String(x)));
+  if(field==='rivalCalled')s.rivalStarters=(s.rivalStarters||[]).filter(x=>a.map(String).includes(String(x)));
+  this.refreshRosterControls();
+};
+X.filterStarters=function(field,calledField){
+  const s=this.v813.formState;if(!s)return;
+  const called=new Set((s[calledField]||[]).map(String));
+  s[field]=(s[field]||[]).filter(x=>called.has(String(x))).slice(0,5);
+};
+X.setSingle=function(field,val){ if(this.v813.formState)this.v813.formState[field]=val||''; };
+
+X.buildPage=function(){
+  const p=document.getElementById('p-encuentros'); if(!p)return;
+  p.innerHTML=`
+  <div id="v813-root">
+    <div class="v813-topline"><span style="font-size:18px">Encuentros</span><span>›</span><span id="v813-breadcrumb">Nuevo encuentro</span><span style="margin-left:auto;font-size:10px;color:#647d92">Temporada <b id="v813-season"></b></span></div>
+    <div class="v813-card" id="v813-form-card">
+      <div class="v813-card-title"><span id="v813-form-title">Nuevo encuentro</span><span style="font-size:9px;color:#72879a">Los campos se guardan en Supabase</span></div>
+      <div id="v813-form"></div>
+    </div>
+    <div class="v813-card">
+      <div class="v813-card-title">
+        <span>Encuentros (<span id="v813-total-title">0</span>)</span>
+        <div class="v813-mini-kpis">
+          <span class="v813-mini-kpi">Finalizados <b id="v813-k-fin">0</b></span>
+          <span class="v813-mini-kpi">Programados <b id="v813-k-prog">0</b></span>
+          <span class="v813-mini-kpi">Local <b id="v813-k-local">0</b></span>
+          <span class="v813-mini-kpi">Visitante <b id="v813-k-away">0</b></span>
+        </div>
+      </div>
+      <div class="v813-filters">
+        <div class="v813-filter"><label>Categoría</label><select id="fsel-cat-enc" onchange="V81.v813.page=1;V81.render813()"></select></div>
+        <div class="v813-filter"><label>Equipo</label><select id="v813-filter-team" onchange="V81.v813.page=1;V81.render813()"></select></div>
+        <div class="v813-filter"><label>Estado</label><select id="v813-filter-status" onchange="V81.v813.page=1;V81.render813()"><option value="">Todos</option><option>Programado</option><option>Iniciado</option><option>Finalizado</option><option>Cancelado</option></select></div>
+        <div class="v813-filter"><label>Local / Visitante</label><select id="v813-filter-ha" onchange="V81.v813.page=1;V81.render813()"><option value="">Todos</option><option>Local</option><option>Visitante</option></select></div>
+        <div class="v813-filter"><label>Buscar</label><input id="v813-filter-q" placeholder="⌕ Buscar..." oninput="V81.v813.page=1;V81.render813()"></div>
+        <button class="v813-btn" onclick="V81.clear813Filters()">Limpiar</button>
+        <button class="v813-btn blue" onclick="V81.newEncounter()">＋ Añadir encuentro</button>
+      </div>
+      <div class="v813-table-wrap"><table class="v813-table"><thead><tr>
+        <th>Jornada</th><th>Fecha</th><th>Hora</th><th>Local</th><th>Rival</th><th>Pabellón</th><th>Estado</th><th>Local / Visitante</th><th>Plantillas</th><th>Acciones</th>
+      </tr></thead><tbody id="v813-tbody"></tbody></table></div>
+      <div class="v813-pager"><span id="v813-page-info"></span><div class="v813-pages" id="v813-pages"></div></div>
+    </div>
+  </div>`;
+  const se=document.getElementById('v813-season');if(se)se.textContent=this.activeSeasonName()||'—';
+  this.refresh813Filters();
+  if(!this.v813.formState)this.newEncounter(false); else this.render813Form();
+};
+X.refresh813Filters=function(){
+  const cats=this.categoriesForSeason();
+  const c=document.getElementById('fsel-cat-enc'), t=document.getElementById('v813-filter-team');
+  if(c){const old=c.value;c.innerHTML='<option value="">Todas</option>'+cats.map(x=>`<option>${this.esc(x)}</option>`).join('');if(cats.includes(old))c.value=old}
+  if(t){
+    const old=t.value;
+    const teams=this.allSeasonTeams().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'es'));
+    t.innerHTML='<option value="">Todos</option>'+teams.map(x=>`<option value="${this.esc(x.id)}">${this.esc(x.name||x.id)}</option>`).join('');
+    if(teams.some(x=>String(x.id)===String(old)))t.value=old;
+  }
+};
+X.initFormState=function(e){
+  if(e){
+    const isLocal=e.home_away==='Local';
+    const ownId=e.team_id||'', rivalId=e.opponent_team_id||'';
+    const caps=e.captain_ids||[];
+    this.v813.formState={
+      id:e.id,round:e.round_label||'J1',category:e.category||'',ownTeamId:ownId,rivalTeamId:rivalId,
+      gender:e.gender||'MASC',homeAway:e.home_away||'Local',status:e.status||'Programado',
+      date:e.game_date||'',time:(e.game_time||'').slice(0,5),location:e.location||'',
+      homeScore:e.home_score??'',awayScore:e.away_score??'',notes:e.notes||'',
+      ourColor:isLocal?(e.home_color||''):(e.away_color||''),
+      rivalColor:isLocal?(e.away_color||''):(e.home_color||''),
+      ourCalled:(isLocal?e.home_called_ids:e.away_called_ids)||[],
+      rivalCalled:(isLocal?e.away_called_ids:e.home_called_ids)||[],
+      ourStarters:(isLocal?e.home_starter_ids:e.away_starter_ids)||[],
+      rivalStarters:(isLocal?e.away_starter_ids:e.home_starter_ids)||[],
+      ourCaptain:caps[0]||'',rivalCaptain:caps[1]||'',newLocation:''
+    };
+  }else{
+    const cat=(document.getElementById('fsel-cat-enc')||{}).value||this.categoriesForSeason()[0]||'';
+    const own=this.ownTeamsForCategory(cat)[0];
+    const rival=this.rivalTeamsForCategory(cat,own&&own.id)[0];
+    this.v813.formState={id:'',round:'J1',category:cat,ownTeamId:own?own.id:'',rivalTeamId:rival?rival.id:'',gender:'MASC',homeAway:'Local',status:'Programado',date:'',time:'',location:'',homeScore:'',awayScore:'',notes:'',ourColor:'',rivalColor:'',ourCalled:[],rivalCalled:[],ourStarters:[],rivalStarters:[],ourCaptain:'',rivalCaptain:'',newLocation:''};
+    this.applyTeamDefaults();
+  }
+};
+X.applyTeamDefaults=function(){
+  const s=this.v813.formState;if(!s)return;
+  const own=this.teams[s.ownTeamId], rival=this.teams[s.rivalTeamId];
+  if(!s.ourColor)s.ourColor=this.teamColors(own)[0];
+  if(!s.rivalColor)s.rivalColor=this.teamColors(rival)[0];
+  const local=s.homeAway==='Local'?own:rival;
+  if(!s.location)s.location=this.teamVenue(local)||this.encLocations()[0]||'';
+};
+X.newEncounter=function(scroll=true){
+  if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede añadir encuentros.');return;}
+  this.initFormState(null);this.render813Form();if(scroll)document.getElementById('v813-form-card')?.scrollIntoView({behavior:'smooth',block:'start'});
+};
+X.editEncounter=function(id){
+  if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede modificar encuentros.');return;}
+  const e=this.encounters.find(x=>String(x.id)===String(id));if(!e)return;
+  this.initFormState(e);this.render813Form();document.getElementById('v813-form-card')?.scrollIntoView({behavior:'smooth',block:'start'});
+};
+X.cancel813=function(){this.initFormState(null);this.render813Form();};
+X.formChange=function(field,val){
+  const s=this.v813.formState;if(!s)return;s[field]=val;
+  if(field==='category'){
+    const own=this.ownTeamsForCategory(val);
+    if(!own.some(x=>String(x.id)===String(s.ownTeamId)))s.ownTeamId=own[0]?.id||'';
+    const rivals=this.rivalTeamsForCategory(val,s.ownTeamId);
+    if(!rivals.some(x=>String(x.id)===String(s.rivalTeamId)))s.rivalTeamId=rivals[0]?.id||'';
+    s.ourCalled=[];s.ourStarters=[];s.ourCaptain='';s.rivalCalled=[];s.rivalStarters=[];s.rivalCaptain='';s.ourColor='';s.rivalColor='';s.location='';
+    this.applyTeamDefaults();
+  }
+  if(field==='ownTeamId'){s.ourCalled=[];s.ourStarters=[];s.ourCaptain='';s.ourColor='';const rivals=this.rivalTeamsForCategory(s.category,s.ownTeamId);if(!rivals.some(x=>String(x.id)===String(s.rivalTeamId)))s.rivalTeamId=rivals[0]?.id||'';s.location='';this.applyTeamDefaults();}
+  if(field==='rivalTeamId'){s.rivalCalled=[];s.rivalStarters=[];s.rivalCaptain='';s.rivalColor='';s.location='';this.applyTeamDefaults();}
+  if(field==='homeAway'){s.location='';this.applyTeamDefaults();}
+  this.render813Form();
+};
+X.locationChanged=function(v){
+  const s=this.v813.formState;if(!s)return;
+  if(v==='__new__'){s.location='__new__';s.newLocation='';}else{s.location=v;s.newLocation='';}
+  this.render813Form();
+};
+X.newLocationInput=function(v){this.v813.formState.newLocation=v;this.updateMap813(v);};
+X.currentLocation=function(){const s=this.v813.formState;return s?(s.location==='__new__'?s.newLocation:s.location):'';};
+X.updateMap813=function(loc){
+  const box=document.getElementById('v813-map');if(!box)return;
+  const q=encodeURIComponent(loc||'Madrid');
+  box.innerHTML=loc?`<iframe loading="lazy" src="https://maps.google.com/maps?q=${q}&z=15&output=embed"></iframe>`:'';
+};
+X.openMap813=function(){const l=this.currentLocation();if(l)window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(l),'_blank');};
+X.render813Form=function(){
+  const f=document.getElementById('v813-form');if(!f)return;
+  const s=this.v813.formState;if(!s)return;
+  const cats=this.categoriesForSeason(), ownTeams=this.ownTeamsForCategory(s.category), rivals=this.rivalTeamsForCategory(s.category,s.ownTeamId);
+  const own=this.teams[s.ownTeamId], rival=this.teams[s.rivalTeamId];
+  const ownPlayers=this.playersFor(s.ownTeamId), rivalPlayers=this.playersFor(s.rivalTeamId);
+  this.filterStarters('ourStarters','ourCalled');this.filterStarters('rivalStarters','rivalCalled');
+  const ownCalledSet=new Set((s.ourCalled||[]).map(String)), rivalCalledSet=new Set((s.rivalCalled||[]).map(String));
+  const ownStarterPlayers=ownPlayers.filter(p=>ownCalledSet.has(String(p.id)));
+  const rivalStarterPlayers=rivalPlayers.filter(p=>rivalCalledSet.has(String(p.id)));
+  const locs=this.encLocations(), curLoc=this.currentLocation();
+  document.getElementById('v813-form-title').textContent=s.id?'Modificar encuentro':'Nuevo encuentro';
+  document.getElementById('v813-breadcrumb').textContent=s.id?'Modificar encuentro':'Nuevo encuentro';
+
+  f.innerHTML=`
+  <div class="v813-form-grid">
+    <div class="v813-field v813-span-2"><label>Jornada *</label><select onchange="V81.formChange('round',this.value)">${this.roundOptions(s.round)}</select></div>
+    <div class="v813-field v813-span-3"><label>Categoría *</label><select onchange="V81.formChange('category',this.value)">${cats.map(c=>`<option ${c===s.category?'selected':''}>${this.esc(c)}</option>`).join('')}</select></div>
+    <div class="v813-field v813-span-4"><label>Equipo (club) *</label><div class="v813-team-picker"><span style="background:${this.esc(s.ourColor||this.teamColors(own)[0])}" class="v813-dot"></span><select onchange="V81.formChange('ownTeamId',this.value)">${ownTeams.map(t=>`<option value="${this.esc(t.id)}" ${String(t.id)===String(s.ownTeamId)?'selected':''}>${this.esc(t.name||t.id)}</option>`).join('')}</select>${this.logoHTML(own,false)}</div></div>
+    <div class="v813-field v813-span-1"><label>Logo</label><div style="text-align:center">${this.logoHTML(own,false)}</div></div>
+    <div class="v813-field v813-span-2"><label>Colores equipación</label>${this.renderSwatches('our',own,s.ourColor)}</div>
+
+    <div class="v813-field v813-span-4"><label>Rival *</label><div class="v813-team-picker"><span style="background:${this.esc(s.rivalColor||this.teamColors(rival)[0])}" class="v813-dot"></span><select onchange="V81.formChange('rivalTeamId',this.value)">${rivals.map(t=>`<option value="${this.esc(t.id)}" ${String(t.id)===String(s.rivalTeamId)?'selected':''}>${this.esc(t.name||t.id)}</option>`).join('')}</select>${this.logoHTML(rival,false)}</div></div>
+    <div class="v813-field v813-span-2"><label>Local / Visitante *</label><select onchange="V81.formChange('homeAway',this.value)"><option ${s.homeAway==='Local'?'selected':''}>Local</option><option ${s.homeAway==='Visitante'?'selected':''}>Visitante</option></select></div>
+    <div class="v813-field v813-span-3"><label>Estado *</label><select onchange="V81.formChange('status',this.value)">${['Programado','Iniciado','Finalizado','Cancelado'].map(x=>`<option ${x===s.status?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="v813-field v813-span-1"><label>Logo</label><div style="text-align:center">${this.logoHTML(rival,false)}</div></div>
+    <div class="v813-field v813-span-2"><label>Colores equipación</label>${this.renderSwatches('rival',rival,s.rivalColor)}</div>
+
+    <div class="v813-field v813-span-2"><label>Fecha *</label><input type="date" value="${this.esc(s.date)}" onchange="V81.v813.formState.date=this.value"></div>
+    <div class="v813-field v813-span-2"><label>Hora *</label><input type="time" value="${this.esc(s.time)}" onchange="V81.v813.formState.time=this.value"></div>
+    <div class="v813-field v813-span-8"><label>Pabellón / Localización *</label><div class="v813-mapwrap"><div><select onchange="V81.locationChanged(this.value)">${locs.map(l=>`<option value="${this.esc(l)}" ${s.location!=='__new__'&&l===s.location?'selected':''}>${this.esc(l)}</option>`).join('')}<option value="__new__" ${s.location==='__new__'?'selected':''}>＋ Nueva localización...</option></select>${s.location==='__new__'?`<input style="margin-top:5px" placeholder="Escribe la nueva localización" value="${this.esc(s.newLocation||'')}" oninput="V81.newLocationInput(this.value)">`:''}</div><div class="v813-map" id="v813-map"></div><button type="button" class="v813-mapbtn" onclick="V81.openMap813()">Ver en Google Maps</button></div></div>
+
+    <div class="v813-field v813-span-2"><label>Local puntos</label><input type="number" min="0" value="${this.esc(s.homeScore)}" oninput="V81.v813.formState.homeScore=this.value"></div>
+    <div class="v813-field v813-span-2"><label>Visitante puntos</label><input type="number" min="0" value="${this.esc(s.awayScore)}" oninput="V81.v813.formState.awayScore=this.value"></div>
+    <div class="v813-field v813-span-8"><label>Notas</label><input value="${this.esc(s.notes)}" oninput="V81.v813.formState.notes=this.value"></div>
+
+    <div class="v813-field v813-span-3"><label>Convocatoria ${this.esc(own?.name||'equipo')}</label>${this.multiHTML('ourCalled',ownPlayers,s.ourCalled)}</div>
+    <div class="v813-field v813-span-2"><label>Quinteto inicial ${this.esc(own?.name||'equipo')}</label>${this.multiHTML('ourStarters',ownStarterPlayers,s.ourStarters)}</div>

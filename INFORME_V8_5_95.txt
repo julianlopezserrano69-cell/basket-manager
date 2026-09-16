@@ -1,0 +1,11 @@
+BASKET MANAGER · V8.5.95
+
+CONVOCATORIAS · GRID EXACTO
+- Convocatoria, quinteto y capitán pasan a paneles grid de tres columnas.
+- Cada fila mantiene selector | dorsal | nombre en una sola línea.
+- Convocatoria incorpora buscador y scroll interno.
+- Quinteto limitado a 5 jugadores convocados.
+- Capitán con selector circular único entre convocados.
+- Misma solución para el equipo rival.
+- Tema oscuro homogéneo con Encuentros V8.5.92+.
+- Service Worker actualizado a basket-manager-v8.5.95.

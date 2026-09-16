@@ -1,125 +1,37 @@
-# Basket Manager V8.5.70 — GitHub / PWA
+# Basket Manager V8.5.116 — GitHub / PWA
 
-Esta versión parte de **V8.5.69** y está preparada para:
+Paquete COMPLETO listo para subir a la raíz del repositorio:
+https://github.com/julianlopezserrano69-cell/basket-manager
 
-- alojarse en GitHub Pages;
-- usar Supabase como base de datos compartida;
-- instalarse en Windows como aplicación web (PWA);
-- mantener una única URL para todos los PCs.
+## Incluye
+- index.html — aplicación completa V8.5.116.
+- sw.js — Service Worker con caché V8.5.116.
+- manifest.webmanifest — instalación PWA.
+- icon-192.png / icon-512.png — iconos PWA.
+- icons/icon-180.png / icons/icon-192.png — compatibilidad iPhone/iPad.
+- .nojekyll — GitHub Pages.
+- PUBLICAR_GITHUB.bat — publicación por Git.
+- históricos auxiliares heredados del MASTER.
 
-## 1. Crear el repositorio
+## Novedad V8.5.116
+Entrenamientos → Control de asistencia.
 
-En GitHub:
+La pantalla reutiliza los datos ya registrados:
+- Entrenamientos realizados: asistencia, puntualidad, vestimenta y actitud.
+- Partidos finalizados: convocados del encuentro.
+- No convocado no cuenta como ausencia a partido.
+- Filtros por temporada, equipo y fechas.
+- Vista resumen y detalle por sesión.
+- Informe imprimible / PDF.
 
-1. **New repository**
-2. Nombre recomendado: `basket-manager`
-3. Puede ser público o privado según tu plan/configuración de Pages.
-4. No hace falta añadir README ni .gitignore desde GitHub.
+## Publicación manual en GitHub
+Descomprime el ZIP y sube TODO su contenido a la raíz del repositorio,
+reemplazando los ficheros anteriores cuando GitHub lo solicite.
 
-## 2. Subir estos ficheros
+URL publicada:
+https://julianlopezserrano69-cell.github.io/basket-manager/
 
-Sube **todo el contenido de esta carpeta** a la raíz del repositorio.
-
-Debe quedar aproximadamente:
-
-```text
-basket-manager/
-├── index.html
-├── manifest.webmanifest
-├── sw.js
-├── .nojekyll
-├── .github/
-│   └── workflows/
-│       └── pages.yml
-└── ...resto de assets de Basket Manager
-```
-
-## 3. Activar GitHub Pages
-
-En GitHub:
-
-**Settings → Pages → Build and deployment → Source → GitHub Actions**
-
-Después haz un commit/push a `main`.
-
-La acción `Deploy Basket Manager to GitHub Pages` publicará la web.
-
-La URL tendrá normalmente esta forma:
-
-```text
-https://TU_USUARIO.github.io/basket-manager/
-```
-
-## 4. Comprobar Supabase
-
-La aplicación seguirá usando el mismo proyecto Supabase.
-
-Importante:
-- Todos los PCs deben usar la misma URL de Basket Manager.
-- Todos los usuarios autorizados verán los mismos datos.
-- Las políticas RLS y usuarios de Supabase siguen siendo las que controlan el acceso.
-
-## 5. Autorizar la URL en Supabase
-
-En Supabase revisa:
-
-**Authentication → URL Configuration**
-
-Añade como Redirect URL la URL de GitHub Pages, por ejemplo:
-
-```text
-https://TU_USUARIO.github.io/basket-manager/**
-```
-
-Si Basket Manager usa login por email/password sin redirección externa, igualmente es recomendable registrar el dominio publicado.
-
-## 6. Instalar en Windows como aplicación
-
-En Microsoft Edge o Google Chrome abre la URL de Basket Manager.
-
-Después:
-
-**Edge**
-- Menú `…`
-- Apps
-- Instalar Basket Manager
-
-**Chrome**
-- Menú `⋮`
-- Guardar y compartir / Instalar página como aplicación
-  o el icono de instalación que aparezca en la barra de direcciones.
-
-Se abrirá en una ventana independiente y aparecerá en:
-- Menú Inicio;
-- búsqueda de Windows;
-- barra de tareas si se ancla.
-
-## 7. Actualizaciones
-
-A partir de esta versión ya no hace falta copiar `index.html` PC por PC.
-
-Flujo:
-
-```text
-modificamos Basket Manager
-        ↓
-subimos nueva versión a GitHub
-        ↓
-GitHub Pages publica
-        ↓
-todos los PCs reciben la actualización
-```
-
-El Service Worker V8.5.70 elimina cachés antiguas al actualizar.
-
-## Recomendación
-
-Antes de dar acceso al resto de usuarios:
-
-1. Publicar.
-2. Probar login.
-3. Comprobar Entrenamientos.
-4. Comprobar Pizarra/Biblioteca.
-5. Comprobar PDF.
-6. Comprobar Scouting.
-7. Instalar en un segundo PC y confirmar que ambos ven los mismos datos de Supabase.
+Después de publicar, en una instalación PWA antigua conviene cerrar completamente
+Basket Manager y volver a abrirla. Si siguiera mostrando una versión anterior,
+abre primero la URL en el navegador y recarga para que el Service Worker V8.5.116
+sustituya la caché anterior.

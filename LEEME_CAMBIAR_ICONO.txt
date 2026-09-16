@@ -1,0 +1,23 @@
+BASKET MANAGER V8.5.72 · ICONO CANASTA
+
+Subir a GitHub (raíz del repositorio) estos archivos:
+- index.html
+- manifest.webmanifest
+- sw.js
+- icon-192.png
+- icon-512.png
+
+Los tres primeros sustituyen a los existentes.
+Los dos PNG son nuevos.
+
+Después:
+1. Esperar 1-3 minutos a GitHub Pages.
+2. Abrir la URL web y hacer Ctrl+F5.
+3. Cerrar completamente la APP instalada.
+4. Volver a abrirla.
+
+Si Windows conserva el icono anterior:
+- desinstalar SOLO la PWA Basket Manager,
+- abrir de nuevo la URL de GitHub Pages,
+- instalar otra vez.
+No se pierde ningún dato: los datos siguen en Supabase.

@@ -1,0 +1,9 @@
+BASKET MANAGER · V8.5.93
+Convocatorias / quintetos / capitán — dropdowns homogéneos
+
+- Convocatoria: multiselección con búsqueda, máximo 12.
+- Quinteto inicial: multiselección con búsqueda, máximo 5.
+- Capitán: selección única con el mismo panel visual.
+- Checkboxes compactos de 18 px y selección naranja.
+- Todos los desplegables del modal usan la paleta oscura de Encuentros.
+- Se mantiene V8.5.92 como base funcional y visual.
