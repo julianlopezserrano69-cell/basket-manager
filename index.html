@@ -34070,7 +34070,23 @@ function viewExercise(id){
   'body{margin:0;background:#07101f;color:#eef4fb;font-family:Arial,sans-serif}.wrap{max-width:1040px;margin:auto;padding:28px}.hero{background:#14233b;border:1px solid #355071;border-radius:18px;padding:22px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{border:1px solid #45617f;border-radius:999px;padding:7px 11px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.box,.step,.singleBoard,.videoBox{background:#0c1729;border:1px solid #2d4667;border-radius:14px;padding:16px}.box h3,.seq h2,.singleBoard h2,.videoBox h2{color:#ffb36f}.seq,.singleBoard,.videoBox{margin-top:22px}.step{margin:14px 0}.stepHead{margin-bottom:8px;color:#ffb36f}.step img,.singleBoard img{width:100%;max-height:700px;object-fit:contain;border-radius:10px;background:#d9a35f}.imageUrl{margin-top:10px}.imageUrl a,.videoLink{color:#8fc5ff;word-break:break-all}.empty{margin-top:20px;padding:16px;border:1px dashed #405b7a;border-radius:12px;color:#8297b3}.videoGrid{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:center}.qr{background:#fff;padding:10px;border-radius:12px;color:#172033;text-align:center}.qr img{width:210px;height:210px}.playBtn{display:inline-block;background:#ff7417;color:#fff;text-decoration:none;padding:10px 14px;border-radius:9px;font-weight:bold}@media(max-width:700px){.grid,.videoGrid{grid-template-columns:1fr}}</style></head><body>'+
   '<div class="wrap"><div class="hero"><h1>'+esc(x.name)+'</h1><div class="chips"><span class="chip">'+esc(x.fundament||'')+'</span><span class="chip">'+esc(x.level||'')+'</span><span class="chip">⏱ '+esc(x.duration_min||10)+' min</span><span class="chip">👥 '+esc(x.players||'—')+'</span>'+(standalone?'<span class="chip">🏀 Imagen/Pizarra</span>':'')+(video?'<span class="chip">🎥 Vídeo + QR</span>':'')+'</div>'+
   '<div class="grid"><div class="box"><h3>Objetivo</h3><div>'+esc(x.objective||'—')+'</div></div><div class="box"><h3>Material</h3><div>'+esc(x.material||'—')+'</div></div><div class="box"><h3>Organización</h3><div>'+esc(x.description||'—')+'</div></div><div class="box"><h3>Coaching points</h3><div>'+esc(x.coaching_points||'—')+'</div></div></div>'+
-  videoBlock+visual+'</div></div></body></html>');
+  videoBlock+visual+'</div></div>
+<!-- V8.5.135 · UNICO POPUP PROXIMOS ENTRENAMIENTOS -->
+<style id="v85135-single-upcoming-css">
+#v85127-next-modal{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+<script id="v85135-single-upcoming-js">
+(function(){'use strict';
+function cleanup(){
+  var legacy=document.getElementById('v85127-next-modal');
+  if(legacy){legacy.classList.remove('open');legacy.setAttribute('aria-hidden','true');}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',cleanup);else cleanup();
+window.V85135={cleanup:cleanup};
+})();
+</script>
+
+</body></html>');
   win.document.close();
 }
 window.v8521OpenSessionPlan=async function(id){
@@ -34079,7 +34095,7 @@ window.v8521OpenSessionPlan=async function(id){
   await load();V8521.currentTrainingId=String(id||'');var ent=training(id);if(!ent){alert('No se encontró el entrenamiento.');return}
   var mc=micro(ent),ms=meso(mc),t=team(ent),pl=planByTraining(id);
   V8521.draftItems=(pl&&pl.items?pl.items:[]).map(function(x){return Object.assign({},x)});
-  /* V8.5.134: un entrenamiento sin plan recibe una propuesta automática editable.
+  /* V8.5.135: un entrenamiento sin plan recibe una propuesta automática editable.
      Los planes ya guardados nunca se sobrescriben al abrirlos. */
   var v85132NeedsAuto=!V8521.draftItems.length;
   E('v8521-session-training-id').value=id;
@@ -42009,7 +42025,7 @@ function upcoming(){var today=localToday();return ((window.DB&&DB.entrenamientos
 function findTraining(id){return typeof window.getEnt==='function'?window.getEnt(id):(((window.DB&&DB.entrenamientos)||[]).find(function(x){return S(x.id)===S(id)})||null)}
 function openEdit(id){var e=findTraining(id);if(!e)return;if(window.V85126&&typeof V85126.capture==='function')V85126.capture();close();setTimeout(function(){if(typeof window.openModal==='function')window.openModal('entrenamiento',e);else if(typeof window.v824EditTraining==='function')window.v824EditTraining(id)},20)}
 function render(){var a=upcoming(),list=E('v85127-next-list'),sub=E('v85127-next-sub');if(!list)return;if(sub)sub.textContent='Desde hoy '+fmtDate(localToday())+' · '+a.length+' próximos';list.innerHTML=a.length?a.map(function(e){var day=S(e.diasemana||''),time=S(e.hora||'').slice(0,5)||'—',loc=locName(e);return '<button type="button" class="v85127-item" data-v85127-edit="'+esc(e.id)+'"><span class="v85127-date">'+esc(fmtDate(e.fecha))+'<small>'+esc(day)+' · '+esc(time)+'</small></span><span><span class="v85127-team">'+esc(teamName(e))+'</span><span class="v85127-meta">'+esc(loc||'Localización pendiente')+' · '+esc((e.dur||e.duracion||'—')+' min')+'</span></span><span class="v85127-edit">✎</span></button>'}).join(''):'<div class="v85127-empty" style="grid-column:1/-1">No hay entrenamientos futuros cargados desde la fecha de hoy.</div>'}
-function show(force){var m=E('v85127-next-modal');if(!m||(!force&&shownForVisit))return;render();shownForVisit=true;m.classList.add('open');m.setAttribute('aria-hidden','false')}
+function show(force){return;} /* V8.5.135: popup legado desactivado; V85129 es el único popup activo */
 function close(){var m=E('v85127-next-modal');if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true')}}
 function markFirstColumn(){var th=document.querySelector('#ent-tbl thead th:first-child');if(th){th.title='Columna fija · pulsa una fecha para modificar el entrenamiento'}document.querySelectorAll('#tb-ent tr[data-training-id] td:first-child').forEach(function(td){td.title='Modificar este entrenamiento'})}
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-v85127-edit]');if(b){ev.preventDefault();ev.stopPropagation();openEdit(b.getAttribute('data-v85127-edit'));return}if(ev.target===E('v85127-next-modal'))close();var td=ev.target.closest&&ev.target.closest('#tb-ent tr[data-training-id] td:first-child');if(td){var tr=td.closest('tr[data-training-id]');if(tr){ev.preventDefault();ev.stopPropagation();openEdit(tr.getAttribute('data-training-id'))}}},true);
@@ -42137,7 +42153,7 @@ window.V85129={show:show,enter:enter,edit:edit,normalizeTable:normalizeTable};
 </script>
 
 
-<!-- V8.5.134 · CABECERA FECHA FIJA + BOTÓN PRÓXIMOS ENTRENAMIENTOS -->
+<!-- V8.5.135 · CABECERA FECHA FIJA + BOTÓN PRÓXIMOS ENTRENAMIENTOS -->
 <style id="v85130-training-header-css">
 #p-entrenamientos #ent-tbl thead th:first-child{position:sticky!important;top:0!important;left:0!important;z-index:1000!important;width:120px!important;min-width:120px!important;max-width:120px!important;background:#1a2b45!important;color:#f4f8ff!important;border-right:2px solid #405b7b!important;border-bottom:2px solid #405b7b!important;box-shadow:9px 5px 15px rgba(0,0,0,.42)!important;background-clip:padding-box!important}
 #p-entrenamientos #v85130-show-next{white-space:nowrap}
@@ -42146,7 +42162,7 @@ window.V85129={show:show,enter:enter,edit:edit,normalizeTable:normalizeTable};
 (function(){'use strict';function fix(){var th=document.querySelector('#p-entrenamientos #ent-tbl thead th:first-child');if(th){th.style.setProperty('position','sticky','important');th.style.setProperty('top','0','important');th.style.setProperty('left','0','important');th.style.setProperty('z-index','1000','important')}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();var tb=document.getElementById('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(fix).observe(tb,{childList:true});window.V85130={fix:fix}})();
 </script>
 
-<!-- V8.5.134 · PROPUESTA AUTOMÁTICA MESOCICLO + MICROCICLO -->
+<!-- V8.5.135 · PROPUESTA AUTOMÁTICA MESOCICLO + MICROCICLO -->
 <style id="v85132-auto-plan-css">
 .v85132-auto-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
 .v85132-auto-reason{display:inline-flex;margin-top:4px;padding:2px 7px;border-radius:999px;background:rgba(255,179,111,.12);border:1px solid rgba(255,179,111,.32);font-size:8px;color:var(--muted)}
@@ -42196,7 +42212,7 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 })();
 </script>
 
-<!-- V8.5.134 · DISTRIBUCIÓN POR BLOQUES + PROGRESIÓN -->
+<!-- V8.5.135 · DISTRIBUCIÓN POR BLOQUES + PROGRESIÓN -->
 <style id="v85133-plan-progress-css">
 #v85133-plan-summary{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:7px;margin:8px 0 12px}
 .v85133-kpi{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:7px 9px}.v85133-kpi span{display:block;font-size:7px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}.v85133-kpi b{display:block;font-size:12px;margin-top:3px}.v85133-progress{grid-column:1/-1;font-size:8px;color:var(--muted);padding:7px 9px;border:1px dashed var(--border);border-radius:8px}
@@ -42206,12 +42222,12 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 (function(){'use strict';window.V85133=window.V85133||{progressByTeam:{},lastProfile:null};
 function n(v){var x=parseFloat(v);return isFinite(x)?x:null}function avg(a){return a.length?a.reduce(function(s,x){return s+x},0)/a.length:null}
 async function fetchProgress(ent){if(!ent||!window.SB||!SB.url||!SB.key)return null;var all=((window.DB&&DB.entrenamientos)||[]).filter(function(t){return String(t.equipo)===String(ent.equipo)&&String(t.fecha||'')<String(ent.fecha||'')}).sort(function(a,b){return String(b.fecha||'').localeCompare(String(a.fecha||''))}).slice(0,3);if(!all.length)return null;var ids=all.map(function(t){return String(t.id)}),tok=sessionStorage.getItem('v8_sb_token')||'',q=ids.map(function(x){return '"'+x.replace(/"/g,'')+'"'}).join(','),r=await fetch(SB.url+'/rest/v1/entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=entrenamiento_id,sesion1,sesion2,sesion3,sesion4',{headers:{apikey:SB.key,Authorization:'Bearer '+(tok||SB.key)}});if(!r.ok)return null;var rows=await r.json(),by={};rows.forEach(function(x){var vals=['sesion1','sesion2','sesion3','sesion4'].map(function(k){return n(x[k])}).filter(function(v){return v!=null&&v>0});if(vals.length)(by[String(x.entrenamiento_id)]||(by[String(x.entrenamiento_id)]=[])).push(avg(vals))});var sessions=ids.map(function(id){return avg(by[id]||[])}).filter(function(v){return v!=null});if(!sessions.length)return null;return {avg:avg(sessions),trend:sessions.length>1?sessions[0]-sessions[sessions.length-1]:0,sessions:sessions.length};}
-window.v85133AdaptProgress=async function(){var ent=typeof training==='function'?training(V8521.currentTrainingId):null;if(!ent)return;try{if(typeof toast==='function')toast('Analizando las últimas sesiones del equipo…','i');var p=await fetchProgress(ent);V85133.progressByTeam[String(ent.equipo)]=p||{avg:3,trend:0,sessions:0};V8521.draftItems=window.v85132BuildAuto(ent);if(typeof renderSession==='function')renderSession();if(typeof v8529RenderRecs==='function')v8529RenderRecs();if(typeof toast==='function')toast(p?'Plan adaptado al progreso de las últimas '+p.sessions+' sesiones':'Sin valoraciones previas suficientes: se mantiene el perfil del microciclo','s')}catch(e){console.warn('V8.5.134 progreso',e);if(typeof toast==='function')toast('No se pudieron leer las valoraciones previas','e')}};
+window.v85133AdaptProgress=async function(){var ent=typeof training==='function'?training(V8521.currentTrainingId):null;if(!ent)return;try{if(typeof toast==='function')toast('Analizando las últimas sesiones del equipo…','i');var p=await fetchProgress(ent);V85133.progressByTeam[String(ent.equipo)]=p||{avg:3,trend:0,sessions:0};V8521.draftItems=window.v85132BuildAuto(ent);if(typeof renderSession==='function')renderSession();if(typeof v8529RenderRecs==='function')v8529RenderRecs();if(typeof toast==='function')toast(p?'Plan adaptado al progreso de las últimas '+p.sessions+' sesiones':'Sin valoraciones previas suficientes: se mantiene el perfil del microciclo','s')}catch(e){console.warn('V8.5.135 progreso',e);if(typeof toast==='function')toast('No se pudieron leer las valoraciones previas','e')}};
 window.v85133RenderPlanSummary=function(ent){var host=document.getElementById('v85133-plan-summary');if(!host){var total=document.getElementById('v8521-session-total');if(!total||!total.parentNode)return;host=document.createElement('div');host.id='v85133-plan-summary';total.parentNode.insertBefore(host,total.nextSibling)}var sums={Calentamiento:0,'Técnica':0,'Táctica':0,Juego:0};(V8521.draftItems||[]).forEach(function(x){var k=sums.hasOwnProperty(x.block_type)?x.block_type:'Técnica';sums[k]+=parseInt(x.duration_min,10)||0});var p=(V85133.progressByTeam||{})[String(ent&&ent.equipo)]||null;host.innerHTML=['Calentamiento','Técnica','Táctica','Juego'].map(function(k){return '<div class="v85133-kpi"><span>'+k+'</span><b>'+sums[k]+' min</b></div>'}).join('')+'<div class="v85133-progress">'+(p&&p.sessions?('🧠 Adaptación activa · valoración previa media '+p.avg.toFixed(2)+'/5 · '+(p.trend>.25?'tendencia positiva: aumenta progresión':(p.trend<-.25?'tendencia negativa: prioriza refuerzo':'tendencia estable'))):'La propuesta distribuye automáticamente los minutos por bloques según el tipo de microciclo. Pulsa “🧠 Adaptar al progreso” para usar las valoraciones de las últimas sesiones.')+'</div>'};
 })();
 </script>
 
-\n<!-- V8.5.134 · RESULTADO POR EJERCICIO + RETROALIMENTACIÓN -->
+\n<!-- V8.5.135 · RESULTADO POR EJERCICIO + RETROALIMENTACIÓN -->
 <style id="v85134-outcome-css">
 .v85134-outcome{grid-column:1/-1!important;display:grid;grid-template-columns:180px minmax(240px,1fr) auto;gap:8px;align-items:center;margin-top:2px;padding:8px 10px;background:#0a1626;border:1px dashed #36506f;border-radius:9px}
 .v85134-outcome label{font-size:8px;color:#8fa2bc}.v85134-outcome select,.v85134-outcome input{background:#091522;border:1px solid #314964;border-radius:7px;color:#edf4fc;padding:7px 8px;font-size:9px;width:100%;box-sizing:border-box}
