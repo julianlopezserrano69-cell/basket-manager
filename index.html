@@ -42204,3 +42204,55 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 <!-- V8.5.141 · RIVALES COMPLETOS: vestimenta Supabase + colores de encuentro + fallback logos en Equipos -->
 </body>
 </html>
+<!-- V8.5.142 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
+<script>
+(function(){
+  function E(id){return document.getElementById(id)}
+  function S(v){return String(v==null?'':v).trim().toLowerCase()}
+  function team(id){return (window.DB&&DB.equipos||[]).find(function(x){return String(x.id)===String(id)})||null}
+  function locsForClub(cid){return (window.DB&&DB.localizaciones||[]).filter(function(l){return String(l.club_id||'')===String(cid||'') && l.activa!==false && (!l.tipo || l.tipo==='Partidos' || l.tipo==='Ambos')})}
+  function pistasForLoc(lid){return (window.DB&&DB.pistas||[]).filter(function(p){return String(p.localizacion_id||'')===String(lid||'') && p.activa!==false})}
+  function chooseLocation(eq,locs){
+    if(!locs.length)return null;
+    var pab=S(eq&&eq.pabellon);
+    if(pab){
+      var exact=locs.find(function(l){return S(l.nombre)===pab}); if(exact)return exact;
+      var partial=locs.find(function(l){return S(l.nombre).indexOf(pab)>=0 || pab.indexOf(S(l.nombre))>=0}); if(partial)return partial;
+    }
+    return locs.length===1?locs[0]:null;
+  }
+  function choosePista(eq,loc,ps){
+    if(!ps.length)return null;
+    var pab=S(eq&&eq.pabellon), ln=S(loc&&loc.nombre);
+    var named=ps.find(function(p){var n=S(p.nombre);return pab && n && (pab.indexOf(n)>=0 || n.indexOf(pab)>=0)})
+    return named || (ps.length===1?ps[0]:null);
+  }
+  window.bm142InheritEncounterVenue=function(force){
+    var localSel=E('enc-local'), locSel=E('enc-localizacion'), pistaSel=E('enc-pista'), cancha=E('enc-cancha'), maps=E('enc-google-maps-url');
+    if(!localSel)return;
+    var eq=team(localSel.value); if(!eq)return;
+    var cid=eq.club_id||'';
+    if(typeof window.bmFillLocalizacionesSelect==='function') window.bmFillLocalizacionesSelect('enc-localizacion', (force?'':(locSel&&locSel.value)), cid, 'Partido');
+    locSel=E('enc-localizacion');
+    var ls=locsForClub(cid), chosen=chooseLocation(eq,ls);
+    if(chosen && locSel && (force || !locSel.value)) locSel.value=chosen.id;
+    var lid=locSel&&locSel.value||'';
+    if(typeof window.bmFillPistasSelect==='function') window.bmFillPistasSelect('enc-pista',lid,(force?'':(pistaSel&&pistaSel.value)));
+    pistaSel=E('enc-pista');
+    var loc=(window.DB&&DB.localizaciones||[]).find(function(l){return String(l.id)===String(lid)})||chosen;
+    var ps=pistasForLoc(lid), p=choosePista(eq,loc,ps);
+    if(p && pistaSel && (force || !pistaSel.value)) pistaSel.value=p.id;
+    var autoCancha=(p&&p.nombre) ? ((loc&&loc.nombre?loc.nombre+' - ':'')+p.nombre) : ((loc&&loc.nombre)||eq.pabellon||'');
+    if(cancha && autoCancha && (force || !cancha.value || cancha.dataset.bm142auto==='1')){cancha.value=autoCancha;cancha.dataset.bm142auto='1'}
+    var url=(loc&&loc.google_maps_url)||(eq&&eq.google_maps_url)||'';
+    if(maps && url && (force || !maps.value)) maps.value=url;
+    if(typeof window.updateEncColors==='function') window.updateEncColors();
+  };
+  document.addEventListener('change',function(ev){
+    if(ev.target&&ev.target.id==='enc-local') setTimeout(function(){window.bm142InheritEncounterVenue(true)},0);
+    if(ev.target&&ev.target.id==='enc-localizacion') setTimeout(function(){window.bm142InheritEncounterVenue(false)},0);
+  });
+  var oldOpen=window.openModal;
+  if(typeof oldOpen==='function') window.openModal=function(type,data){var r=oldOpen.apply(this,arguments);if(type==='encuentro')setTimeout(function(){window.bm142InheritEncounterVenue(!data)},140);return r};
+})();
+</script>

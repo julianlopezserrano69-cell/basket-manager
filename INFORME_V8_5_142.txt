@@ -1,0 +1,4 @@
+Basket Manager V8.5.142
+Base: V8.5.141 confirmada estable por el usuario.
+Cambio: Encuentros hereda automáticamente desde el equipo local su club, localizaciones de partido, pista cuando es inequívoca, cancha y Google Maps disponible. Mantiene selección manual cuando hay varias opciones no determinables.
+No modifica datos Supabase por sí sola ni inventa sedes/pistas.
