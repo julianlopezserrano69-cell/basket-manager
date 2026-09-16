@@ -4446,7 +4446,9 @@ body.mode-mobile #login-overlay #login-box .login-field input{
 .v813-team-picker select{flex:1}
 .v813-logo{width:38px;height:38px;object-fit:contain;border-radius:9px;background:#fff;border:1px solid #d8e3eb;padding:2px}
 .v813-logo-sm{width:24px;height:24px;object-fit:contain;border-radius:6px;background:#fff;vertical-align:middle;margin-left:6px}
-.v813-logo-fallback{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#edf4f8;border:1px solid #d0dde6;color:#31536f;font-size:9px;font-weight:900}
+.v813-logo-fallback{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--club-c1,#edf4f8) 0 50%,var(--club-c2,#fff) 50% 100%);border:1px solid #d0dde6;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.75);font-size:9px;font-weight:900;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.v8140-logo-wrap{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+.v8140-logo-error-fallback{display:none}
 .v813-colorbox{display:flex;gap:9px;align-items:center;min-height:38px}
 .v813-swatch{width:24px;height:24px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #c7d4de;cursor:pointer;padding:0}
 .v813-swatch.selected{box-shadow:0 0 0 3px #f47a22}
@@ -29455,9 +29457,15 @@ X.playersFor=function(teamId){
 X.playerLabel=function(p){ const d=this.playerJersey(p); return (d!==''?d+' - ':'')+this.playerName(p); };
 X.logoHTML=function(t,small){
   const u=this.teamLogo(t), n=(t&&t.name)||'EQ';
-  if(u) return `<img class="${small?'v813-logo-sm':'v813-logo'}" src="${this.esc(u)}" alt="${this.esc(n)}" onerror="this.style.display='none'">`;
-  const ini=n.split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
-  return `<span class="v813-logo-fallback" style="${small?'width:24px;height:24px;font-size:7px;margin-left:6px':''}">${this.esc(ini)}</span>`;
+  const ini=n.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'EQ';
+  const colors=this.teamColors(t), c1=colors[0]||'#0b4f86', c2=colors[1]||'#ffffff';
+  const fallback=`<span class="v813-logo-fallback" aria-label="${this.esc(n)}" title="${this.esc(n)}" style="${small?'width:24px;height:24px;font-size:7px;margin-left:6px;':''}--club-c1:${this.esc(c1)};--club-c2:${this.esc(c2)}">${this.esc(ini)}</span>`;
+  if(!u) return fallback;
+  return `<span class="v8140-logo-wrap">`+
+    `<img class="${small?'v813-logo-sm':'v813-logo'}" src="${this.esc(u)}" alt="${this.esc(n)}" loading="lazy" decoding="async" `+
+    `onerror="this.style.display='none';var f=this.nextElementSibling;if(f)f.style.display='inline-flex'">`+
+    fallback.replace('class="v813-logo-fallback"','class="v813-logo-fallback v8140-logo-error-fallback"')+
+    `</span>`;
 };
 X.activeClubId=function(){
   let v='';

@@ -1,0 +1,9 @@
+Basket Manager V8.5.140
+Base: V8.5.138 (última versión confirmada estable).
+
+Cambio único y conservador:
+- Fallback visual de logos en Encuentros cuando logo/logo_url está vacío o la imagen falla.
+- El fallback usa iniciales y colores del club/equipo.
+- Las imágenes usan loading=lazy y decoding=async.
+- No se modifican datos Supabase ni se añaden logos no verificados.
+- Service Worker actualizado a basket-manager-v8.5.140.
