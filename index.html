@@ -32718,7 +32718,7 @@ window.v858RefreshPeriodStatus=function(){
 };
 
 setInterval(function(){
-  if(document.getElementById('p-plan-entrenamientos')) v858RefreshPeriodStatus();
+  var p=document.getElementById('p-plan-entrenamientos'); if(p&&p.classList.contains('active')) v858RefreshPeriodStatus();
 },60000);
 
 })();
@@ -36652,7 +36652,7 @@ var oldLoad54=window.v850Load;if(typeof oldLoad54==='function'&&!oldLoad54.__v85
 }
 ['saveMicrociclo','saveMesociclo'].forEach(function(name){var old=window[name];if(typeof old==='function'&&!old.__v8554){window[name]=async function(){var r=await old.apply(this,arguments);scheduleSync54();return r};window[name].__v8554=true}});
 setTimeout(scheduleSync54,1200);
-setInterval(scheduleSync54,60000);
+/* V8.5.151: eliminado polling cada 60s; la sincronización queda ligada a carga/guardado. */
 
 /* Acciones: solo iconos. */
 window.v8554CompactTrainingActions=function(){
@@ -40649,7 +40649,8 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
   document.addEventListener('click', e=>{
     if(e.target.closest && (e.target.closest('[data-action="new-match"]') || e.target.closest('[onclick*="match"]') || e.target.closest('[onclick*="encuentro"]'))) run();
   },true);
-  new MutationObserver(run).observe(document.documentElement,{childList:true,subtree:true});
+  /* V8.5.151: sin observer global del documento; el ajuste se activa por interacción/apertura. */
+  document.addEventListener('focusin',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))run()},true);
   run();
 })();
 </script>
@@ -40740,7 +40741,9 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       i.style.paddingLeft='34px'; i.style.fontSize='8px'; i.style.height='34px';
     });
   }
-  new MutationObserver(()=>setTimeout(fix,30)).observe(document.documentElement,{childList:true,subtree:true});
+  /* V8.5.151: eliminado segundo observer global redundante. */
+  document.addEventListener('focusin',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))setTimeout(fix,0)},true);
+  document.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))setTimeout(fix,0)},true);
   fix();
 })();
 </script>
@@ -42373,6 +42376,10 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 })();
 </script>
 
+
+<script id="v85151-core-stability-marker">
+(function(){'use strict';window.BM_VERSION='8.5.151';})();
+</script>
 </body>
 </html>
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
@@ -42428,4 +42435,8 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 })();
 </script>
 
+
+<script id="v85151-core-stability-marker">
+(function(){'use strict';window.BM_VERSION='8.5.151';})();
+</script>
 </body></html>

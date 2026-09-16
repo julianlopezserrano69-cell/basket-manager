@@ -1,0 +1,12 @@
+V8.5.151 - CORE ESTABLE (FASE 1)
+Base: V8.5.150 confirmada por el usuario.
+
+Cambios conservadores, sin modificar Supabase ni lógica funcional:
+- Eliminado polling de autoasignación de microciclos cada 60 s; se conservan sincronizaciones al cargar/guardar.
+- Refresco periódico de estado de planificación limitado a cuando la página está activa.
+- Eliminados 2 MutationObserver globales sobre document.documentElement del modal de encuentros.
+- Sustituidos por activación dirigida mediante interacción/foco en el modal.
+- Cache PWA actualizada a basket-manager-v8.5.151.
+- Marcador interno BM_VERSION=8.5.151.
+
+Objetivo: reducir trabajo DOM en segundo plano y refrescos/reflows globales sin cambiar comportamiento de negocio.
