@@ -14138,12 +14138,23 @@ function renderClubs(data) {
       ? '<details class="club-equipos-dd" style="position:relative"><summary style="cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:var(--surface2);white-space:nowrap"><span class="badge b-orange">'+esc(eqs[0].nombre||eqs[0].name||'-')+'</span><span style="color:var(--muted)">⌄</span></summary><div style="position:absolute;z-index:80;top:calc(100% + 4px);left:0;min-width:220px;max-height:230px;overflow:auto;background:var(--card);border:1px solid var(--border);border-radius:9px;box-shadow:0 12px 28px rgba(0,0,0,.25);padding:6px">'+eqs.map(function(eq){return '<div style="padding:6px 8px;border-radius:6px;white-space:nowrap">'+esc(eq.nombre||eq.name||'-')+'</div>';}).join('')+'</div></details>'
       : '<span style="color:var(--muted);font-size:12px">Sin equipos</span>';
     var logo = c.logo || c.logo_url || '';
-    var col1 = c.color1 || c.primary_color || '#f97316';
-    var col2 = c.color2 || c.secondary_color || '#0b4f86';
-    var loc = c.localizacion || c.location || '';
+    var eqColorSource = eqs[0] || null;
+    function clubHex(v, fb){
+      v=String(v||'').trim();
+      if(/^#[0-9a-f]{6}$/i.test(v)) return v;
+      var mm={NEGRO:'#111827',BLANCO:'#FFFFFF',AZUL:'#2563EB',ROJO:'#DC2626',VERDE:'#16A34A',NARANJA:'#F97316',AMARILLO:'#FACC15'};
+      return mm[v.toUpperCase()]||fb;
+    }
+    var col1 = clubHex(c.color1 || c.primary_color || (eqColorSource && (eqColorSource.vestimenta_principal||eqColorSource.color)), '#64748b');
+    var col2 = clubHex(c.color2 || c.secondary_color || (eqColorSource && eqColorSource.vestimenta_reserva), '#cbd5e1');
+    var clubLocs=(DB.localizaciones||[]).filter(function(x){return String(x.club_id||'')===String(c.id)&&x.activa!==false;});
+    var defaultLoc=clubLocs.find(function(x){return x.tipo==='Partidos'||x.tipo==='Ambos';})||clubLocs[0]||null;
+    var loc = c.localizacion || c.location || (defaultLoc && (defaultLoc.nombre||defaultLoc.direccion)) || '';
+    var initials=String(c.nombre||c.name||'CL').replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean).slice(0,3).map(function(x){return x.charAt(0);}).join('').toUpperCase()||'CL';
+    var fallbackLogo='<div title="Logo oficial pendiente" style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,'+esc(col1)+' 0 50%,'+esc(col2)+' 50% 100%);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;text-shadow:0 1px 2px #000">'+esc(initials)+'</div>';
     var logoHtml = logo
-      ? '<img src="'+esc(logo)+'" alt="" style="width:38px;height:38px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:8px;padding:2px" onerror="this.style.display=\'none\'">'
-      : '<div style="width:38px;height:38px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted)">🏀</div>';
+      ? '<img src="'+esc(logo)+'" alt="" style="width:38px;height:38px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:8px;padding:2px" onerror="this.outerHTML='+JSON.stringify(fallbackLogo).replace(/"/g,'&quot;')+'">'
+      : fallbackLogo;
     var colors = '<div style="display:flex;gap:8px;align-items:center">'+
       '<span title="'+esc(col1)+'" style="width:24px;height:24px;border-radius:50%;display:inline-block;background:'+esc(col1)+';border:2px solid #fff;box-shadow:0 0 0 1px var(--border)"></span>'+
       '<span title="'+esc(col2)+'" style="width:24px;height:24px;border-radius:50%;display:inline-block;background:'+esc(col2)+';border:2px solid #fff;box-shadow:0 0 0 1px var(--border)"></span>'+
@@ -17547,7 +17558,11 @@ function _dbFor(tabla) {
   var t = _curTmp();
   var rows = DB[tabla] || [];
   if (!t) return rows;
-  return rows.filter(function(r){ return r.temporada === t; });
+  function seasonEq(a,b){
+    function n(v){ var m=String(v||'').trim().match(/(20\d{2})\D+(20)?(\d{2})/); return m ? (m[1]+'-'+m[3]) : String(v||'').trim(); }
+    return n(a)===n(b);
+  }
+  return rows.filter(function(r){ return !r.temporada || seasonEq(r.temporada,t); });
 }
 function renderAll() {
   refreshEquiposEntrenadorLinks();
@@ -19669,7 +19684,7 @@ function sbReadGenero(r) {
   return sbGeneroValue(r && (r.genero || r.Genero || r['Género'] || r['género'] || r.genero_equipo || r.genero_jugador));
 }
 var SB_MAPS = {
-  clubs:         { table: 'clubs',         toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad||null,contacto:o.contacto||null,telefono:o.telefono||null,mail:o.mail||null,web:o.web||null,logo:o.logo||o.logo_url||null,logo_url:o.logo_url||o.logo||null,color1:o.color1||o.primary_color||null,color2:o.color2||o.secondary_color||null,primary_color:o.primary_color||o.color1||null,secondary_color:o.secondary_color||o.color2||null,localizacion:o.localizacion||o.location||null,location:o.location||o.localizacion||null,notas:o.notas||null}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||r.name||'',ciudad:r.ciudad||r.city||'',contacto:r.contacto||'',telefono:r.telefono||'',mail:r.mail||'',web:r.web||'',logo:r.logo||r.logo_url||'',logo_url:r.logo_url||r.logo||'',color1:r.color1||r.primary_color||'#f97316',color2:r.color2||r.secondary_color||'#0b4f86',primary_color:r.primary_color||r.color1||'#f97316',secondary_color:r.secondary_color||r.color2||'#0b4f86',localizacion:r.localizacion||r.location||'',location:r.location||r.localizacion||'',notas:r.notas||''}; } },
+  clubs:         { table: 'clubs',         toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad||null,contacto:o.contacto||null,telefono:o.telefono||null,mail:o.mail||null,web:o.web||null,logo:o.logo||o.logo_url||null,logo_url:o.logo_url||o.logo||null,color1:o.color1||o.primary_color||null,color2:o.color2||o.secondary_color||null,primary_color:o.primary_color||o.color1||null,secondary_color:o.secondary_color||o.color2||null,localizacion:o.localizacion||o.location||null,location:o.location||o.localizacion||null,notas:o.notas||null}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||r.name||'',ciudad:r.ciudad||r.city||'',contacto:r.contacto||'',telefono:r.telefono||'',mail:r.mail||'',web:r.web||'',logo:r.logo||r.logo_url||'',logo_url:r.logo_url||r.logo||'',color1:r.color1||r.primary_color||'',color2:r.color2||r.secondary_color||'',primary_color:r.primary_color||r.color1||'',secondary_color:r.secondary_color||r.color2||'',localizacion:r.localizacion||r.location||'',location:r.location||r.localizacion||'',notas:r.notas||''}; } },
   equipos:        { table: 'equipos',        toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad,club_id:o.club_id||null,pabellon:o.pabellon||null,google_maps_url:o.google_maps_url||null,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,entrenador_id:o.entrenador_id||getEntrenadorEquipoId(o.id)||null,color:o.color,vestimenta_principal:o.vestimenta_principal||null,vestimenta_reserva:o.vestimenta_reserva||null,"Temporada":o.temporada,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||'',ciudad:r.ciudad||'',club_id:r.club_id||'',pabellon:r.pabellon||'',google_maps_url:r.google_maps_url||'',categoria:r.categoria||'',genero:sbReadGenero(r),entrenador_id:r.entrenador_id||'',entrenador:'',color:r.color||'#f97316',vestimenta_principal:r.vestimenta_principal||'',vestimenta_reserva:r.vestimenta_reserva||'',temporada:r["Temporada"]||r.temporada||'',notas:r.notas||''}; } },
   jugadores:      { table: 'jugadores',      toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,dorsal:o.dorsal,posicion:o.posicion,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,equipo:o.equipo||null,edad:calcularEdadPorAnoNacimiento(o.ano_nacimiento),ano_nacimiento:o.ano_nacimiento?parseInt(o.ano_nacimiento):null,altura:o.altura,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',dorsal:r.dorsal||'',posicion:r.posicion||'Base',categoria:r.categoria||'',genero:sbReadGenero(r),equipo:r.equipo||'',edad:r.edad||'',ano_nacimiento:r.ano_nacimiento||'',altura:r.altura||'',notas:r.notas||''}; } },
   entrenadores:   { table: 'entrenadores',   toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,club_id:o.club_id||null,equipo:o.equipo||((o.equipos_ids||[])[0])||null,equipos_ids:Array.isArray(o.equipos_ids)?o.equipos_ids:(o.equipo?[o.equipo]:[]),genero:sbGeneroValue(o.genero)||null,telefono:o.telefono,mail:o.mail,notas:o.notas}; }, fromRow: function(r){ var ids=Array.isArray(r.equipos_ids)?r.equipos_ids.filter(Boolean):(r.equipo?[r.equipo]:[]); return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',club_id:r.club_id||'',equipo:r.equipo||ids[0]||'',equipos_ids:ids,equipos:ids.slice(),genero:sbReadGenero(r),telefono:r.telefono||'',mail:r.mail||'',notas:r.notas||''}; } },
@@ -34090,7 +34105,7 @@ function viewExercise(id){
   'body{margin:0;background:#07101f;color:#eef4fb;font-family:Arial,sans-serif}.wrap{max-width:1040px;margin:auto;padding:28px}.hero{background:#14233b;border:1px solid #355071;border-radius:18px;padding:22px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{border:1px solid #45617f;border-radius:999px;padding:7px 11px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.box,.step,.singleBoard,.videoBox{background:#0c1729;border:1px solid #2d4667;border-radius:14px;padding:16px}.box h3,.seq h2,.singleBoard h2,.videoBox h2{color:#ffb36f}.seq,.singleBoard,.videoBox{margin-top:22px}.step{margin:14px 0}.stepHead{margin-bottom:8px;color:#ffb36f}.step img,.singleBoard img{width:100%;max-height:700px;object-fit:contain;border-radius:10px;background:#d9a35f}.imageUrl{margin-top:10px}.imageUrl a,.videoLink{color:#8fc5ff;word-break:break-all}.empty{margin-top:20px;padding:16px;border:1px dashed #405b7a;border-radius:12px;color:#8297b3}.videoGrid{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:center}.qr{background:#fff;padding:10px;border-radius:12px;color:#172033;text-align:center}.qr img{width:210px;height:210px}.playBtn{display:inline-block;background:#ff7417;color:#fff;text-decoration:none;padding:10px 14px;border-radius:9px;font-weight:bold}@media(max-width:700px){.grid,.videoGrid{grid-template-columns:1fr}}</style></head><body>'+
   '<div class="wrap"><div class="hero"><h1>'+esc(x.name)+'</h1><div class="chips"><span class="chip">'+esc(x.fundament||'')+'</span><span class="chip">'+esc(x.level||'')+'</span><span class="chip">⏱ '+esc(x.duration_min||10)+' min</span><span class="chip">👥 '+esc(x.players||'—')+'</span>'+(standalone?'<span class="chip">🏀 Imagen/Pizarra</span>':'')+(video?'<span class="chip">🎥 Vídeo + QR</span>':'')+'</div>'+
   '<div class="grid"><div class="box"><h3>Objetivo</h3><div>'+esc(x.objective||'—')+'</div></div><div class="box"><h3>Material</h3><div>'+esc(x.material||'—')+'</div></div><div class="box"><h3>Organización</h3><div>'+esc(x.description||'—')+'</div></div><div class="box"><h3>Coaching points</h3><div>'+esc(x.coaching_points||'—')+'</div></div></div>'+
-  videoBlock+visual+'</div></div></body></html>');
+  videoBlock+visual+'</div></div>');
   win.document.close();
 }
 window.v8521OpenSessionPlan=async function(id){
@@ -42203,23 +42218,10 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 </script>
 <!-- V8.5.141 · RIVALES COMPLETOS: vestimenta Supabase + colores de encuentro + fallback logos en Equipos -->
 
-<script id="bm-v85143-clubs-encuentros-fix">
-(function(){
-'use strict';
-window.bmSeasonEq=function(a,b){function n(v){var m=String(v||'').trim().match(/(20\d{2})\D+(20)?(\d{2})/);return m?(m[1]+'-'+m[3]):String(v||'').trim();}return n(a)===n(b);};
-function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function ini(n){return String(n||'CL').replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean).slice(0,3).map(function(x){return x.charAt(0);}).join('').toUpperCase()||'CL';}
-function tm(id){return (DB.equipos||[]).find(function(x){return String(x.club_id||'')===String(id);})||null;}
-function lc(id){var a=(DB.localizaciones||[]).filter(function(x){return String(x.club_id||'')===String(id)&&x.activa!==false;});return a.find(function(x){return x.tipo==='Partidos'||x.tipo==='Ambos';})||a[0]||null;}
-function hx(v,fb){v=String(v||'').trim();if(/^#[0-9a-f]{6}$/i.test(v))return v;var m={NEGRO:'#111827',BLANCO:'#FFFFFF',AZUL:'#2563EB',ROJO:'#DC2626',VERDE:'#16A34A',NARANJA:'#F97316',AMARILLO:'#FACC15'};return m[v.toUpperCase()]||fb;}
-var old=window.renderClubs;window.renderClubs=function(data){(data||[]).forEach(function(c){var t=tm(c.id),l=lc(c.id);if(!c.color1&&!c.primary_color)c.color1=hx(t&&(t.vestimenta_principal||t.color),'#f97316');if(!c.color2&&!c.secondary_color)c.color2=hx(t&&t.vestimenta_reserva,'#0b4f86');if(!c.localizacion&&!c.location&&l)c.localizacion=l.nombre||l.direccion||'';});if(typeof old==='function')old(data);var tb=document.getElementById('tb-clubs');if(!tb)return;var rows=tb.querySelectorAll('tr');(data||[]).slice().sort(function(a,b){return String(a.nombre||a.name||'').localeCompare(String(b.nombre||b.name||''),'es');}).forEach(function(c,i){var tr=rows[i],td=tr&&tr.cells&&tr.cells[0];if(!td)return;var img=td.querySelector('img'),c1=hx(c.color1||c.primary_color,'#f97316'),c2=hx(c.color2||c.secondary_color,'#0b4f86');var fb='<div title="Logo pendiente" style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,'+e(c1)+' 0 50%,'+e(c2)+' 50% 100%);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-shadow:0 1px 2px #000">'+e(ini(c.nombre||c.name))+'</div>';if(!img)td.innerHTML=fb;else img.onerror=function(){td.innerHTML=fb;};});};
-function ref(){try{if(typeof filterClubs==='function')filterClubs();}catch(x){}try{if(typeof filterEnc==='function')filterEnc();else if(typeof renderEncuentros==='function')renderEncuentros((DB.encuentros||[]).slice());}catch(x){console.warn('V8.5.143 encuentros',x);}}
-var nav0=window.nav;if(typeof nav0==='function')window.nav=function(page){var r=nav0.apply(this,arguments);if(page==='clubs'||page==='encuentros')setTimeout(ref,150);return r;};window.addEventListener('load',function(){setTimeout(ref,1200);});
-})();
-</script>
+<script id="bm-v85144-core-fix">/* V8.5.144 fixes integrated in core functions. */</script>
 </body>
 </html>
-<!-- V8.5.143 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
+<!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
   function E(id){return document.getElementById(id)}
@@ -42271,3 +42273,5 @@ var nav0=window.nav;if(typeof nav0==='function')window.nav=function(page){var r=
   if(typeof oldOpen==='function') window.openModal=function(type,data){var r=oldOpen.apply(this,arguments);if(type==='encuentro')setTimeout(function(){window.bm142InheritEncounterVenue(!data)},140);return r};
 })();
 </script>
+
+</body></html>
