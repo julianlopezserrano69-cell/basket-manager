@@ -1,0 +1,5 @@
+V8.5.148
+- Corrige edición/guardado de encuentros históricos: PATCH directo a public.encuentros usando su ID real, sin enviar IDs legacy-* a public.encounters UUID.
+- Corrige borrado de encuentros históricos por la misma vía.
+- Jornada: si el registro histórico no tiene J, la vista asigna J1, J2... por orden cronológico; al modificar y guardar se persiste en public.encuentros.J.
+- Mantiene carga directa de public.encuentros de V8.5.147.
