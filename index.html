@@ -29263,10 +29263,12 @@ const V81={
     const label=this.homeName(e)+' vs '+this.awayName(e)+' · '+(e.game_date||'');
     if(!confirm('¿Borrar definitivamente este encuentro?\\n\\n'+label+'\\n\\nEsta acción no se puede deshacer.')) return;
     try{
-      const r=await window.sbFetch('encounters?id=eq.'+encodeURIComponent(id),{method:'DELETE'});
+      const isLegacy=String(id||'').indexOf('legacy-')===0;
+      const path=isLegacy?('encuentros?id=eq.'+encodeURIComponent(String(id).slice(7))):('encounters?id=eq.'+encodeURIComponent(id));
+      const r=await window.sbFetch(path,{method:'DELETE'});
       if(!r.ok) throw new Error(await r.text());
-      await this.load(true);
-    }catch(err){alert('No se pudo borrar el encuentro. Puede tener datos relacionados (scouting, estadísticas, convocatoria, etc.).\\n\\n'+(err.message||err));}
+      await this.load813();
+    }catch(err){alert('No se pudo borrar el encuentro.\\n\\n'+(err.message||err));}
   },
 
   tab(name){
@@ -29796,25 +29798,54 @@ X.saveEncounter813=async function(){
   const loc=this.currentLocation();
   const isLocal=s.homeAway==='Local';
   const homeTeam=isLocal?own:rival, awayTeam=isLocal?rival:own;
-  const homeCalled=isLocal?s.ourCalled:s.rivalCalled, awayCalled=isLocal?s.rivalCalled:s.ourCalled;
-  const homeStarters=isLocal?s.ourStarters:s.rivalStarters, awayStarters=isLocal?s.rivalStarters:s.ourStarters;
-  const payload={
-    team_id:s.ownTeamId, club_id:own?.club_id||null, season_id:this.activeSeasonId()||own?.season_id||null,
-    opponent_team_id:s.rivalTeamId, opponent_name:rival?.name||'', category:s.category, gender:s.gender||'MASC',
-    home_away:s.homeAway, status:s.status, game_date:s.date, game_time:s.time||null, round_label:s.round,
-    location:loc||null, home_score:s.homeScore===''?null:Number(s.homeScore), away_score:s.awayScore===''?null:Number(s.awayScore),
-    notes:s.notes||null, home_team_id:homeTeam?.id||null, away_team_id:awayTeam?.id||null,
-    home_color:isLocal?s.ourColor:s.rivalColor, away_color:isLocal?s.rivalColor:s.ourColor,
-    home_called_ids:homeCalled||[], away_called_ids:awayCalled||[], home_starter_ids:homeStarters||[], away_starter_ids:awayStarters||[],
-    captain_ids:[s.ourCaptain,s.rivalCaptain].filter(Boolean)
-  };
-  if(!s.id){payload.id=(crypto.randomUUID?crypto.randomUUID():('enc-'+Date.now()));payload.code='APP-'+Date.now();}
+  const isLegacy=String(s.id||'').indexOf('legacy-')===0;
   try{
-    const path=s.id?'encounters?id=eq.'+encodeURIComponent(s.id):'encounters';
-    const r=await window.sbFetch(path,{method:s.id?'PATCH':'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error(await r.text());
+    if(isLegacy){
+      // Registro procedente de public.encuentros: SIEMPRE se guarda en esa misma tabla.
+      const realId=String(s.id).slice(7);
+      let seasonName=''; try{seasonName=this.activeSeasonName()||'';}catch(_e){}
+      if(!seasonName)seasonName='2026-27';
+      const payloadLegacy={
+        fecha:s.date,
+        local:homeTeam?.id||null,
+        visitante:awayTeam?.id||null,
+        pts_local:s.homeScore===''?null:Number(s.homeScore),
+        pts_vis:s.awayScore===''?null:Number(s.awayScore),
+        cancha:loc||null,
+        estado:s.status||'Programado',
+        notas:s.notes||null,
+        diasemana:(()=>{try{return ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][new Date(s.date+'T12:00:00').getDay()]}catch(_e){return null}})(),
+        hora:s.time||null,
+        categoria:s.category||null,
+        J:s.round||null,
+        Temporada:seasonName,
+        genero:s.gender||'MASC',
+        updated_at:new Date().toISOString()
+      };
+      const r=await window.sbFetch('encuentros?id=eq.'+encodeURIComponent(realId),{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(payloadLegacy)});
+      if(!r.ok)throw new Error(await r.text());
+    }else{
+      // Registro moderno: public.encounters (UUID).
+      const homeCalled=isLocal?s.ourCalled:s.rivalCalled, awayCalled=isLocal?s.rivalCalled:s.ourCalled;
+      const homeStarters=isLocal?s.ourStarters:s.rivalStarters, awayStarters=isLocal?s.rivalStarters:s.ourStarters;
+      const payload={
+        team_id:s.ownTeamId,club_id:own?.club_id||null,season_id:this.activeSeasonId()||own?.season_id||null,
+        opponent_team_id:s.rivalTeamId,opponent_name:rival?.name||'',category:s.category,gender:s.gender||'MASC',
+        home_away:s.homeAway,status:s.status,game_date:s.date,game_time:s.time||null,round_label:s.round,
+        location:loc||null,home_score:s.homeScore===''?null:Number(s.homeScore),away_score:s.awayScore===''?null:Number(s.awayScore),
+        notes:s.notes||null,home_team_id:homeTeam?.id||null,away_team_id:awayTeam?.id||null,
+        home_color:isLocal?s.ourColor:s.rivalColor,away_color:isLocal?s.rivalColor:s.ourColor,
+        home_called_ids:homeCalled||[],away_called_ids:awayCalled||[],home_starter_ids:homeStarters||[],away_starter_ids:awayStarters||[],
+        captain_ids:[s.ourCaptain,s.rivalCaptain].filter(Boolean)
+      };
+      if(!s.id){payload.id=(crypto.randomUUID?crypto.randomUUID():('00000000-0000-4000-8000-'+String(Date.now()).slice(-12)));payload.code='APP-'+Date.now();}
+      const path=s.id?'encounters?id=eq.'+encodeURIComponent(s.id):'encounters';
+      const r=await window.sbFetch(path,{method:s.id?'PATCH':'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(payload)});
+      if(!r.ok)throw new Error(await r.text());
+    }
     await this.load813();
-    this.initFormState(null);this.render813Form();alert(s.id?'Encuentro modificado correctamente.':'Encuentro añadido correctamente.');
+    this.initFormState(null);this.render813Form();
+    alert(s.id?'Encuentro modificado correctamente.':'Encuentro añadido correctamente.');
   }catch(e){alert('No se pudo guardar el encuentro:\\n'+(e.message||e));}
 };
 X.clear813Filters=function(){
@@ -39486,7 +39517,7 @@ function go(){
     set('v813-total-title',total);set('v8588-k-total',total);set('v8588-k-played',played.length);set('v8588-k-pending',rows.filter(function(x){return x.status!=='Finalizado'&&x.status!=='Cancelado'}).length);set('v8588-k-won',won);set('v8588-k-lost',lost);
     set('v813-k-fin',played.length);set('v813-k-prog',rows.filter(function(x){return x.status==='Programado'}).length);set('v813-k-local',rows.filter(function(x){return x.home_away==='Local'}).length);set('v813-k-away',rows.filter(function(x){return x.home_away==='Visitante'}).length);
     var max=Math.max(1,Math.ceil(total/X.v813.pageSize));if(X.v813.page>max)X.v813.page=max;var start=(X.v813.page-1)*X.v813.pageSize,pageRows=rows.slice(start,start+X.v813.pageSize),tb=document.getElementById('v813-tbody');if(!tb)return;
-    tb.innerHTML=pageRows.map(function(e){var ht=X.teams[e.home_team_id]||{name:X.homeName(e)},at=X.teams[e.away_team_id]||{name:X.awayName(e)},res=(e.home_score!=null&&e.away_score!=null)?('<b>'+E(e.home_score)+' - '+E(e.away_score)+'</b>'):'—';return '<tr><td><b>'+E(e.round_label||'—')+'</b></td><td>'+E(e.game_date||'—')+'</td><td>'+E((e.game_time||'').slice(0,5)||'—')+'</td><td>'+X.teamCell813(ht,e.home_color)+'</td><td>'+X.teamCell813(at,e.away_color)+'</td><td>'+res+'</td><td>'+E(e.location||'—')+'</td><td><span class="v813-status '+E(e.status||'')+'">'+E(e.status||'—')+'</span></td><td>'+E(e.home_away||'—')+'</td><td style="white-space:nowrap"><button class="v813-iconbtn" title="Ver encuentro" onclick="V81.viewEncounter(\''+E(e.id)+'\')">◉</button><button class="v813-iconbtn" title="Modificar" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎</button><button class="v813-iconbtn delete" title="Borrar" onclick="V81.deleteEncounter(\''+E(e.id)+'\')">🗑</button></td></tr>'}).join('')||'<tr><td colspan="10" style="text-align:center;padding:26px">No hay encuentros con estos filtros.</td></tr>';
+    tb.innerHTML=pageRows.map(function(e,rowIndex){var ht=X.teams[e.home_team_id]||{name:X.homeName(e)},at=X.teams[e.away_team_id]||{name:X.awayName(e)},res=(e.home_score!=null&&e.away_score!=null)?('<b>'+E(e.home_score)+' - '+E(e.away_score)+'</b>'):'—';return '<tr><td><b>'+E(e.round_label||('J'+(start+rowIndex+1)))+'</b></td><td>'+E(e.game_date||'—')+'</td><td>'+E((e.game_time||'').slice(0,5)||'—')+'</td><td>'+X.teamCell813(ht,e.home_color)+'</td><td>'+X.teamCell813(at,e.away_color)+'</td><td>'+res+'</td><td>'+E(e.location||'—')+'</td><td><span class="v813-status '+E(e.status||'')+'">'+E(e.status||'—')+'</span></td><td>'+E(e.home_away||'—')+'</td><td style="white-space:nowrap"><button class="v813-iconbtn" title="Ver encuentro" onclick="V81.viewEncounter(\''+E(e.id)+'\')">◉</button><button class="v813-iconbtn" title="Modificar" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎</button><button class="v813-iconbtn delete" title="Borrar" onclick="V81.deleteEncounter(\''+E(e.id)+'\')">🗑</button></td></tr>'}).join('')||'<tr><td colspan="10" style="text-align:center;padding:26px">No hay encuentros con estos filtros.</td></tr>';
     set('v813-page-info',total?('Mostrando '+(start+1)+' a '+Math.min(start+X.v813.pageSize,total)+' de '+total+' encuentros'):'0 encuentros');
     var pg=document.getElementById('v813-pages'),ph='';for(var i=1;i<=max;i++){if(max>7&&i>3&&i<max-2){if(i===4)ph+='<span style="padding:5px">…</span>';continue}ph+='<button class="v813-page '+(i===X.v813.page?'active':'')+'" onclick="V81.v813.page='+i+';V81.render813()">'+i+'</button>'}if(pg)pg.innerHTML=ph;
   };
@@ -40129,7 +40160,7 @@ function boot(){
   var p=document.getElementById('p-encuentros');if(!p)return;
   p.innerHTML=`<div id="v813-root">
     <div class="v8592-head">
-      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v8.5.148</span></small></div>
+      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v8.5.149</span></small></div>
       <div class="v8592-club"><label>Club</label><select id="v8592-club" onchange="V81.v8592ClubChanged(this.value)"></select></div>
       <button class="v813-btn v8592-add" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
     </div>
@@ -42294,74 +42325,6 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 
 <script id="bm-v85144-core-fix">/* V8.5.144 fixes integrated in core functions. */</script>
 
-<script id="bm-v85148-legacy-encuentros-crud-fix">
-(function(){
-'use strict';
-if(!window.V81)return;
-var X=window.V81;
-function isLegacyId(id){return String(id||'').indexOf('legacy-')===0;}
-function legacyId(id){return String(id||'').replace(/^legacy-/,'');}
-function dayName(dateStr){
-  if(!dateStr)return null;
-  try{return ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][new Date(dateStr+'T12:00:00').getDay()];}catch(_e){return null;}
-}
-var originalSave=X.saveEncounter813;
-X.saveEncounter813=async function(){
-  var s=this.v813&&this.v813.formState;
-  if(!s||!isLegacyId(s.id))return originalSave.apply(this,arguments);
-  if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede guardar encuentros.');return;}
-  var own=this.teams[s.ownTeamId], rival=this.teams[s.rivalTeamId];
-  if(!s.round||!s.category||!s.ownTeamId||!s.rivalTeamId||!s.date){alert('Completa Jornada, Categoría, Equipo, Rival y Fecha.');return;}
-  if((s.ourStarters||[]).length>5||(s.rivalStarters||[]).length>5){alert('El quinteto inicial no puede superar 5 jugadores.');return;}
-  var isLocal=s.homeAway==='Local';
-  var homeTeam=isLocal?own:rival, awayTeam=isLocal?rival:own;
-  var loc=this.currentLocation();
-  var current=(this.encounters||[]).find(function(e){return String(e.id)===String(s.id);})||{};
-  var seasonName='';
-  try{seasonName=this.activeSeasonName()||'';}catch(_e){}
-  if(!seasonName)seasonName='2026-27';
-  var payload={
-    fecha:s.date,
-    local:homeTeam&&homeTeam.id?homeTeam.id:null,
-    visitante:awayTeam&&awayTeam.id?awayTeam.id:null,
-    pts_local:s.homeScore===''?null:Number(s.homeScore),
-    pts_vis:s.awayScore===''?null:Number(s.awayScore),
-    cancha:loc||null,
-    estado:s.status||'Programado',
-    notas:s.notes||null,
-    diasemana:dayName(s.date),
-    hora:s.time||null,
-    categoria:s.category||null,
-    J:s.round||null,
-    Temporada:seasonName,
-    genero:s.gender||'MASC',
-    updated_at:new Date().toISOString()
-  };
-  try{
-    var path='encuentros?id=eq.'+encodeURIComponent(legacyId(s.id));
-    var r=await window.sbFetch(path,{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error(await r.text());
-    await this.load813();
-    this.initFormState(null);this.render813Form();
-    if(typeof this.closeEncounterModal==='function')this.closeEncounterModal();
-    alert('Encuentro modificado correctamente.');
-  }catch(e){alert('No se pudo guardar el encuentro:\n'+(e.message||e));}
-};
-var originalDelete=X.deleteEncounter;
-X.deleteEncounter=async function(id){
-  if(!isLegacyId(id))return originalDelete.apply(this,arguments);
-  if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede borrar encuentros.');return;}
-  var e=(this.encounters||[]).find(function(x){return String(x.id)===String(id);});if(!e)return;
-  var label=this.homeName(e)+' vs '+this.awayName(e)+' · '+(e.game_date||'');
-  if(!confirm('¿Borrar definitivamente este encuentro?\n\n'+label+'\n\nEsta acción no se puede deshacer.'))return;
-  try{
-    var r=await window.sbFetch('encuentros?id=eq.'+encodeURIComponent(legacyId(id)),{method:'DELETE'});
-    if(!r.ok)throw new Error(await r.text());
-    await this.load813();
-  }catch(err){alert('No se pudo borrar el encuentro:\n'+(err.message||err));}
-};
-})();
-</script>
 
 </body>
 </html>
