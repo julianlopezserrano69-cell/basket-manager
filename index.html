@@ -6499,7 +6499,11 @@ body.v8537-ready{overflow:auto}
 .v8582-integrity-badge{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #35506d;border-radius:999px;background:#0a1727;color:#9fb5cd;font-size:8px;font-weight:800}
 .v8582-integrity-badge.ok{border-color:rgba(34,197,94,.45);color:#86efac;background:rgba(34,197,94,.08)}
 .v8582-integrity-badge.warn{border-color:rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.08)}
-</style></head>
+</style>
+<!-- V8.5.119 PDF nativo: generación directa, sin window.print -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
 <body>
 <div id="bm-intro-splash" aria-hidden="true">
   <div class="bm-intro-bg"></div>
@@ -7815,7 +7819,7 @@ window.addEventListener('DOMContentLoaded', function(){
     <div><div class="pt">Control de asistencia</div><div class="ps">Seguimiento automático de entrenamientos realizados y partidos finalizados</div></div>
     <div class="v85116-actions">
       <button class="btn btn-secondary" type="button" onclick="V85116.refresh()">↻ Actualizar</button>
-      <button class="btn btn-primary" type="button" onclick="V85116.printPDF()">📄 Descargar PDF</button>
+      <button class="btn btn-primary" type="button" onclick="V85116.printPDF()">📄 Abrir PDF</button>
     </div>
   </div>
   <div class="card v85116-filter-card">
@@ -38187,7 +38191,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.118</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.119</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38358,7 +38362,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.118</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.119</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40285,7 +40289,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.118';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.119';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
@@ -41383,8 +41387,8 @@ async function load(){
  var id=teamId();A.rows=[];A.encounters=[];if(!id)return;
  var tr=((window.DB&&DB.entrenamientos)||[]).filter(function(e){var xs=S(e.temporada||e.season_id);return S(e.equipo)===S(id)&&(!season()||!xs||xs===season())&&trainingFinished(e)&&dateOK(e.fecha)});
  var ids=tr.map(function(x){return x.id}).filter(Boolean);
- if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.118 training rows',e)}}
- try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.118 encounters',e)}
+ if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.119 training rows',e)}}
+ try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.119 encounters',e)}
  A.trainings=tr;
 }
 function perPlayer(){
@@ -41472,7 +41476,7 @@ function buildPrint(pp,m){
   '<section class="pr-block pr-detail"><div class="pr-title"><span>03</span><div><h2>Detalle por sesión y jugador</h2><p>Asistencia, puntualidad, vestimenta, actitud y convocatorias</p></div></div>'+
    '<table><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="left">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+detailRows.join('')+'</tbody></table></section>'+
   '<section class="pr-notes"><h2>Criterios del informe</h2><div><p><b>Entrenamientos:</b> los datos proceden directamente de los registros de asistencia, puntualidad, vestimenta y actitud ya guardados.</p><p><b>Partidos:</b> se incluyen únicamente encuentros finalizados. “No convocado” no se considera ausencia.</p></div></section>'+
-  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.118</span></footer>'+
+  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.119</span></footer>'+
  '</div>';
 }
 async function render(){
@@ -41484,34 +41488,135 @@ async function open(){fill();if(teamId())await render();else E('v85116-content')
 function change(){fill();render()}
 function printPDF(){
  if(!teamId()){if(typeof toast==='function')toast('Selecciona un equipo','w');return}
+ if(!window.jspdf||!window.jspdf.jsPDF){
+   if(typeof toast==='function')toast('El generador PDF todavía no está disponible. Comprueba la conexión y vuelve a intentarlo.','e');
+   return;
+ }
  render().then(function(){
-   var report=E('v85116-print');
-   if(!report||!report.innerHTML.trim()){if(typeof toast==='function')toast('No se pudo generar el informe','e');return}
-   var css=`*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#17202a;font-family:Arial,Helvetica,sans-serif}
-   .pr-report{width:100%}.pr-head{display:flex;justify-content:space-between;align-items:flex-end;background:#15354c;color:#fff;padding:18px 20px}
-   .eyebrow{display:block;font-size:8px;letter-spacing:1.3px;color:#bcd7e8;font-weight:700}.pr-head h1{font-size:26px;margin:4px 0;color:#fff}.pr-head p{font-size:10px;margin:0;color:#dbeaf3}
-   .pr-badge{text-align:right;font-size:8px;line-height:1.35;border:1px solid #7895a9;padding:7px 10px}.pr-badge b{font-size:10px}
-   .pr-cards{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:11px 12px;background:#f2f5f7}
-   .pr-card{border:1px solid #d6e0e6;border-top:4px solid #d97706;background:#fff;padding:8px 5px;text-align:center;break-inside:avoid}
-   .pr-card span{display:block;font-size:7px;text-transform:uppercase;color:#657681;font-weight:700}.pr-card b{display:block;font-size:17px;color:#17354b;margin:3px 0}.pr-card small{display:block;font-size:6px;color:#88949c}
-   .pr-block{margin:13px 12px;break-inside:auto}.pr-title{display:flex;align-items:center;gap:8px;border-bottom:2px solid #17354b;padding-bottom:5px;margin-bottom:7px}
-   .pr-title>span{display:flex;align-items:center;justify-content:center;width:27px;height:27px;background:#d97706;color:#fff;font-size:9px;font-weight:800}
-   .pr-title h2{font-size:13px;color:#17354b;margin:0}.pr-title p{font-size:7px;color:#75838d;margin:2px 0 0}
-   table{width:100%;border-collapse:collapse;font-size:8px;margin:0}thead{display:table-header-group}tr{break-inside:avoid}
-   th,td{border:1px solid #dce3e8;padding:5px 4px;text-align:center;vertical-align:middle}th{background:#eaf0f4;color:#304a5d;font-size:7px;text-transform:uppercase;font-weight:800}
-   td.left,th.left{text-align:left}tbody tr:nth-child(even) td{background:#f8fafb}.ok{color:#137333;font-weight:700}.bad{color:#b42318;font-weight:700}.na{color:#7c8790}
-   .tag{display:inline-block;border-radius:10px;padding:2px 6px;font-size:6px;font-weight:800}.tag.train{background:#e5f2ff;color:#15558a}.tag.match{background:#fff0dd;color:#9a5200}
-   .pr-detail{break-before:page}.pr-notes{margin:13px 12px;padding:9px 11px;border:1px solid #d7e0e6;background:#f7f9fa;break-inside:avoid}
-   .pr-notes h2{font-size:10px;margin:0 0 5px;color:#17354b}.pr-notes>div{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pr-notes p{font-size:7px;line-height:1.45;margin:0}
-   footer{display:flex;justify-content:space-between;border-top:1px solid #cad5dc;margin:12px;padding-top:6px;color:#6d7c86;font-size:7px}
-   @page{size:A4 landscape;margin:8mm}@media print{html,body{width:100%;height:auto}.pr-report{width:100%}.pr-detail{break-before:page}}`;
-   var w=window.open('','_blank');
-   if(!w){if(typeof toast==='function')toast('Permite ventanas emergentes para generar el PDF','w');return}
-   w.document.open();
-   w.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Control de asistencia - '+esc((team(teamId())||{}).nombre||'Equipo')+'</title><style>'+css+'</style></head><body>'+report.innerHTML+'</body></html>');
-   w.document.close();
-   w.focus();
-   setTimeout(function(){w.print()},350);
+   var jsPDF=window.jspdf.jsPDF;
+   var doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+   if(typeof doc.autoTable!=='function'){
+     if(typeof toast==='function')toast('No se ha cargado el módulo de tablas PDF.','e');
+     return;
+   }
+
+   var id=teamId(), tm=team(id), teamName=tm?(tm.nombre||tm.name):'Equipo';
+   var from=E('v85116-from').value, to=E('v85116-to').value;
+   var period=(from?fmt(from):'Inicio')+' - '+(to?fmt(to):'Hoy');
+   var pp=perPlayer(), met=metrics(pp);
+   var navy=[23,53,75], orange=[217,119,6], pale=[239,244,247], muted=[102,118,129];
+   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
+
+   function safe(v){return S(v).replace(/[^\x20-\x7E\u00C0-\u00FF]/g,' ')}
+   function header(title,subtitle){
+     doc.setFillColor.apply(doc,navy);doc.rect(0,0,W,24,'F');
+     doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text(safe(title),12,10);
+     doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text(safe(subtitle),12,16);
+     doc.setTextColor(0,0,0);
+   }
+   function footer(){
+     var n=doc.internal.getNumberOfPages();
+     for(var i=1;i<=n;i++){doc.setPage(i);doc.setDrawColor(210,220,226);doc.line(10,H-8,W-10,H-8);
+       doc.setFontSize(6.5);doc.setTextColor.apply(doc,muted);doc.text('Basket Manager · Control de asistencia',10,H-4);
+       doc.text(safe(teamName),W/2,H-4,{align:'center'});doc.text('Página '+i+' / '+n,W-10,H-4,{align:'right'});}
+   }
+   function sectionTitle(n,title,y){
+     doc.setFillColor.apply(doc,orange);doc.roundedRect(10,y-4,8,8,1,1,'F');
+     doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(n,14,y+1,{align:'center'});
+     doc.setTextColor.apply(doc,navy);doc.setFontSize(10);doc.text(safe(title),22,y+1);
+     doc.setDrawColor.apply(doc,navy);doc.line(22,y+3,W-10,y+3);doc.setTextColor(0,0,0);
+   }
+
+   header('CONTROL DE ASISTENCIA · '+safe(teamName),'Temporada '+safe(season()||'Todas')+' · '+safe(period)+' · Entrenamientos realizados y partidos finalizados');
+
+   var cards=[
+     ['ENTRENAMIENTOS',met.trainings,'realizados'],['PARTIDOS',met.matches,'finalizados'],
+     ['ASISTENCIA',fp(met.attendance),'entrenamientos'],['PUNTUALIDAD',fp(met.punctual),'sobre asistentes'],
+     ['VESTIMENTA',fp(met.clothing),'registros válidos'],['ACTITUD',met.attitude==null?'—':met.attitude.toFixed(2),'media equipo'],
+     ['CONVOCATORIAS',met.calls,'acumuladas']
+   ];
+   var gap=2, x0=10, cw=(W-20-gap*6)/7, cy=29;
+   cards.forEach(function(c,i){
+     var x=x0+i*(cw+gap);doc.setFillColor(250,251,252);doc.setDrawColor(214,224,230);doc.roundedRect(x,cy,cw,20,1.5,1.5,'FD');
+     doc.setFillColor.apply(doc,orange);doc.rect(x,cy,cw,1.5,'F');
+     doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor.apply(doc,muted);doc.text(c[0],x+cw/2,cy+6,{align:'center'});
+     doc.setTextColor.apply(doc,navy);doc.setFontSize(12);doc.text(safe(c[1]),x+cw/2,cy+12,{align:'center'});
+     doc.setFont('helvetica','normal');doc.setFontSize(5);doc.setTextColor.apply(doc,muted);doc.text(safe(c[2]),x+cw/2,cy+17,{align:'center'});
+   });
+
+   sectionTitle('01','Resumen por jugador',57);
+   var sumBody=pp.map(function(x){return [
+     safe(x.p.dorsal||'—'),safe(x.p.nombre||x.p.name||''),x.trTotal,x.att,fp(pct(x.att,x.trTotal)),
+     fp(pct(x.pun,x.att)),fp(pct(x.vest,x.vestDen)),x.act==null?'—':x.act.toFixed(2),x.matches,x.called,fp(pct(x.called,x.matches))
+   ]});
+   doc.autoTable({
+     startY:63,head:[['#','Jugador','Entr.','Asiste','% Asist.','% Punt.','% Vest.','Actitud','Part.','Conv.','% Conv.']],body:sumBody,
+     theme:'grid',styles:{font:'helvetica',fontSize:6.3,cellPadding:2,textColor:[35,49,58],lineColor:[218,226,231],lineWidth:.15},
+     headStyles:{fillColor:navy,textColor:[255,255,255],fontStyle:'bold',halign:'center'},
+     alternateRowStyles:{fillColor:[248,250,251]},columnStyles:{1:{halign:'left',cellWidth:48}},margin:{left:10,right:10,bottom:13}
+   });
+
+   var y=(doc.lastAutoTable&&doc.lastAutoTable.finalY?doc.lastAutoTable.finalY:90)+9;
+   if(y>150){doc.addPage();header('CONTROL DE ASISTENCIA · '+safe(teamName),'Resumen de sesiones computadas');y=34}
+   sectionTitle('02','Sesiones computadas',y); y+=6;
+   var sess=[];
+   (A.trainings||[]).slice().sort(function(a,b){return S(a.fecha).localeCompare(S(b.fecha))}).forEach(function(t){
+     sess.push([fmt(t.fecha),'Entrenamiento',safe(t.titulo||t.nombre||t.objetivo||'Entrenamiento')]);
+   });
+   (A.encounters||[]).slice().sort(function(a,b){return S(a.game_date||a.date).localeCompare(S(b.game_date||b.date))}).forEach(function(e){
+     var local=S(e.home_team_id)===S(id), rival=local?S(e.away_team_name||e.away_name||'Rival'):S(e.home_team_name||e.home_name||'Rival');
+     sess.push([fmt(e.game_date||e.date),'Partido finalizado',safe(rival)]);
+   });
+   doc.autoTable({startY:y,head:[['Fecha','Tipo','Sesión / rival']],body:sess.length?sess:[['—','—','Sin sesiones en el periodo']],
+     theme:'grid',styles:{fontSize:6.5,cellPadding:2,lineColor:[218,226,231],lineWidth:.15},
+     headStyles:{fillColor:pale,textColor:navy,fontStyle:'bold'},columnStyles:{0:{cellWidth:28},1:{cellWidth:40}},margin:{left:10,right:10,bottom:13}});
+
+   doc.addPage();header('DETALLE POR SESIÓN Y JUGADOR',safe(teamName)+' · '+safe(period));
+   sectionTitle('03','Detalle completo',34);
+   var detail=[];
+   var pps=players(id);
+   (A.trainings||[]).slice().sort(function(a,b){return S(a.fecha).localeCompare(S(b.fecha))}).forEach(function(t){
+     var rr=(A.rows||[]).filter(function(r){return S(r.entrenamiento_id)===S(t.id)});
+     pps.forEach(function(p){
+       var r=rr.find(function(q){return S(q.jugador_id)===S(p.id)}),att=r&&yes(r.asistencia);
+       detail.push([fmt(t.fecha),'ENTRENO',safe(p.dorsal||'—'),safe(p.nombre||p.name||''),att?'Sí':'No',
+         att?(yes(r.puntualidad)?'Sí':'No'):'—',att?safe(S(r.vestimenta||'—').toUpperCase()):'—',att&&r.actitud!=null?safe(r.actitud):'—']);
+     });
+   });
+   (A.encounters||[]).slice().sort(function(a,b){return S(a.game_date||a.date).localeCompare(S(b.game_date||b.date))}).forEach(function(e){
+     var called=ownCalled(e,id).map(S);
+     pps.forEach(function(p){detail.push([fmt(e.game_date||e.date),'PARTIDO',safe(p.dorsal||'—'),safe(p.nombre||p.name||''),
+       called.indexOf(S(p.id))>=0?'Convocado':'No convocado','—','—','—']);});
+   });
+   doc.autoTable({
+     startY:40,head:[['Fecha','Tipo','#','Jugador','Asistencia / convocatoria','Puntual','Vestimenta','Actitud']],body:detail,
+     theme:'grid',styles:{fontSize:6.1,cellPadding:1.8,lineColor:[218,226,231],lineWidth:.15,overflow:'linebreak'},
+     headStyles:{fillColor:navy,textColor:[255,255,255],fontStyle:'bold',halign:'center'},
+     alternateRowStyles:{fillColor:[248,250,251]},columnStyles:{3:{halign:'left',cellWidth:48},4:{cellWidth:38}},margin:{top:13,left:10,right:10,bottom:13},
+     didDrawPage:function(data){if(data.pageNumber>1){doc.setFontSize(6.5);doc.setTextColor.apply(doc,muted);doc.text('Detalle · '+safe(teamName),10,8);}}
+   });
+
+   var fy=(doc.lastAutoTable&&doc.lastAutoTable.finalY?doc.lastAutoTable.finalY:60)+8;
+   if(fy>170){doc.addPage();header('CRITERIOS DEL INFORME',safe(teamName));fy=36}
+   doc.setFillColor(247,249,250);doc.setDrawColor(215,224,230);doc.roundedRect(10,fy,W-20,18,2,2,'FD');
+   doc.setTextColor.apply(doc,navy);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('Criterios',14,fy+6);
+   doc.setFont('helvetica','normal');doc.setTextColor(70,82,90);doc.setFontSize(6.3);
+   doc.text('Entrenamientos: asistencia, puntualidad, vestimenta y actitud proceden de los registros ya guardados.',14,fy+11);
+   doc.text('Partidos: solo encuentros finalizados. Un jugador no convocado no se contabiliza como ausencia.',14,fy+15);
+
+   footer();
+
+   var filename=('Control_Asistencia_'+safe(teamName)+'_'+(from||'inicio')+'_'+(to||'hoy')+'.pdf').replace(/[\\/:*?"<>| ]+/g,'_');
+   var blob=doc.output('blob');
+   var url=URL.createObjectURL(blob);
+   var opened=window.open(url,'_blank');
+   if(!opened){
+     var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+     if(typeof toast==='function')toast('PDF generado y descargado','s');
+   }else{
+     if(typeof toast==='function')toast('PDF generado. Puedes descargarlo desde el visor PDF.','s');
+   }
+   setTimeout(function(){URL.revokeObjectURL(url)},120000);
  });
 }
 window.V85116={open:open,refresh:render,render:render,change:change,printPDF:printPDF,state:A};

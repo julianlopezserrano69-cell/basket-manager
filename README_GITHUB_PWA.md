@@ -1,11 +1,11 @@
-# Basket Manager V8.5.118 — GitHub / PWA
+# Basket Manager V8.5.119 — GitHub / PWA
 
 Paquete COMPLETO listo para subir a la raíz del repositorio:
 https://github.com/julianlopezserrano69-cell/basket-manager
 
 ## Incluye
-- index.html — aplicación completa V8.5.118.
-- sw.js — Service Worker con caché V8.5.118.
+- index.html — aplicación completa V8.5.119.
+- sw.js — Service Worker con caché V8.5.119.
 - manifest.webmanifest — instalación PWA.
 - icon-192.png / icon-512.png — iconos PWA.
 - icons/icon-180.png / icons/icon-192.png — compatibilidad iPhone/iPad.
@@ -13,7 +13,7 @@ https://github.com/julianlopezserrano69-cell/basket-manager
 - PUBLICAR_GITHUB.bat — publicación por Git.
 - históricos auxiliares heredados del MASTER.
 
-## Novedad V8.5.118
+## Novedad V8.5.119
 Entrenamientos → Control de asistencia.
 
 La pantalla reutiliza los datos ya registrados:
@@ -33,13 +33,17 @@ https://julianlopezserrano69-cell.github.io/basket-manager/
 
 Después de publicar, en una instalación PWA antigua conviene cerrar completamente
 Basket Manager y volver a abrirla. Si siguiera mostrando una versión anterior,
-abre primero la URL en el navegador y recarga para que el Service Worker V8.5.118
+abre primero la URL en el navegador y recarga para que el Service Worker V8.5.119
 sustituya la caché anterior.
 
 
-## V8.5.118
+## V8.5.119
 PDF de Control de asistencia corregido y ampliado: cuadros resumen, resumen por jugador, sesiones computadas, detalle completo por sesión/jugador y criterios del informe, con diseño A4 apaisado multipágina.
 
 
-## V8.5.118
+## V8.5.119
 Corrección definitiva del PDF de Control de asistencia: impresión en documento aislado, sin heredar el layout/rotaciones/visibilidad de la SPA. Incluye KPIs, resumen, sesiones y detalle completo.
+
+
+## V8.5.119
+PDF nativo real: se genera un archivo PDF binario con jsPDF + AutoTable y se abre directamente en el visor PDF del navegador. No usa window.print ni diálogo de impresión. Incluye 7 KPIs, resumen por jugador, sesiones computadas y detalle completo.
