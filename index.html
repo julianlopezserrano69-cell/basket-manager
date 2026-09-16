@@ -6508,7 +6508,7 @@ body.v8537-ready{overflow:auto}
 .v8582-integrity-badge.ok{border-color:rgba(34,197,94,.45);color:#86efac;background:rgba(34,197,94,.08)}
 .v8582-integrity-badge.warn{border-color:rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.08)}
 </style>
-<!-- V8.5.124 PDF nativo: generación directa, sin window.print -->
+<!-- V8.5.125 PDF nativo: generación directa, sin window.print -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
@@ -33327,12 +33327,12 @@ function finished8518(ent){
   return Date.now()>=dt.getTime();
 }
 function microFor8518(ent){
-  /* V8.5.124: Supabase es la fuente de verdad. No inferir por fecha. */
+  /* V8.5.125: Supabase es la fuente de verdad. No inferir por fecha. */
   var all=(window.DB&&DB.microciclos)||[];
   return all.find(function(m){return String(m.id)===String(ent&&ent.microciclo_id||'')})||null;
 }
 function autoLink8518(){
-  /* V8.5.124: desactivado. Las asignaciones se leen de entrenamientos.microciclo_id. */
+  /* V8.5.125: desactivado. Las asignaciones se leen de entrenamientos.microciclo_id. */
   return 0;
 }
 function sortValue8518(ent,k){
@@ -34152,6 +34152,35 @@ window.v8529RenderRecs=function(){
     else{media='<div class="v8529-rec-media"><div class="v8529-rec-placeholder"><strong>🏀</strong><span>Sin pizarra ni vídeo</span></div></div>';}
     return '<div class="v8529-rec-card">'+media+'<div><b>'+esc(x.name)+'</b><span>'+esc(x.fundament)+' · '+esc(x.level)+' · '+esc(x.duration_min)+' min'+(video?' · 🎥 QR':'')+'</span></div><button class="btn btn-primary btn-sm" data-v8529-add="'+esc(x.id)+'">+ Añadir</button></div>';
   }).join(''):'<div class="v8521-empty">No hay recomendaciones específicas.</div>';
+
+  /* V8.5.125: los handlers inline onerror pueden ser bloqueados por CSP.
+     Registramos errores de carga por JS y garantizamos el fallback real. */
+  Array.prototype.forEach.call(box.querySelectorAll('.v8529-main-media'),function(im){
+    im.addEventListener('error',function(){window.v8529RecFallback(im)},{once:true});
+  });
+  Array.prototype.forEach.call(box.querySelectorAll('.v8529-rec-qr-overlay,.v8529-qr-only'),function(im){
+    im.addEventListener('error',function(){window.v8529QrFallback(im)},{once:true});
+  });
+
+  /* Refresca directamente desde Supabase los campos multimedia de los cards.
+     Evita que una copia antigua de localStorage deje fuera video_url/image_url. */
+  if(!V8521._v85125Hydrating && rows.some(function(x){return !v8529RecVideo(x)||!v8529RecMedia(x)})){
+    V8521._v85125Hydrating=true;
+    Promise.resolve().then(async function(){
+      try{
+        var ids=rows.map(function(x){return String(x.id||'')}).filter(Boolean);
+        if(!ids.length)return;
+        var filter='('+ids.map(function(id){return '"'+id.replace(/"/g,'')+'"'}).join(',')+')';
+        var fresh=await rest('exercise_library?id=in.'+encodeURIComponent(filter)+'&select=id,image_url,animation_url,video_url');
+        if(Array.isArray(fresh))fresh.forEach(function(r){
+          var x=V8521.exercises.find(function(e){return String(e.id)===String(r.id)});if(!x)return;
+          ['image_url','animation_url','video_url'].forEach(function(k){if(r[k]!==undefined&&r[k]!==null)x[k]=r[k]});
+        });
+        try{localStorage.setItem('v8521_exercises',JSON.stringify(V8521.exercises))}catch(_e){}
+      }catch(e){console.warn('V8.5.125 refresco multimedia recomendaciones',e)}
+      finally{V8521._v85125Hydrating=false;window.v8529RenderRecs()}
+    });
+  }
 };
 window.v8529AddProposal=function(){
   var ent=training(V8521.currentTrainingId),rows=v8529Recommended(ent),dur=parseInt(ent&&(ent.dur||ent.duracion),10)||90;
@@ -35951,7 +35980,7 @@ function microScore53(mc,ent){
   return score;
 }
 function microFor(ent){
-  /* V8.5.124: el PDF respeta exclusivamente entrenamientos.microciclo_id. */
+  /* V8.5.125: el PDF respeta exclusivamente entrenamientos.microciclo_id. */
   return byId((window.DB&&DB.microciclos)||[],ent&&ent.microciclo_id);
 }
 function exerciseById(id){return window.V8521&&Array.isArray(V8521.exercises)?byId(V8521.exercises,id):null}
@@ -38218,7 +38247,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.124</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.125</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38389,7 +38418,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.124</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.125</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40316,7 +40345,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.124';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.125';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
@@ -41414,8 +41443,8 @@ async function load(){
  var id=teamId();A.rows=[];A.encounters=[];if(!id)return;
  var tr=((window.DB&&DB.entrenamientos)||[]).filter(function(e){var xs=S(e.temporada||e.season_id);return S(e.equipo)===S(id)&&(!season()||!xs||xs===season())&&trainingFinished(e)&&dateOK(e.fecha)});
  var ids=tr.map(function(x){return x.id}).filter(Boolean);
- if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.124 training rows',e)}}
- try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.124 encounters',e)}
+ if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.125 training rows',e)}}
+ try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.125 encounters',e)}
  A.trainings=tr;
 }
 function perPlayer(){
@@ -41503,7 +41532,7 @@ function buildPrint(pp,m){
   '<section class="pr-block pr-detail"><div class="pr-title"><span>03</span><div><h2>Detalle por sesión y jugador</h2><p>Asistencia, puntualidad, vestimenta, actitud y convocatorias</p></div></div>'+
    '<table><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="left">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+detailRows.join('')+'</tbody></table></section>'+
   '<section class="pr-notes"><h2>Criterios del informe</h2><div><p><b>Entrenamientos:</b> los datos proceden directamente de los registros de asistencia, puntualidad, vestimenta y actitud ya guardados.</p><p><b>Partidos:</b> se incluyen únicamente encuentros finalizados. “No convocado” no se considera ausencia.</p></div></section>'+
-  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.124</span></footer>'+
+  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.125</span></footer>'+
  '</div>';
 }
 async function render(){
@@ -41601,7 +41630,7 @@ function printPDF(){
      title:'Control de asistencia - '+safe(clubName),
      subject:'Control de asistencia del equipo '+safe(teamName),
      author:'Basket Manager',
-     creator:'Basket Manager V8.5.124'
+     creator:'Basket Manager V8.5.125'
    });
 
    /* ============================================================
