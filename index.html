@@ -19920,7 +19920,7 @@ function sbPullAll() {
           effectiveRows=rows.filter(function(row){
             var s=rowSeason(row);
             // Registros legacy sin temporada siguen siendo visibles; los etiquetados se filtran.
-            return !s || String(s)===String(activeTmp);
+            return !s || (typeof window.bmSeasonEq==='function' ? window.bmSeasonEq(s,activeTmp) : String(s)===String(activeTmp));
           });
         }
 
@@ -42202,9 +42202,24 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 })();
 </script>
 <!-- V8.5.141 · RIVALES COMPLETOS: vestimenta Supabase + colores de encuentro + fallback logos en Equipos -->
+
+<script id="bm-v85143-clubs-encuentros-fix">
+(function(){
+'use strict';
+window.bmSeasonEq=function(a,b){function n(v){var m=String(v||'').trim().match(/(20\d{2})\D+(20)?(\d{2})/);return m?(m[1]+'-'+m[3]):String(v||'').trim();}return n(a)===n(b);};
+function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function ini(n){return String(n||'CL').replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean).slice(0,3).map(function(x){return x.charAt(0);}).join('').toUpperCase()||'CL';}
+function tm(id){return (DB.equipos||[]).find(function(x){return String(x.club_id||'')===String(id);})||null;}
+function lc(id){var a=(DB.localizaciones||[]).filter(function(x){return String(x.club_id||'')===String(id)&&x.activa!==false;});return a.find(function(x){return x.tipo==='Partidos'||x.tipo==='Ambos';})||a[0]||null;}
+function hx(v,fb){v=String(v||'').trim();if(/^#[0-9a-f]{6}$/i.test(v))return v;var m={NEGRO:'#111827',BLANCO:'#FFFFFF',AZUL:'#2563EB',ROJO:'#DC2626',VERDE:'#16A34A',NARANJA:'#F97316',AMARILLO:'#FACC15'};return m[v.toUpperCase()]||fb;}
+var old=window.renderClubs;window.renderClubs=function(data){(data||[]).forEach(function(c){var t=tm(c.id),l=lc(c.id);if(!c.color1&&!c.primary_color)c.color1=hx(t&&(t.vestimenta_principal||t.color),'#f97316');if(!c.color2&&!c.secondary_color)c.color2=hx(t&&t.vestimenta_reserva,'#0b4f86');if(!c.localizacion&&!c.location&&l)c.localizacion=l.nombre||l.direccion||'';});if(typeof old==='function')old(data);var tb=document.getElementById('tb-clubs');if(!tb)return;var rows=tb.querySelectorAll('tr');(data||[]).slice().sort(function(a,b){return String(a.nombre||a.name||'').localeCompare(String(b.nombre||b.name||''),'es');}).forEach(function(c,i){var tr=rows[i],td=tr&&tr.cells&&tr.cells[0];if(!td)return;var img=td.querySelector('img'),c1=hx(c.color1||c.primary_color,'#f97316'),c2=hx(c.color2||c.secondary_color,'#0b4f86');var fb='<div title="Logo pendiente" style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,'+e(c1)+' 0 50%,'+e(c2)+' 50% 100%);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-shadow:0 1px 2px #000">'+e(ini(c.nombre||c.name))+'</div>';if(!img)td.innerHTML=fb;else img.onerror=function(){td.innerHTML=fb;};});};
+function ref(){try{if(typeof filterClubs==='function')filterClubs();}catch(x){}try{if(typeof filterEnc==='function')filterEnc();else if(typeof renderEncuentros==='function')renderEncuentros((DB.encuentros||[]).slice());}catch(x){console.warn('V8.5.143 encuentros',x);}}
+var nav0=window.nav;if(typeof nav0==='function')window.nav=function(page){var r=nav0.apply(this,arguments);if(page==='clubs'||page==='encuentros')setTimeout(ref,150);return r;};window.addEventListener('load',function(){setTimeout(ref,1200);});
+})();
+</script>
 </body>
 </html>
-<!-- V8.5.142 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
+<!-- V8.5.143 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
   function E(id){return document.getElementById(id)}
