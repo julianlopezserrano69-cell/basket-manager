@@ -6508,7 +6508,7 @@ body.v8537-ready{overflow:auto}
 .v8582-integrity-badge.ok{border-color:rgba(34,197,94,.45);color:#86efac;background:rgba(34,197,94,.08)}
 .v8582-integrity-badge.warn{border-color:rgba(245,158,11,.45);color:#fde68a;background:rgba(245,158,11,.08)}
 </style>
-<!-- V8.5.125 PDF nativo: generación directa, sin window.print -->
+<!-- V8.5.126 PDF nativo: generación directa, sin window.print -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
@@ -33327,12 +33327,12 @@ function finished8518(ent){
   return Date.now()>=dt.getTime();
 }
 function microFor8518(ent){
-  /* V8.5.125: Supabase es la fuente de verdad. No inferir por fecha. */
+  /* V8.5.126: Supabase es la fuente de verdad. No inferir por fecha. */
   var all=(window.DB&&DB.microciclos)||[];
   return all.find(function(m){return String(m.id)===String(ent&&ent.microciclo_id||'')})||null;
 }
 function autoLink8518(){
-  /* V8.5.125: desactivado. Las asignaciones se leen de entrenamientos.microciclo_id. */
+  /* V8.5.126: desactivado. Las asignaciones se leen de entrenamientos.microciclo_id. */
   return 0;
 }
 function sortValue8518(ent,k){
@@ -34153,7 +34153,7 @@ window.v8529RenderRecs=function(){
     return '<div class="v8529-rec-card">'+media+'<div><b>'+esc(x.name)+'</b><span>'+esc(x.fundament)+' · '+esc(x.level)+' · '+esc(x.duration_min)+' min'+(video?' · 🎥 QR':'')+'</span></div><button class="btn btn-primary btn-sm" data-v8529-add="'+esc(x.id)+'">+ Añadir</button></div>';
   }).join(''):'<div class="v8521-empty">No hay recomendaciones específicas.</div>';
 
-  /* V8.5.125: los handlers inline onerror pueden ser bloqueados por CSP.
+  /* V8.5.126: los handlers inline onerror pueden ser bloqueados por CSP.
      Registramos errores de carga por JS y garantizamos el fallback real. */
   Array.prototype.forEach.call(box.querySelectorAll('.v8529-main-media'),function(im){
     im.addEventListener('error',function(){window.v8529RecFallback(im)},{once:true});
@@ -34177,7 +34177,7 @@ window.v8529RenderRecs=function(){
           ['image_url','animation_url','video_url'].forEach(function(k){if(r[k]!==undefined&&r[k]!==null)x[k]=r[k]});
         });
         try{localStorage.setItem('v8521_exercises',JSON.stringify(V8521.exercises))}catch(_e){}
-      }catch(e){console.warn('V8.5.125 refresco multimedia recomendaciones',e)}
+      }catch(e){console.warn('V8.5.126 refresco multimedia recomendaciones',e)}
       finally{V8521._v85125Hydrating=false;window.v8529RenderRecs()}
     });
   }
@@ -35980,7 +35980,7 @@ function microScore53(mc,ent){
   return score;
 }
 function microFor(ent){
-  /* V8.5.125: el PDF respeta exclusivamente entrenamientos.microciclo_id. */
+  /* V8.5.126: el PDF respeta exclusivamente entrenamientos.microciclo_id. */
   return byId((window.DB&&DB.microciclos)||[],ent&&ent.microciclo_id);
 }
 function exerciseById(id){return window.V8521&&Array.isArray(V8521.exercises)?byId(V8521.exercises,id):null}
@@ -38247,7 +38247,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.125</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.126</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38418,7 +38418,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.125</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.126</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40345,7 +40345,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.125';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.126';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
@@ -41443,8 +41443,8 @@ async function load(){
  var id=teamId();A.rows=[];A.encounters=[];if(!id)return;
  var tr=((window.DB&&DB.entrenamientos)||[]).filter(function(e){var xs=S(e.temporada||e.season_id);return S(e.equipo)===S(id)&&(!season()||!xs||xs===season())&&trainingFinished(e)&&dateOK(e.fecha)});
  var ids=tr.map(function(x){return x.id}).filter(Boolean);
- if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.125 training rows',e)}}
- try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.125 encounters',e)}
+ if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.126 training rows',e)}}
+ try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.126 encounters',e)}
  A.trainings=tr;
 }
 function perPlayer(){
@@ -41532,7 +41532,7 @@ function buildPrint(pp,m){
   '<section class="pr-block pr-detail"><div class="pr-title"><span>03</span><div><h2>Detalle por sesión y jugador</h2><p>Asistencia, puntualidad, vestimenta, actitud y convocatorias</p></div></div>'+
    '<table><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="left">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+detailRows.join('')+'</tbody></table></section>'+
   '<section class="pr-notes"><h2>Criterios del informe</h2><div><p><b>Entrenamientos:</b> los datos proceden directamente de los registros de asistencia, puntualidad, vestimenta y actitud ya guardados.</p><p><b>Partidos:</b> se incluyen únicamente encuentros finalizados. “No convocado” no se considera ausencia.</p></div></section>'+
-  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.125</span></footer>'+
+  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.126</span></footer>'+
  '</div>';
 }
 async function render(){
@@ -41630,7 +41630,7 @@ function printPDF(){
      title:'Control de asistencia - '+safe(clubName),
      subject:'Control de asistencia del equipo '+safe(teamName),
      author:'Basket Manager',
-     creator:'Basket Manager V8.5.125'
+     creator:'Basket Manager V8.5.126'
    });
 
    /* ============================================================
@@ -41857,6 +41857,108 @@ window.V85116={open:open,refresh:render,render:render,change:change,printPDF:pri
  @page{size:A4 landscape;margin:8mm}
 }
 </style>
+
+
+<!-- V8.5.126 · ENTRENAMIENTOS UX / FILTROS / SCROLL / EDICION POR FILA -->
+<style id="v85126-training-table-ux-css">
+#p-entrenamientos .card-bd{overflow:visible!important}
+#p-entrenamientos #ent-tbl-wrap{overflow-x:auto!important;overflow-y:hidden!important;scrollbar-gutter:stable both-edges!important;overscroll-behavior-x:contain!important}
+#p-entrenamientos #ent-tbl-inner{max-height:min(58vh,560px)!important;overflow-y:auto!important;overflow-x:visible!important;scrollbar-gutter:stable!important;overscroll-behavior:contain!important}
+#p-entrenamientos #ent-tbl thead{position:sticky!important;top:0!important;z-index:40!important}
+#p-entrenamientos #ent-tbl tbody tr[data-training-id]{cursor:pointer!important;transition:background .14s ease,box-shadow .14s ease!important}
+#p-entrenamientos #ent-tbl tbody tr[data-training-id]:hover td{background:#13243a!important}
+#p-entrenamientos #ent-tbl tbody tr[data-training-id]:hover td:first-child,
+#p-entrenamientos #ent-tbl tbody tr[data-training-id]:hover td.v836-actions-col{background:#172a43!important}
+#p-entrenamientos #ent-tbl th:first-child,#p-entrenamientos #ent-tbl td:first-child{position:sticky!important;left:0!important;z-index:24!important;background:var(--card)!important;border-right:1px solid var(--border)!important;box-shadow:4px 0 10px rgba(0,0,0,.22)!important}
+#p-entrenamientos #ent-tbl thead th:first-child{z-index:52!important;background:var(--surface2)!important}
+#p-entrenamientos #ent-tbl th.v836-actions-col,#p-entrenamientos #ent-tbl td.v836-actions-col{position:sticky!important;right:0!important;z-index:25!important;background:var(--card)!important;border-left:1px solid var(--border)!important;box-shadow:-4px 0 10px rgba(0,0,0,.22)!important}
+#p-entrenamientos #ent-tbl thead th.v836-actions-col{z-index:53!important;background:var(--surface2)!important}
+#p-entrenamientos .table-scroll-top{position:sticky!important;top:0!important;z-index:35!important;margin-bottom:5px!important;background:var(--surface2)!important;border:1px solid var(--border)!important}
+#p-entrenamientos .v85126-filter-tools{display:flex;align-items:center;gap:7px;margin-left:auto}
+#p-entrenamientos .v85126-filter-summary{font-size:10px;color:var(--muted);white-space:nowrap}
+#p-entrenamientos .v85126-clear{height:34px;padding:0 11px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text);font:600 11px 'DM Sans',sans-serif;cursor:pointer}
+#p-entrenamientos .v85126-clear:hover{border-color:var(--accent);color:var(--accent2)}
+@media(max-width:900px){#p-entrenamientos #ent-tbl-inner{max-height:62vh!important}#p-entrenamientos .v85126-filter-tools{width:100%;justify-content:flex-end;margin-left:0}}
+</style>
+<script id="v85126-training-table-ux-js">
+(function(){
+'use strict';
+var KEY='bm_v85126_entrenamientos_view';
+var applying=false, saveTimer=0;
+function E(id){return document.getElementById(id)}
+function S(v){return String(v==null?'':v)}
+function stateObj(){try{return JSON.parse(sessionStorage.getItem(KEY)||'{}')||{}}catch(e){return {}}}
+function pager(){return window.v8518TrainingPagination&&v8518TrainingPagination.state?v8518TrainingPagination.state:null}
+function capture(){
+  if(applying)return;
+  var st=pager()||{}, wrap=E('ent-tbl-wrap'), inner=E('ent-tbl-inner');
+  var o={q:S((E('q-ent')||{}).value),eq:S((E('fsel-eq-ent')||{}).value),cat:S((E('fsel-cat-ent')||{}).value),club:S((E('fsel-club-ent')||{}).value),page:Number(st.page)||1,size:Number(st.size)||25,sortKey:S(st.sortKey||'fecha'),sortDir:S(st.sortDir||'asc'),scrollLeft:wrap?wrap.scrollLeft:0,scrollTop:inner?inner.scrollTop:0};
+  try{sessionStorage.setItem(KEY,JSON.stringify(o))}catch(e){}
+}
+function delayedCapture(){clearTimeout(saveTimer);saveTimer=setTimeout(capture,40)}
+function applyControls(o){
+  var club=E('fsel-club-ent');if(club&&o.club!==undefined&&Array.from(club.options).some(function(x){return S(x.value)===S(o.club)}))club.value=o.club;
+  try{if(typeof window.rebuildEntTeamFilter==='function')window.rebuildEntTeamFilter()}catch(e){}
+  try{if(typeof window.rebuildEntCategoryFilter==='function')window.rebuildEntCategoryFilter()}catch(e){}
+  var q=E('q-ent'),eq=E('fsel-eq-ent'),cat=E('fsel-cat-ent');
+  if(q&&o.q!==undefined)q.value=o.q;
+  if(eq&&o.eq!==undefined&&Array.from(eq.options).some(function(x){return S(x.value)===S(o.eq)}))eq.value=o.eq;
+  if(cat&&o.cat!==undefined&&Array.from(cat.options).some(function(x){return S(x.value)===S(o.cat)}))cat.value=o.cat;
+}
+function restore(render){
+  var o=stateObj();if(!Object.keys(o).length)return;
+  applying=true;
+  try{
+    applyControls(o);
+    var st=pager();if(st){if(o.sortKey)st.sortKey=o.sortKey;if(o.sortDir)st.sortDir=o.sortDir;if(o.size)st.size=o.size;}
+    if(render&&typeof window.filterEnt==='function')window.filterEnt();
+    st=pager();if(st&&o.page){var pages=Math.max(1,Math.ceil((st.filtered||[]).length/(Number(st.size)||25)));st.page=Math.min(Math.max(1,Number(o.page)||1),pages);if(typeof window.renderEntrenamientos==='function'&&window.v8518TrainingPagination){/* page repaint below */}}
+    if(st&&typeof window.v8518TrainingPagination==='object'&&typeof window.v8518TrainingPagination.refresh==='function'&&false)window.v8518TrainingPagination.refresh();
+  }finally{applying=false}
+  setTimeout(function(){
+    var st=pager();
+    /* filterEnt siempre pone page=1; restauramos página y disparamos el paginador mediante sus botones cuando sea necesario */
+    if(st&&o.page&&Number(o.page)>1){
+      var target=Math.min(Number(o.page)||1,Math.max(1,Math.ceil((st.filtered||[]).length/(Number(st.size)||25))));
+      while(st.page<target){var n=E('v8518-next');if(!n||n.disabled)break;n.click()}
+    }
+    var size=E('v8518-page-size');if(size&&o.size&&S(size.value)!==S(o.size)){size.value=S(o.size);size.dispatchEvent(new Event('change',{bubbles:true}))}
+    setTimeout(function(){var w=E('ent-tbl-wrap'),i=E('ent-tbl-inner');if(w)w.scrollLeft=Number(o.scrollLeft)||0;if(i)i.scrollTop=Number(o.scrollTop)||0;syncTop();updateSummary();},40);
+  },40);
+}
+function syncTop(){
+  var wrap=E('ent-tbl-wrap');if(!wrap)return;var top=wrap.previousElementSibling;
+  if(!top||!top.classList.contains('table-scroll-top'))return;
+  var table=E('ent-tbl'),inn=top.firstElementChild;if(table&&inn){inn.style.width=Math.max(table.scrollWidth,wrap.clientWidth)+'px';top.style.display=table.scrollWidth>wrap.clientWidth+2?'block':'none';top.scrollLeft=wrap.scrollLeft;}
+}
+function updateSummary(){
+  var box=E('v85126-filter-summary');if(!box)return;var st=pager(),n=st&&Array.isArray(st.filtered)?st.filtered.length:document.querySelectorAll('#tb-ent tr[data-training-id]').length;box.textContent=n+' resultado'+(n===1?'':'s');
+}
+function ensureTools(){
+  if(E('v85126-filter-tools'))return;var hd=document.querySelector('#p-entrenamientos .card-hd');if(!hd)return;
+  var d=document.createElement('div');d.id='v85126-filter-tools';d.className='v85126-filter-tools';d.innerHTML='<span id="v85126-filter-summary" class="v85126-filter-summary"></span><button type="button" class="v85126-clear" id="v85126-clear">Limpiar filtros</button>';hd.appendChild(d);
+  E('v85126-clear').addEventListener('click',function(){var q=E('q-ent'),eq=E('fsel-eq-ent'),cat=E('fsel-cat-ent');if(q)q.value='';if(eq)eq.value='';if(cat)cat.value='';var st=pager();if(st){st.page=1;st.sortKey='fecha';st.sortDir='asc'};capture();if(typeof window.filterEnt==='function')window.filterEnt();setTimeout(function(){capture();updateSummary()},30)});
+}
+function openRowEdit(ev){
+  var tr=ev.target.closest&&ev.target.closest('#tb-ent tr[data-training-id]');if(!tr)return;
+  if(ev.target.closest('button,a,select,input,textarea,summary,details,[data-action],[data-micro-view]'))return;
+  var id=tr.getAttribute('data-training-id');if(!id)return;capture();var ent=typeof window.getEnt==='function'?window.getEnt(id):((DB.entrenamientos||[]).find(function(x){return S(x.id)===S(id)})||null);if(ent&&typeof window.openModal==='function')window.openModal('entrenamiento',ent);
+}
+function bind(){
+  ensureTools();var p=E('p-entrenamientos');if(!p||p.dataset.v85126==='1')return;p.dataset.v85126='1';
+  ['q-ent','fsel-eq-ent','fsel-cat-ent','fsel-club-ent'].forEach(function(id){var x=E(id);if(x){x.addEventListener('input',delayedCapture);x.addEventListener('change',function(){setTimeout(function(){capture();updateSummary();syncTop()},80)})}});
+  p.addEventListener('click',openRowEdit);
+  var w=E('ent-tbl-wrap'),i=E('ent-tbl-inner');if(w)w.addEventListener('scroll',delayedCapture,{passive:true});if(i)i.addEventListener('scroll',delayedCapture,{passive:true});
+  var tb=E('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(function(){setTimeout(function(){syncTop();updateSummary()},0)}).observe(tb,{childList:true});
+}
+var oldClose=window.closeModal;if(typeof oldClose==='function'&&!oldClose.__v85126){var c=function(type){var r=oldClose.apply(this,arguments);if(type==='entrenamiento')setTimeout(function(){restore(true)},30);return r};c.__v85126=true;window.closeModal=c}
+var oldNav=window.nav;if(typeof oldNav==='function'&&!oldNav.__v85126){var n=function(page){if(page!=='entrenamientos'&&E('p-entrenamientos')&&E('p-entrenamientos').classList.contains('active'))capture();var r=oldNav.apply(this,arguments);if(page==='entrenamientos')setTimeout(function(){bind();restore(true)},80);return r};n.__v85126=true;window.nav=n}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('#m-entrenamiento .modal-close,#m-entrenamiento [onclick*="closeModal"]');if(b)setTimeout(function(){restore(true)},50)},true);
+function init(){bind();restore(true);setTimeout(syncTop,150);setTimeout(syncTop,800)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init,50)});else setTimeout(init,50);
+window.V85126={capture:capture,restore:restore,syncScroll:syncTop};
+})();
+</script>
 
 </body>
 </html>
