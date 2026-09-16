@@ -29872,7 +29872,10 @@ X.load813=async function(){
     this.json('scouting_projects?select=*'),
     this.json('clubs?select=*'),
     this.json('players?select=*'),
-    this.json('categories?select=*')
+    this.json('categories?select=*'),
+    // V8.5.147: cargar SIEMPRE la tabla histórica directamente desde Supabase.
+    // No dependemos de la carrera asíncrona de sbPullAll() / DB.encuentros.
+    this.json('encuentros?select=*')
   ]);
   const val=i=>all[i].status==='fulfilled'?(all[i].value||[]):[];
   this.encounters=val(0);
@@ -29900,11 +29903,14 @@ X.load813=async function(){
   this.v813.players=Object.values(playerMap);
   this.v813.categories=val(6);
 
-  // V8.5.146: puente real entre la tabla histórica `encuentros` y la vista moderna.
+  // V8.5.147: puente directo entre la tabla histórica `encuentros` y la vista moderna.
   // Los encuentros creados por la app histórica viven en public.encuentros, mientras
   // esta pantalla moderna lee public.encounters. Los fusionamos en memoria sin tocar Supabase.
   try{
-    var legacyRows=((window.DB&&DB.encuentros)||[]).slice();
+    // Fuente primaria: public.encuentros leído en ESTE MISMO load813().
+    // Fallback: DB.encuentros por compatibilidad/offline.
+    var legacyRows=(val(7)||[]).slice();
+    if(!legacyRows.length){try{legacyRows=((window.DB&&DB.encuentros)||[]).slice();}catch(_e){legacyRows=[];}}
     var modernLegacyIds={};
     (this.encounters||[]).forEach(function(e){
       if(e&&e.legacy_encuentro_id) modernLegacyIds[String(e.legacy_encuentro_id)]=1;
@@ -29945,17 +29951,17 @@ X.load813=async function(){
         category:r.categoria||ownTeam.category||homeTeam.category||awayTeam.category||'',
         gender:r.genero||ownTeam.gender||'', home_away:own===home?'Local':'Visitante',
         status:st, game_date:r.fecha||'', game_time:r.hora||null,
-        round_label:r.J||r.jornada||'', location:r.cancha||'', notes:r.notas||'',
+        round_label:r.J||r.jornada||'', location:r.cancha||r.pabellon||'', notes:r.notas||'',
         home_team_id:home, away_team_id:away,
-        home_score:(r.ptsLocal!=null?Number(r.ptsLocal):null),
-        away_score:(r.ptsVis!=null?Number(r.ptsVis):null),
+        home_score:(r.ptsLocal!=null?Number(r.ptsLocal):(r.pts_local!=null?Number(r.pts_local):null)),
+        away_score:(r.ptsVis!=null?Number(r.ptsVis):(r.pts_vis!=null?Number(r.pts_vis):null)),
         home_color:'', away_color:'', home_called_ids:[], away_called_ids:[],
         home_starter_ids:[], away_starter_ids:[], captain_ids:[]
       };
       self.encounters.push(modern);
     });
-    console.info('[V8.5.146] Encuentros modernos + históricos:',this.encounters.length,'(históricos disponibles:',legacyRows.length+')');
-  }catch(e){console.warn('[V8.5.146] No se pudo fusionar encuentros históricos',e);}
+    console.info('[V8.5.147] Encuentros modernos + históricos:',this.encounters.length,'(históricos disponibles:',legacyRows.length+')');
+  }catch(e){console.warn('[V8.5.147] No se pudo fusionar encuentros históricos',e);}
 
   this.loaded=true;
   this.buildPage();this.render813();
@@ -40119,7 +40125,7 @@ function boot(){
   var p=document.getElementById('p-encuentros');if(!p)return;
   p.innerHTML=`<div id="v813-root">
     <div class="v8592-head">
-      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b></small></div>
+      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v8.5.147</span></small></div>
       <div class="v8592-club"><label>Club</label><select id="v8592-club" onchange="V81.v8592ClubChanged(this.value)"></select></div>
       <button class="v813-btn v8592-add" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
     </div>
