@@ -1,4 +1,4 @@
-const CACHE_NAME = 'basket-manager-v8.5.121';
+const CACHE_NAME = 'basket-manager-v8.5.122';
 const APP_SHELL = [
   './',
   './index.html',
