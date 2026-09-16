@@ -7499,7 +7499,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-clubs" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.154</div></div>
+      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.155</div></div>
       <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
     </div>
   </div>
@@ -7564,7 +7564,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-equipos" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.154</div></div>
+      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.155</div></div>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
         <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
         <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7648,7 +7648,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-jugadores" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
-      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.154</div></div>
+      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.155</div></div>
       <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
     </div>
     <div class="jg-category-cards">
@@ -22215,6 +22215,8 @@ el.addEventListener('mousedown', function(e){
   var currentBoard = { id: null, nombre: '', notas: '', categoria: '' };
   var autosaveTimer = null;
   var autosavePending = false;
+  var autosaveInFlight = false;
+  var autosaveQueued = false;
 
   function pzGenId(){
     return 'pz_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
@@ -22546,6 +22548,7 @@ el.addEventListener('mousedown', function(e){
 
   function pzBoardAutosave(){
     if (!currentBoard.id) return;
+    if (autosaveInFlight) { autosaveQueued = true; return; }
     if (typeof sbFetch !== 'function' || !SB || !SB.ready) {
       pzAutosaveStatus('● Supabase no conectado');
       return;
@@ -22559,6 +22562,7 @@ el.addEventListener('mousedown', function(e){
       categoria: currentBoard.categoria || '',
       estado: estado
     };
+    autosaveInFlight = true;
     sbFetch('pizarras?on_conflict=id', {
       method: 'POST',
       headers: { 'Prefer': 'resolution=merge-duplicates,return=minimal' },
@@ -22573,6 +22577,9 @@ el.addEventListener('mousedown', function(e){
       }
     }).catch(function(e){
       pzAutosaveStatus('✗ error de red');
+    }).finally(function(){
+      autosaveInFlight = false;
+      if (autosaveQueued) { autosaveQueued = false; setTimeout(pzBoardAutosave, 50); }
     });
   }
 
@@ -34448,17 +34455,27 @@ function addToSession(id){
   return true;
 }
 window.v8521SaveSessionPlan=async function(){
+  if(V8521._savingPlan)return;
   var id=E('v8521-session-training-id').value,ent=training(id);if(!ent)return;
   var existing=planByTraining(id);
   var plan={id:existing&&existing.id||uid('plan'),training_id:id,microcycle_id:(micro(ent)||{}).id||null,session_objective:E('v8521-session-objective').value.trim(),notes:E('v8521-session-notes').value.trim(),updated_at:new Date().toISOString()};
-  var idx=V8521.plans.findIndex(function(x){return String(x.training_id)===String(id)});plan.items=V8521.draftItems.map(function(x,i){return Object.assign({},x,{plan_id:plan.id,sort_order:i})});
-  if(idx>=0)V8521.plans[idx]=plan;else V8521.plans.push(plan);persistLocal();v8521Close('m-v8521-session-plan');
+  plan.items=V8521.draftItems.map(function(x,i){return Object.assign({},x,{plan_id:plan.id,sort_order:i})});
+  var btn=document.querySelector('#m-v8521-session-plan .modal-ft .btn-primary');
+  V8521._savingPlan=true;if(btn){btn.disabled=true;btn.dataset.v85155Text=btn.textContent;btn.textContent='Guardando…'}
   try{
     await rest('training_session_plans?on_conflict=training_id',{method:'POST',headers:hdr({Prefer:'resolution=merge-duplicates,return=representation'}),body:JSON.stringify({id:plan.id,training_id:plan.training_id,microcycle_id:plan.microcycle_id,session_objective:plan.session_objective,notes:plan.notes,updated_at:plan.updated_at})});
     await rest('training_session_exercises?plan_id=eq.'+encodeURIComponent(plan.id),{method:'DELETE',headers:hdr({Prefer:'return=minimal'})});
     if(plan.items.length)await rest('training_session_exercises',{method:'POST',headers:hdr({Prefer:'return=minimal'}),body:JSON.stringify(plan.items.map(function(x){return {id:x.id,plan_id:plan.id,exercise_id:x.exercise_id,duration_min:parseInt(x.duration_min,10)||10,block_type:x.block_type||'Técnica',notes:x.notes||'',sort_order:x.sort_order}}))});
-  }catch(e){console.warn(e)}
-  if(typeof toast==='function')toast('Plan de sesión guardado','s');
+    var idx=V8521.plans.findIndex(function(x){return String(x.training_id)===String(id)});if(idx>=0)V8521.plans[idx]=plan;else V8521.plans.push(plan);
+    persistLocal();v8521Close('m-v8521-session-plan');
+    if(typeof toast==='function')toast('Plan de sesión guardado','s');
+  }catch(e){
+    console.error('V8.5.155 plan de sesión',e);
+    if(typeof toast==='function')toast('No se pudo guardar el Plan de Sesión','e');
+    alert('No se pudo guardar el Plan de Sesión.\n\n'+(e&&e.message||e));
+  }finally{
+    V8521._savingPlan=false;if(btn){btn.disabled=false;btn.textContent=btn.dataset.v85155Text||'Guardar plan de sesión'}
+  }
 };
 document.addEventListener('input',function(ev){
   var i=ev.target.getAttribute&&ev.target.getAttribute('data-v8521-duration');if(i!=null){V8521.draftItems[+i].duration_min=parseInt(ev.target.value,10)||0;renderSession()}
@@ -36592,6 +36609,8 @@ window.v8558BuildTrainingPdfFile=async function(id){
 };
 
 window.v8553GenerateTrainingPdf=async function(id){
+  if(window.V85155_PDF_BUSY){if(typeof toast==='function')toast('Ya se está generando un PDF','i');return}
+  window.V85155_PDF_BUSY=true;
   try{
     var r=await v8558BuildTrainingPdfFile(id);
     setTimeout(function(){
@@ -36608,6 +36627,8 @@ window.v8553GenerateTrainingPdf=async function(id){
     closeProgress();
     console.error('V8.5.63 PDF',e);
     alert('No se pudo generar el informe PDF.\n\n'+(e&&e.message||e));
+  }finally{
+    window.V85155_PDF_BUSY=false;
   }
 };
 
