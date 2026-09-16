@@ -7472,7 +7472,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-clubs" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría</div></div>
+      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.145</div></div>
       <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
     </div>
   </div>
@@ -14145,11 +14145,11 @@ function renderClubs(data) {
       var mm={NEGRO:'#111827',BLANCO:'#FFFFFF',AZUL:'#2563EB',ROJO:'#DC2626',VERDE:'#16A34A',NARANJA:'#F97316',AMARILLO:'#FACC15'};
       return mm[v.toUpperCase()]||fb;
     }
-    var col1 = clubHex(c.color1 || c.primary_color || (eqColorSource && (eqColorSource.vestimenta_principal||eqColorSource.color)), '#64748b');
-    var col2 = clubHex(c.color2 || c.secondary_color || (eqColorSource && eqColorSource.vestimenta_reserva), '#cbd5e1');
+    var col1 = clubHex((eqColorSource && (eqColorSource.vestimenta_principal||eqColorSource.color)) || c.color1 || c.primary_color, '#64748b');
+    var col2 = clubHex((eqColorSource && eqColorSource.vestimenta_reserva) || c.color2 || c.secondary_color, '#cbd5e1');
     var clubLocs=(DB.localizaciones||[]).filter(function(x){return String(x.club_id||'')===String(c.id)&&x.activa!==false;});
     var defaultLoc=clubLocs.find(function(x){return x.tipo==='Partidos'||x.tipo==='Ambos';})||clubLocs[0]||null;
-    var loc = c.localizacion || c.location || (defaultLoc && (defaultLoc.nombre||defaultLoc.direccion)) || '';
+    var loc = c.localizacion || c.location || (defaultLoc && (defaultLoc.nombre||defaultLoc.direccion)) || (eqColorSource && (eqColorSource.pabellon||eqColorSource.ciudad)) || '';
     var initials=String(c.nombre||c.name||'CL').replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean).slice(0,3).map(function(x){return x.charAt(0);}).join('').toUpperCase()||'CL';
     var fallbackLogo='<div title="Logo oficial pendiente" style="width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,'+esc(col1)+' 0 50%,'+esc(col2)+' 50% 100%);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;text-shadow:0 1px 2px #000">'+esc(initials)+'</div>';
     var logoHtml = logo
@@ -19860,6 +19860,15 @@ function sendInviteEmail() {
   toast('✉️ Abriendo Gmail con la invitación...', 's');
 }
 
+window.bmSeasonEq = function(a,b){
+  function n(v){
+    var s=String(v||'').trim();
+    var m=s.match(/(20\d{2})\D+(?:20)?(\d{2})/);
+    return m ? (m[1]+'-'+m[2]) : s;
+  }
+  return n(a)===n(b);
+};
+
 function sbPullAll() {
   if (!SB.ready) { toast('Conecta Supabase primero', 'e'); return; }
 
@@ -19930,14 +19939,10 @@ function sbPullAll() {
       .then(function(rows){
         if(!Array.isArray(rows)) throw new Error(map.table+' no devolvió un array');
 
+        // Cargar todas las filas válidas. El filtrado de temporada se hace después
+        // en _dbFor(), que normaliza 2026-27 y 2026-2027 como la misma temporada.
+        // Esto evita que Supabase oculte encuentros antes de llegar a la interfaz.
         var effectiveRows=rows;
-        if(seasonal[col] && activeTmp){
-          effectiveRows=rows.filter(function(row){
-            var s=rowSeason(row);
-            // Registros legacy sin temporada siguen siendo visibles; los etiquetados se filtran.
-            return !s || (typeof window.bmSeasonEq==='function' ? window.bmSeasonEq(s,activeTmp) : String(s)===String(activeTmp));
-          });
-        }
 
         // Solo sustituimos DB cuando la respuesta de Supabase fue realmente válida.
         DB[col]=effectiveRows.map(map.fromRow);
