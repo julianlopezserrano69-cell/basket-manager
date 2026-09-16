@@ -1,0 +1,7 @@
+V8.5.152 - ENTRENAMIENTOS LIMPIEZA CONTROLADA
+Base: V8.5.151
+
+- Retirados observers históricos v85126/v85128/v85129/v85130 que actuaban sobre scroll, normalización y sticky de la tabla de Entrenamientos.
+- Se conservan los observers funcionales de botones Plan/PDF/Email y deduplicación para no romper funciones.
+- La estructura estable de V8.5.150 sigue siendo la única responsable del viewport y anchuras.
+- Sin cambios en Supabase, datos, filtros, edición, asistencia, PDF o planes.

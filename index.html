@@ -36652,7 +36652,7 @@ var oldLoad54=window.v850Load;if(typeof oldLoad54==='function'&&!oldLoad54.__v85
 }
 ['saveMicrociclo','saveMesociclo'].forEach(function(name){var old=window[name];if(typeof old==='function'&&!old.__v8554){window[name]=async function(){var r=await old.apply(this,arguments);scheduleSync54();return r};window[name].__v8554=true}});
 setTimeout(scheduleSync54,1200);
-/* V8.5.151: eliminado polling cada 60s; la sincronización queda ligada a carga/guardado. */
+/* V8.5.152: eliminado polling cada 60s; la sincronización queda ligada a carga/guardado. */
 
 /* Acciones: solo iconos. */
 window.v8554CompactTrainingActions=function(){
@@ -40649,7 +40649,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
   document.addEventListener('click', e=>{
     if(e.target.closest && (e.target.closest('[data-action="new-match"]') || e.target.closest('[onclick*="match"]') || e.target.closest('[onclick*="encuentro"]'))) run();
   },true);
-  /* V8.5.151: sin observer global del documento; el ajuste se activa por interacción/apertura. */
+  /* V8.5.152: sin observer global del documento; el ajuste se activa por interacción/apertura. */
   document.addEventListener('focusin',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))run()},true);
   run();
 })();
@@ -40741,7 +40741,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       i.style.paddingLeft='34px'; i.style.fontSize='8px'; i.style.height='34px';
     });
   }
-  /* V8.5.151: eliminado segundo observer global redundante. */
+  /* V8.5.152: eliminado segundo observer global redundante. */
   document.addEventListener('focusin',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))setTimeout(fix,0)},true);
   document.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('#matchModal'))setTimeout(fix,0)},true);
   fix();
@@ -42101,7 +42101,7 @@ function bind(){
   ['q-ent','fsel-eq-ent','fsel-cat-ent','fsel-club-ent'].forEach(function(id){var x=E(id);if(x){x.addEventListener('input',delayedCapture);x.addEventListener('change',function(){setTimeout(function(){capture();updateSummary();syncTop()},80)})}});
   p.addEventListener('click',openRowEdit);
   var w=E('ent-tbl-wrap'),i=E('ent-tbl-inner');if(w)w.addEventListener('scroll',delayedCapture,{passive:true});if(i)i.addEventListener('scroll',delayedCapture,{passive:true});
-  var tb=E('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(function(){setTimeout(function(){syncTop();updateSummary()},0)}).observe(tb,{childList:true});
+  /* V8.5.152: observer v85126 retirado; resumen/scroll se actualizan por eventos explícitos */
 }
 var oldClose=window.closeModal;if(typeof oldClose==='function'&&!oldClose.__v85126){var c=function(type){var r=oldClose.apply(this,arguments);if(type==='entrenamiento')setTimeout(function(){restore(true)},30);return r};c.__v85126=true;window.closeModal=c}
 var oldNav=window.nav;if(typeof oldNav==='function'&&!oldNav.__v85126){var n=function(page){if(page!=='entrenamientos'&&E('p-entrenamientos')&&E('p-entrenamientos').classList.contains('active'))capture();var r=oldNav.apply(this,arguments);if(page==='entrenamientos')setTimeout(function(){bind();restore(true)},80);return r};n.__v85126=true;window.nav=n}
@@ -42193,9 +42193,9 @@ function dataReady(){return !!(window.DB&&Array.isArray(DB.entrenamientos)&&DB.e
 var token=0,lastActive=false;
 function showNextWhenReady(){if(!active())return;var mine=++token,tries=0;(function wait(){if(mine!==token||!active())return;if(dataReady()||tries>=40){tagRows();bindScroll();syncTop();return}tries++;setTimeout(wait,150)})()}
 function onEnter(){tagRows();bindScroll();syncTop();showNextWhenReady()}
-var page=E('p-entrenamientos');if(page&&window.MutationObserver)new MutationObserver(function(){var a=active();if(a&&!lastActive)onEnter();if(!a&&lastActive)token++;lastActive=a}).observe(page,{attributes:true,attributeFilter:['class']});
+/* V8.5.152: observer de activación v85128 retirado; la navegación explícita llama onEnter */
 document.addEventListener('click',function(ev){var nav=ev.target.closest&&ev.target.closest('#nav-entrenamientos,[data-page="entrenamientos"]');if(nav)setTimeout(function(){if(active())onEnter()},120);var td=ev.target.closest&&ev.target.closest('#tb-ent td:first-child');if(td){var id=trainingIdFromRow(td.closest('tr'));if(id){ev.preventDefault();ev.stopImmediatePropagation();openEdit(id)}}},true);
-var tb=E('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(function(){setTimeout(function(){tagRows();syncTop()},0)}).observe(tb,{childList:true});
+/* V8.5.152: observer v85128 sobre filas retirado */
 function init(){tagRows();bindScroll();syncTop();lastActive=active();if(lastActive)showNextWhenReady();setTimeout(function(){tagRows();syncTop()},700)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init,60)});else setTimeout(init,60);
 window.V85128={showNext:showNextWhenReady,tagRows:tagRows,openEdit:openEdit};
@@ -42271,7 +42271,7 @@ function enter(autoPopup){normalizeTable();setTimeout(normalizeTable,80);setTime
 var oldNav=window.nav;if(typeof oldNav==='function'){window.nav=function(page){var was=v85138Inside;var r=oldNav.apply(this,arguments);v85138Inside=(page==='entrenamientos');if(v85138Inside&&!was)setTimeout(function(){enter(true)},60);return r}}
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-v85129-edit]');if(b){ev.preventDefault();ev.stopImmediatePropagation();edit(b.getAttribute('data-v85129-edit'));return}if(ev.target===E('v85129-next-modal')){close();return}var td=ev.target.closest&&ev.target.closest('#ent-tbl tbody td:first-child');if(td){var tr=td.closest('tr[data-training-id]');if(tr){ev.preventDefault();ev.stopImmediatePropagation();edit(tr.getAttribute('data-training-id'))}}},true);
 var c=E('v85129-next-close');if(c)c.addEventListener('click',function(ev){ev.preventDefault();close()});
-var tb=E('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(function(){setTimeout(normalizeTable,0)}).observe(tb,{childList:true});
+/* V8.5.152: observer normalizeTable retirado; estructura estable desde V8.5.150 */
 function init(){normalizeTable();v85138Inside=active();/* no popup de arranque duplicado: solo navegación real */}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 window.V85129={show:show,enter:enter,edit:edit,normalizeTable:normalizeTable};
@@ -42285,7 +42285,7 @@ window.V85129={show:show,enter:enter,edit:edit,normalizeTable:normalizeTable};
 #p-entrenamientos #v85130-show-next{white-space:nowrap}
 </style>
 <script id="v85130-training-header-js">
-(function(){'use strict';function fix(){var th=document.querySelector('#p-entrenamientos #ent-tbl thead th:first-child');if(th){th.style.setProperty('position','sticky','important');th.style.setProperty('top','0','important');th.style.setProperty('left','0','important');th.style.setProperty('z-index','1000','important')}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();var tb=document.getElementById('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(fix).observe(tb,{childList:true});window.V85130={fix:fix}})();
+(function(){'use strict';function fix(){var th=document.querySelector('#p-entrenamientos #ent-tbl thead th:first-child');if(th){th.style.setProperty('position','sticky','important');th.style.setProperty('top','0','important');th.style.setProperty('left','0','important');th.style.setProperty('z-index','1000','important')}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();/* V8.5.152: observer sticky retirado; CSS final mantiene cabecera/fecha */window.V85130={fix:fix}})();
 </script>
 
 <!-- V8.5.138 · PROPUESTA AUTOMÁTICA MESOCICLO + MICROCICLO -->
