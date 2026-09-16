@@ -7276,6 +7276,7 @@ window.addEventListener('DOMContentLoaded', function(){
     <div class="nav-sub nav-cat-sub" id="nav-encuentros-cat-sub22" data-cat-page="encuentros" data-cat-value="SUB22" onclick="setMenuCategoria('encuentros','SUB22')"><span class="nav-sub-icon">🏷️</span> SUB22</div>
     <div class="nav-sub nav-cat-sub" id="nav-encuentros-cat-veteranats" data-cat-page="encuentros" data-cat-value="Veteran@s" onclick="setMenuCategoria('encuentros','Veteran@s')"><span class="nav-sub-icon">🏷️</span> Veteran@s</div>
     <div class="nav-item" id="nav-entrenamientos" onclick="nav('entrenamientos')"><span class="nav-icon">🏋</span> Entrenamientos</div>
+    <div class="nav-sub" id="nav-asistencia-equipo" onclick="nav('asistencia-equipo')"><span class="nav-sub-icon">📋</span> Control de asistencia</div>
     <div class="nav-sub" id="nav-plan-entrenamientos" onclick="nav('plan-entrenamientos')"><span class="nav-sub-icon">🗓️</span> Planificación</div>
     <div class="nav-sub v8526-library-nav" id="nav-biblioteca-ejercicios" onclick="nav('biblioteca-ejercicios')"><span class="nav-sub-icon">📚</span> Biblioteca de ejercicios</div>
     <div class="nav-item" id="nav-valoraciones" onclick="nav('valoraciones')"><span class="nav-icon">⭐</span> Valoraciones</div>
@@ -7807,6 +7808,29 @@ window.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <!-- VALORACIONES -->
+
+
+<div id="p-asistencia-equipo" class="page">
+  <div class="page-header">
+    <div><div class="pt">Control de asistencia</div><div class="ps">Seguimiento automático de entrenamientos realizados y partidos finalizados</div></div>
+    <div class="v85116-actions">
+      <button class="btn btn-secondary" type="button" onclick="V85116.refresh()">↻ Actualizar</button>
+      <button class="btn btn-primary" type="button" onclick="V85116.printPDF()">📄 Descargar PDF</button>
+    </div>
+  </div>
+  <div class="card v85116-filter-card">
+    <div class="v85116-filters">
+      <label><span>Temporada</span><select id="v85116-season" class="fsel" onchange="V85116.change()"></select></label>
+      <label><span>Equipo</span><select id="v85116-team" class="fsel" onchange="V85116.change()"></select></label>
+      <label><span>Desde</span><input id="v85116-from" type="date" onchange="V85116.render()"></label>
+      <label><span>Hasta</span><input id="v85116-to" type="date" onchange="V85116.render()"></label>
+      <label><span>Vista</span><select id="v85116-view" class="fsel" onchange="V85116.render()"><option value="summary">Resumen</option><option value="detail">Detalle por sesión</option></select></label>
+    </div>
+    <div class="v85116-note">Los entrenamientos reutilizan directamente Asistencia, Puntualidad, Vestimenta y Actitud ya registrados. En partidos se usan los Convocados del encuentro; un jugador no convocado no se considera ausencia.</div>
+  </div>
+  <div id="v85116-content"></div>
+  <div id="v85116-print" class="v85116-print"></div>
+</div>
 
 <div id="p-plan-entrenamientos" class="page">
   <div class="ph">
@@ -13552,7 +13576,7 @@ function nav(page) {
   window.scrollTo(0, 0);
   if (window._playLightning) window._playLightning();
   rollBall();
-  var pages = ['dashboard','clubs','localizaciones','equipos','jugadores','entrenadores','encuentros','entrenamientos','plan-entrenamientos','valoraciones','scouting','informes','config','calendario','tips','temporadas','directo','pizarra','solicitudes','sugerencias'];
+  var pages = ['dashboard','clubs','localizaciones','equipos','jugadores','entrenadores','encuentros','entrenamientos','asistencia-equipo','plan-entrenamientos','valoraciones','scouting','informes','config','calendario','tips','temporadas','directo','pizarra','solicitudes','sugerencias','calidad-datos'];
   pages.forEach(function(p) {
     var el = document.getElementById('p-' + p);
     if (el) el.classList.toggle('active', p === page);
@@ -13581,6 +13605,7 @@ function nav(page) {
     },20);
   }
   if (page === 'calendario') renderCalendario();
+  if (page === 'asistencia-equipo' && window.V85116) { setTimeout(function(){V85116.open()},30); }
   if (page === 'plan-entrenamientos') renderPlanEntrenamientos();
   if (page === 'temporadas') { setTimeout(renderTmpPage,50); }
   if (page === 'directo') { setTimeout(initDirecto,50); }
@@ -38162,7 +38187,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.115</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.116</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38333,7 +38358,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.115</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.116</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40260,7 +40285,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.115';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.116';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
@@ -41282,6 +41307,128 @@ body > #v8588-enc-modal .v8591-inherited{
  @page{size:A4;margin:10mm}
 }
 </style>
+
+
+<style id="v85116-attendance-css">
+#p-asistencia-equipo .v85116-actions{display:flex;gap:8px;flex-wrap:wrap}
+#p-asistencia-equipo .v85116-filter-card{padding:12px;margin-bottom:12px}
+#p-asistencia-equipo .v85116-filters{display:grid;grid-template-columns:1.1fr 1.8fr repeat(3,1fr);gap:9px}
+#p-asistencia-equipo .v85116-filters label span{display:block;font-size:8px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:800;margin-bottom:4px}
+#p-asistencia-equipo .v85116-filters input,#p-asistencia-equipo .v85116-filters select{width:100%;height:34px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:0 8px;font-size:10px}
+#p-asistencia-equipo .v85116-note{margin-top:8px;font-size:9px;color:var(--muted);line-height:1.45}
+#p-asistencia-equipo .v85116-kpis{display:grid;grid-template-columns:repeat(7,minmax(90px,1fr));gap:8px;margin:10px 0}
+#p-asistencia-equipo .v85116-kpi{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+#p-asistencia-equipo .v85116-kpi span{display:block;color:var(--muted);font-size:7px;text-transform:uppercase;font-weight:800}
+#p-asistencia-equipo .v85116-kpi b{display:block;font-size:18px;margin-top:3px}
+#p-asistencia-equipo .v85116-panel{background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-top:10px;overflow:hidden}
+#p-asistencia-equipo .v85116-panel h3{font-size:11px;margin:0;padding:10px 12px;border-bottom:1px solid var(--border)}
+#p-asistencia-equipo .v85116-scroll{overflow:auto;max-height:58vh}
+#p-asistencia-equipo .v85116-table{width:100%;border-collapse:collapse;min-width:850px;font-size:9px}
+#p-asistencia-equipo .v85116-table th{position:sticky;top:0;background:var(--elevated);z-index:2;padding:7px;text-transform:uppercase;font-size:7px;color:var(--muted);white-space:nowrap}
+#p-asistencia-equipo .v85116-table td{padding:7px;border-top:1px solid var(--border-subtle);text-align:center;white-space:nowrap}
+#p-asistencia-equipo .v85116-table td.name,#p-asistencia-equipo .v85116-table th.name{text-align:left;min-width:150px}
+#p-asistencia-equipo .v85116-good{color:#4ade80;font-weight:800}.v85116-bad{color:#f87171;font-weight:800}.v85116-na{color:var(--muted)}
+#p-asistencia-equipo .v85116-print{display:none}
+@media(max-width:900px){#p-asistencia-equipo .v85116-filters{grid-template-columns:1fr 1fr}#p-asistencia-equipo .v85116-kpis{grid-template-columns:repeat(2,1fr)}}
+@media print{
+ body *{visibility:hidden!important}
+ #v85116-print,#v85116-print *{visibility:visible!important}
+ #v85116-print{display:block!important;position:absolute;left:0;top:0;width:100%;color:#17202a;background:white;font-family:Arial,sans-serif}
+ #v85116-print .pr-head{background:#17344b;color:white;padding:18px 20px}
+ #v85116-print .pr-head h1{margin:0 0 4px;font-size:22px}.pr-head p{margin:0;font-size:9px}
+ #v85116-print .pr-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:10px}
+ #v85116-print .pr-kpi{border:1px solid #d9e1e7;border-radius:6px;padding:7px;text-align:center}
+ #v85116-print .pr-kpi span{display:block;font-size:6px;text-transform:uppercase;color:#667}.pr-kpi b{font-size:12px}
+ #v85116-print h2{font-size:12px;margin:10px 10px 5px}
+ #v85116-print table{width:calc(100% - 20px);margin:0 10px 12px;border-collapse:collapse;font-size:7px}
+ #v85116-print th{background:#eef3f6}#v85116-print th,#v85116-print td{border:1px solid #d8e0e6;padding:4px;text-align:center}
+ #v85116-print th:nth-child(2),#v85116-print td:nth-child(2){text-align:left}
+ @page{size:A4 landscape;margin:8mm}
+}
+</style>
+<script id="v85116-attendance-js">
+(function(){
+'use strict';
+var A={rows:[],encounters:[],loading:false,opened:false};
+function E(id){return document.getElementById(id)}
+function S(v){return String(v==null?'':v)}
+function esc(v){return S(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function yes(v){return v===true||['SI','SÍ','YES','TRUE','1'].indexOf(S(v).trim().toUpperCase())>=0}
+function team(id){return ((window.DB&&DB.equipos)||[]).find(function(x){return S(x.id)===S(id)})||null}
+function players(id){return ((window.DB&&DB.jugadores)||[]).filter(function(x){return S(x.equipo||x.team_id)===S(id)}).slice().sort(function(a,b){var x=parseInt(a.dorsal,10),y=parseInt(b.dorsal,10);if(isNaN(x))x=999;if(isNaN(y))y=999;return x-y||S(a.nombre||a.name).localeCompare(S(b.nombre||b.name),'es')})}
+function season(){return E('v85116-season')?E('v85116-season').value:''}
+function teamId(){return E('v85116-team')?E('v85116-team').value:''}
+function trainingFinished(e){if(typeof window.v841TrainingFinished==='function'){try{return !!v841TrainingFinished(e)}catch(x){}}if(typeof window.v845TrainingCountsForKpi==='function'){try{return !!v845TrainingCountsForKpi(e,new Date())}catch(x){}}var d=S(e.fecha),tm=S(e.hora||'00:00').slice(0,5);if(!d)return false;var dt=new Date(d+'T'+tm+':00'),dur=parseInt(e.dur,10)||0;return Date.now()>=dt.getTime()+(dur+60)*60000}
+function matchFinished(e){return ['finished','finalizado','finalizada','completed','complete'].indexOf(S(e.status||e.estado).toLowerCase())>=0}
+function ownCalled(e,id){if(S(e.home_team_id)===S(id))return e.home_called_ids||[];if(S(e.away_team_id)===S(id))return e.away_called_ids||[];return []}
+function matchForTeam(e,id){return S(e.home_team_id)===S(id)||S(e.away_team_id)===S(id)}
+function fmt(d){if(!d)return '—';var p=S(d).slice(0,10).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:S(d)}
+function pct(n,d){return d?Math.round(n*1000/d)/10:null}
+function fp(v){return v==null?'—':(Math.round(v*10)/10)+'%'}
+function avg(a){a=a.filter(function(x){return x!=null&&!isNaN(x)});return a.length?Math.round(a.reduce(function(s,x){return s+x},0)/a.length*100)/100:null}
+function dateOK(d){var f=E('v85116-from').value,t=E('v85116-to').value,x=S(d).slice(0,10);return (!f||x>=f)&&(!t||x<=t)}
+function currentSeasonDefault(){try{return typeof _curTmp==='function'?S(_curTmp()):''}catch(e){return ''}}
+function seasons(){var a=[];((window.DB&&DB.temporadas)||[]).forEach(function(x){var v=S(x.id||x.nombre||x.name);if(v&&a.indexOf(v)<0)a.push(v)});((window.DB&&DB.entrenamientos)||[]).forEach(function(x){var v=S(x.temporada||x.season_id);if(v&&a.indexOf(v)<0)a.push(v)});return a.sort().reverse()}
+function fill(){
+ var se=E('v85116-season'),te=E('v85116-team'),oldS=se.value||currentSeasonDefault(),oldT=te.value;
+ var ss=seasons();se.innerHTML='<option value="">Todas</option>'+ss.map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>'}).join('');if(ss.indexOf(oldS)>=0)se.value=oldS;
+ var teams=((window.DB&&DB.equipos)||[]).filter(function(x){var xs=S(x.temporada||x.season_id);return !se.value||!xs||xs===se.value}).sort(function(a,b){return S(a.nombre||a.name).localeCompare(S(b.nombre||b.name),'es')});
+ te.innerHTML='<option value="">Selecciona equipo</option>'+teams.map(function(x){return '<option value="'+esc(x.id)+'">'+esc(x.nombre||x.name||x.id)+'</option>'}).join('');if(teams.some(function(x){return S(x.id)===S(oldT)}))te.value=oldT;
+}
+async function rest(path){
+ if(typeof window.sbFetch==='function'){var r=await sbFetch(path,{method:'GET'});if(!r.ok)throw new Error(await r.text());return await r.json()}
+ if(!window.SB||!SB.url||!SB.key)return[];var tok=sessionStorage.getItem('v8_sb_token')||SB.key,r=await fetch(SB.url+'/rest/v1/'+path,{headers:{apikey:SB.key,Authorization:'Bearer '+tok}});return r.ok?await r.json():[]
+}
+async function load(){
+ var id=teamId();A.rows=[];A.encounters=[];if(!id)return;
+ var tr=((window.DB&&DB.entrenamientos)||[]).filter(function(e){var xs=S(e.temporada||e.season_id);return S(e.equipo)===S(id)&&(!season()||!xs||xs===season())&&trainingFinished(e)&&dateOK(e.fecha)});
+ var ids=tr.map(function(x){return x.id}).filter(Boolean);
+ if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.116 training rows',e)}}
+ try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.116 encounters',e)}
+ A.trainings=tr;
+}
+function perPlayer(){
+ var id=teamId(),ps=players(id),trs=A.trainings||[],rows=A.rows||[],matches=A.encounters||[];
+ return ps.map(function(p){
+  var rr=rows.filter(function(r){return S(r.jugador_id)===S(p.id)});
+  var attended=rr.filter(function(r){return yes(r.asistencia)}),pun=attended.filter(function(r){return yes(r.puntualidad)}),vestEligible=attended.filter(function(r){var v=S(r.vestimenta).toUpperCase();return v&&v!=='NA'&&v!=='N/A'}),vest=vestEligible.filter(function(r){return yes(r.vestimenta)});
+  var acts=attended.map(function(r){var n=parseFloat(r.actitud);return isNaN(n)?null:n});
+  var called=matches.filter(function(m){return ownCalled(m,id).map(S).indexOf(S(p.id))>=0}).length;
+  return {p:p,trTotal:trs.length,trRecords:rr.length,att:attended.length,pun:pun.length,vest:vest.length,vestDen:vestEligible.length,act:avg(acts),matches:matches.length,called:called};
+ })
+}
+function metrics(pp){
+ var trN=(A.trainings||[]).length,maN=(A.encounters||[]).length,attN=0,attD=0,punN=0,punD=0,veN=0,veD=0,acts=[],called=0;
+ pp.forEach(function(x){attN+=x.att;attD+=trN;punN+=x.pun;punD+=x.att;veN+=x.vest;veD+=x.vestDen;if(x.act!=null)acts.push(x.act);called+=x.called});
+ return {trainings:trN,matches:maN,attendance:pct(attN,attD),punctual:pct(punN,punD),clothing:pct(veN,veD),attitude:avg(acts),calls:called}
+}
+function kpis(m){return '<div class="v85116-kpis">'+[['Entrenos',m.trainings],['Partidos fin.',m.matches],['Asistencia',fp(m.attendance)],['Puntualidad',fp(m.punctual)],['Vestimenta',fp(m.clothing)],['Actitud',m.attitude==null?'—':m.attitude.toFixed(2)],['Convocatorias',m.calls]].map(function(x){return '<div class="v85116-kpi"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'}).join('')+'</div>'}
+function summary(pp){
+ return '<div class="v85116-panel"><h3>Resumen por jugador</h3><div class="v85116-scroll"><table class="v85116-table"><thead><tr><th>#</th><th class="name">Jugador</th><th>Entrenos</th><th>Asiste</th><th>% Asist.</th><th>% Punt.</th><th>% Vest.</th><th>Actitud</th><th>Partidos fin.</th><th>Convocado</th><th>% Conv.</th></tr></thead><tbody>'+pp.map(function(x){return '<tr><td>'+esc(x.p.dorsal||'—')+'</td><td class="name">'+esc(x.p.nombre||x.p.name)+'</td><td>'+x.trTotal+'</td><td>'+x.att+'</td><td>'+fp(pct(x.att,x.trTotal))+'</td><td>'+fp(pct(x.pun,x.att))+'</td><td>'+fp(pct(x.vest,x.vestDen))+'</td><td>'+(x.act==null?'—':x.act.toFixed(2))+'</td><td>'+x.matches+'</td><td>'+x.called+'</td><td>'+fp(pct(x.called,x.matches))+'</td></tr>'}).join('')+'</tbody></table></div></div>'
+}
+function detail(){
+ var id=teamId(),pmap={};players(id).forEach(function(p){pmap[S(p.id)]=p});
+ var sessions=[];
+ (A.trainings||[]).forEach(function(t){var rr=(A.rows||[]).filter(function(r){return S(r.entrenamiento_id)===S(t.id)});rr.forEach(function(r){var p=pmap[S(r.jugador_id)]||{};sessions.push({date:t.fecha,type:'Entrenamiento',p:p,att:yes(r.asistencia)?'Sí':'No',pun:yes(r.asistencia)?(yes(r.puntualidad)?'Sí':'No'):'—',vest:yes(r.asistencia)?S(r.vestimenta||'—').toUpperCase():'—',act:yes(r.asistencia)&&r.actitud!=null?r.actitud:'—'})})});
+ (A.encounters||[]).forEach(function(m){var called=ownCalled(m,id).map(S);players(id).forEach(function(p){sessions.push({date:m.game_date||m.date,type:'Partido',p:p,att:called.indexOf(S(p.id))>=0?'Convocado':'No convocado',pun:'—',vest:'—',act:'—'})})});
+ sessions.sort(function(a,b){return S(a.date).localeCompare(S(b.date))||S(a.p.dorsal).localeCompare(S(b.p.dorsal))});
+ return '<div class="v85116-panel"><h3>Detalle por sesión</h3><div class="v85116-scroll"><table class="v85116-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="name">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+sessions.map(function(x){return '<tr><td>'+fmt(x.date)+'</td><td>'+x.type+'</td><td>'+esc(x.p.dorsal||'—')+'</td><td class="name">'+esc(x.p.nombre||x.p.name||'')+'</td><td>'+x.att+'</td><td>'+x.pun+'</td><td>'+x.vest+'</td><td>'+x.act+'</td></tr>'}).join('')+'</tbody></table></div></div>'
+}
+function buildPrint(pp,m){
+ var t=team(teamId()),name=t?(t.nombre||t.name):'Equipo',period=(E('v85116-from').value?fmt(E('v85116-from').value):'Inicio')+' — '+(E('v85116-to').value?fmt(E('v85116-to').value):'Hoy');
+ E('v85116-print').innerHTML='<div class="pr-head"><h1>Control de asistencia · '+esc(name)+'</h1><p>Temporada '+esc(season()||'Todas')+' · '+period+' · Solo entrenamientos realizados y partidos finalizados</p></div><div class="pr-kpis">'+[['Entrenos',m.trainings],['Partidos',m.matches],['Asistencia',fp(m.attendance)],['Puntualidad',fp(m.punctual)],['Vestimenta',fp(m.clothing)],['Actitud',m.attitude==null?'—':m.attitude.toFixed(2)]].map(function(x){return '<div class="pr-kpi"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'}).join('')+'</div><h2>Resumen por jugador</h2>'+summary(pp).replace(/<div class="v85116-panel"><h3>Resumen por jugador<\/h3><div class="v85116-scroll">/,'').replace(/<\/div><\/div>$/,'')+'<p style="font-size:7px;margin:6px 10px">Partidos: “No convocado” no se contabiliza como ausencia. Puntualidad, vestimenta y actitud proceden exclusivamente de los datos ya guardados en cada entrenamiento.</p>';
+}
+async function render(){
+ var box=E('v85116-content');if(!box)return;if(!teamId()){box.innerHTML='<div class="empty"><div class="empty-icon">📋</div>Selecciona un equipo para generar el control de asistencia.</div>';return}
+ box.innerHTML='<div class="empty">Cargando datos…</div>';
+ await load();var pp=perPlayer(),m=metrics(pp);box.innerHTML=kpis(m)+(E('v85116-view').value==='detail'?detail():summary(pp));buildPrint(pp,m)
+}
+async function open(){fill();if(teamId())await render();else E('v85116-content').innerHTML='<div class="empty"><div class="empty-icon">📋</div>Selecciona un equipo para generar el control de asistencia.</div>'}
+function change(){fill();render()}
+function printPDF(){if(!teamId()){if(typeof toast==='function')toast('Selecciona un equipo','w');return}render().then(function(){setTimeout(function(){window.print()},80)})}
+window.V85116={open:open,refresh:render,render:render,change:change,printPDF:printPDF,state:A};
+})();
+</script>
 
 </body>
 </html>
