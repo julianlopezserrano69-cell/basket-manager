@@ -7823,10 +7823,8 @@ window.addEventListener('DOMContentLoaded', function(){
     </div>
       <div class="card-bd" style="padding:0">
       <div class="tbl-wrap" id="ent-tbl-wrap">
-        <div style="overflow-x:hidden;max-height:440px;overflow-y:auto;" id="ent-tbl-inner">
           <table class="sticky-hdr-table" id="ent-tbl"><thead style="position:sticky;top:0;z-index:10;"><tr><th class="ent-sort-th" data-sort="fecha" onclick="sortEntBy('fecha')" title="Ordenar por fecha" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Fecha <span class="ent-sort-ind" id="ent-sort-fecha">↕</span></th><th class="ent-sort-th" data-sort="dia" onclick="sortEntBy('dia')" title="Ordenar alfabéticamente por día" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Día <span class="ent-sort-ind" id="ent-sort-dia">↕</span></th><th class="ent-sort-th" data-sort="hora" onclick="sortEntBy('hora')" title="Ordenar por hora" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Hora <span class="ent-sort-ind" id="ent-sort-hora">↕</span></th><th class="ent-sort-th" data-sort="equipo" onclick="sortEntBy('equipo')" title="Ordenar alfabéticamente por equipo" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Equipo <span class="ent-sort-ind" id="ent-sort-equipo">↕</span></th><th class="ent-sort-th" data-sort="categoria" onclick="sortEntBy('categoria')" title="Ordenar alfabéticamente por categoría" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Categoría <span class="ent-sort-ind" id="ent-sort-categoria">↕</span></th><th class="ent-sort-th" data-sort="tipo" onclick="sortEntBy('tipo')" title="Ordenar alfabéticamente por tipo" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Tipo <span class="ent-sort-ind" id="ent-sort-tipo">↕</span></th><th class="v850-micro-th" style="background:var(--surface2);white-space:nowrap">Periodización</th><th class="ent-sort-th" data-sort="dur" onclick="sortEntBy('dur')" title="Ordenar por duración" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Duración <span class="ent-sort-ind" id="ent-sort-dur">↕</span></th><th class="ent-sort-th" data-sort="localizacion" onclick="sortEntBy('localizacion')" title="Ordenar alfabéticamente por localización" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Localización <span class="ent-sort-ind" id="ent-sort-localizacion">↕</span></th><th class="ent-sort-th" data-sort="pista" onclick="sortEntBy('pista')" title="Ordenar alfabéticamente por pista" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Pista <span class="ent-sort-ind" id="ent-sort-pista">↕</span></th><th class="ent-sort-th" data-sort="asis" onclick="sortEntBy('asis')" title="Ordenar por asistencia" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Asistencia <span class="ent-sort-ind" id="ent-sort-asis">↕</span></th><th class="ent-sort-th" data-sort="vest" onclick="sortEntBy('vest')" title="Ordenar por vestimenta" style="background:var(--surface2);cursor:pointer;user-select:none;white-space:nowrap">Vestimenta <span class="ent-sort-ind" id="ent-sort-vest">↕</span></th><th class="v836-pdf-col" style="background:var(--surface2);white-space:nowrap;text-align:center">PDF</th><th class="v836-actions-col" style="background:var(--surface2);white-space:nowrap;text-align:center">Acciones</th></tr></thead>
           <tbody id="tb-ent"></tbody></table>
-        </div>
       </div>
     </div>
     </div>
@@ -31339,13 +31337,13 @@ async function paintRows(data){
   for(var i=0;i<trs.length;i++){
     var tr=trs[i],id=String(tr.getAttribute('data-training-id')||''),x=map[id];
     if(!x)continue;
-    tr.querySelectorAll('.v840-kpi-cell').forEach(function(e){e.remove()});
     var rows=await loadRows([id]),m=metrics(rows);
+    var vals=[fmtPct(m.punt),fmt5(m.act),fmt5(m.ses)];
+    var cells=Array.from(tr.querySelectorAll('.v840-kpi-cell'));
     var pdf=tr.querySelector('.v836-pdf-col');
     if(!pdf)continue;
-    [fmtPct(m.punt),fmt5(m.act),fmt5(m.ses)].forEach(function(v){
-      var td=document.createElement('td');td.className='v840-kpi-cell';td.textContent=v;tr.insertBefore(td,pdf);
-    });
+    while(cells.length<3){var td=document.createElement('td');td.className='v840-kpi-cell v850-stable-kpi';td.textContent='—';tr.insertBefore(td,pdf);cells.push(td);}
+    vals.forEach(function(v,j){cells[j].textContent=v;});
   }
 }
 async function refreshGlobal(){
@@ -33571,6 +33569,7 @@ function renderRows8518(data){
       '<td style="white-space:nowrap">'+esc8518(pista8518(x)||'—')+'</td>'+
       '<td style="text-align:center;font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--accent)">'+asis8518(x)+'</td>'+
       '<td style="text-align:center;font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:#a78bfa">'+vest8518(x)+'</td>'+
+      '<td class="v840-kpi-cell v850-stable-kpi">—</td><td class="v840-kpi-cell v850-stable-kpi">—</td><td class="v840-kpi-cell v850-stable-kpi">—</td>'+
       '<td class="v827-pdf-col v836-pdf-col"><button type="button" class="v8563-icon-btn v8563-pdf-btn" data-v8553-report="'+esc8518(id)+'" title="Generar / descargar informe PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.75h8l4 4V21.25H6z"/><path d="M14 2.75v4h4"/><path d="M8.5 11h7M8.5 14h7M8.5 17h5"/></svg></button></td>'+'<td class="v824-ent-actions v836-actions-col"><div class="v8563-actions"><button type="button" class="v8563-icon-btn v8563-plan" data-v8521-plan="'+esc8518(id)+'" title="Plan de sesión"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="M9 2.75v3M15 2.75v3"/></svg></button><button type="button" class="v8563-icon-btn v8563-mail" data-v8558-email="'+esc8518(id)+'" title="Compartir PDF por email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></button><button type="button" class="v8563-icon-btn v8563-view v824-ent-btn" data-action="view" data-id="'+esc8518(id)+'" title="Ver entrenamiento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.75 12s3.4-5.5 9.25-5.5S21.25 12 21.25 12 17.85 17.5 12 17.5 2.75 12 2.75 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></button><button type="button" class="v8563-icon-btn v8563-edit v824-ent-btn" data-action="edit" data-id="'+esc8518(id)+'" title="Modificar entrenamiento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.2-1 10.9-10.9-3.2-3.2L5 15.8 4 20Z"/><path d="m14.8 6 3.2 3.2"/></svg></button><button type="button" class="v8563-icon-btn v8563-delete v824-ent-btn" data-action="delete" data-id="'+esc8518(id)+'" title="Borrar entrenamiento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4.5h6V7M7.5 7l.8 13h7.4l.8-13M10 10.5v6M14 10.5v6"/></svg></button></div></td></tr>';
   });
   tb.innerHTML=h;indicators8518();
@@ -42325,6 +42324,54 @@ window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'
 
 <script id="bm-v85144-core-fix">/* V8.5.144 fixes integrated in core functions. */</script>
 
+
+
+<style id="v850-training-stable-css">
+/* V8.5.150 · Entrenamientos estable: un solo viewport y geometría fija */
+#p-entrenamientos .table-scroll-top{display:none!important}
+#p-entrenamientos #ent-tbl-wrap{overflow:auto!important;max-height:62vh!important;scrollbar-gutter:stable both-edges;overscroll-behavior:contain;position:relative!important}
+#p-entrenamientos #ent-tbl{table-layout:fixed!important;width:max-content!important;min-width:100%!important;border-collapse:separate!important;border-spacing:0!important}
+#p-entrenamientos #ent-tbl thead th{position:sticky!important;top:0!important;z-index:20!important}
+#p-entrenamientos #ent-tbl th,#p-entrenamientos #ent-tbl td{box-sizing:border-box!important}
+#p-entrenamientos #ent-tbl th:nth-child(1),#p-entrenamientos #ent-tbl td:nth-child(1){width:118px!important;min-width:118px!important;max-width:118px!important}
+#p-entrenamientos #ent-tbl th:nth-child(2),#p-entrenamientos #ent-tbl td:nth-child(2){width:100px!important;min-width:100px!important;max-width:100px!important}
+#p-entrenamientos #ent-tbl th:nth-child(3),#p-entrenamientos #ent-tbl td:nth-child(3){width:82px!important;min-width:82px!important;max-width:82px!important}
+#p-entrenamientos #ent-tbl th:nth-child(4),#p-entrenamientos #ent-tbl td:nth-child(4){width:230px!important;min-width:230px!important;max-width:230px!important}
+#p-entrenamientos #ent-tbl th:nth-child(5),#p-entrenamientos #ent-tbl td:nth-child(5){width:125px!important;min-width:125px!important;max-width:125px!important}
+#p-entrenamientos #ent-tbl th:nth-child(6),#p-entrenamientos #ent-tbl td:nth-child(6){width:150px!important;min-width:150px!important;max-width:150px!important}
+#p-entrenamientos #ent-tbl th:nth-child(7),#p-entrenamientos #ent-tbl td:nth-child(7){width:300px!important;min-width:300px!important;max-width:300px!important}
+#p-entrenamientos #ent-tbl th:nth-child(8),#p-entrenamientos #ent-tbl td:nth-child(8){width:100px!important;min-width:100px!important;max-width:100px!important}
+#p-entrenamientos #ent-tbl th:nth-child(9),#p-entrenamientos #ent-tbl td:nth-child(9){width:210px!important;min-width:210px!important;max-width:210px!important}
+#p-entrenamientos #ent-tbl th:nth-child(10),#p-entrenamientos #ent-tbl td:nth-child(10){width:150px!important;min-width:150px!important;max-width:150px!important}
+#p-entrenamientos #ent-tbl th:nth-child(n+11):nth-child(-n+15),#p-entrenamientos #ent-tbl td:nth-child(n+11):nth-child(-n+15){width:112px!important;min-width:112px!important;max-width:112px!important;text-align:center!important}
+#p-entrenamientos #ent-tbl th:nth-last-child(2),#p-entrenamientos #ent-tbl td:nth-last-child(2){width:76px!important;min-width:76px!important;max-width:76px!important}
+#p-entrenamientos #ent-tbl th:last-child,#p-entrenamientos #ent-tbl td:last-child{width:250px!important;min-width:250px!important;max-width:250px!important}
+#p-entrenamientos #ent-tbl tbody tr{contain:layout paint}
+#p-entrenamientos .v850-stable-kpi{font-family:'Bebas Neue',sans-serif;font-size:20px;text-align:center}
+</style>
+<script id="v850-training-stable-js">
+(function(){
+'use strict';
+var lastLeft=0,lastTop=0,raf=0;
+function E(id){return document.getElementById(id)}
+function wrap(){return E('ent-tbl-wrap')}
+function stabilize(){
+  var w=wrap(),t=E('ent-tbl');if(!w||!t)return;
+  var top=w.previousElementSibling;if(top&&top.classList.contains('table-scroll-top'))top.style.display='none';
+  /* Las capas antiguas no deben restaurar posiciones históricas. */
+  try{sessionStorage.removeItem('bm_v85126_entrenamientos_view')}catch(e){}
+}
+function remember(){var w=wrap();if(!w)return;lastLeft=w.scrollLeft;lastTop=w.scrollTop}
+function restorePosition(){var w=wrap();if(!w)return;cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){w.scrollLeft=lastLeft;w.scrollTop=lastTop})}
+function bind(){var w=wrap();if(!w||w.dataset.v850stable==='1')return;w.dataset.v850stable='1';w.addEventListener('scroll',remember,{passive:true});stabilize()}
+/* Mantener posición durante repintados de filas, sin forzar el scroll a cero. */
+var oldFilter=window.filterEnt;if(typeof oldFilter==='function'&&!oldFilter.__v850stable){var f=function(){remember();var r=oldFilter.apply(this,arguments);restorePosition();return r};f.__v850stable=true;window.filterEnt=f}
+var oldRender=window.renderEntrenamientos;if(typeof oldRender==='function'&&!oldRender.__v850stable){var rr=function(){remember();var r=oldRender.apply(this,arguments);restorePosition();return r};rr.__v850stable=true;window.renderEntrenamientos=rr}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(bind,0)});else setTimeout(bind,0);
+window.addEventListener('resize',function(){stabilize()},{passive:true});
+window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restorePosition};
+})();
+</script>
 
 </body>
 </html>

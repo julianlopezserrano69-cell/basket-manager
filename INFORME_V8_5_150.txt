@@ -1,0 +1,15 @@
+V8.5.150 - ENTRENAMIENTOS ESTABLE
+Base: V8.5.149
+
+Cambios exclusivos de estabilidad visual en Entrenamientos:
+- Un único viewport de scroll (#ent-tbl-wrap).
+- Eliminado el viewport anidado #ent-tbl-inner del HTML.
+- Barra horizontal superior desactivada solo en Entrenamientos.
+- Anchuras de columnas estabilizadas en un único bloque CSS final.
+- Las 3 métricas asíncronas reservan sus celdas desde el primer render para evitar reflow de columnas.
+- V840 actualiza las celdas KPI existentes en vez de insertarlas posteriormente.
+- Se evita restaurar posiciones históricas guardadas por la capa v85126.
+- Se conserva la posición actual durante render/filter sin alterar la lógica de datos.
+- Sin cambios de esquema ni SQL/Supabase.
+
+Validación: 129 scripts inline, 0 errores node --check. sw.js cache v8.5.150.
