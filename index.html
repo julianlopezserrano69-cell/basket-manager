@@ -38187,7 +38187,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.116</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · FASE 4.1 · V8.5.118</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -38358,7 +38358,7 @@ function renderPostReport(){
     '<div class="v85114-section"><h2>10. Trabajo para próximos entrenamientos</h2>'+reportList(post.training_actions)+'</div>'+
     '<div class="v85114-section"><h2>11. Notas para el staff</h2>'+reportList(post.staff_notes)+'</div>'+
    '</section>'+
-   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.116</span></footer>'+
+   '<footer class="v85114-footer"><span>Basket Manager · Scouting</span><span>'+esc(own)+' vs '+esc(rival)+'</span><span>V8.5.118</span></footer>'+
   '</article>';
 }
 function printPostReport(){
@@ -40285,7 +40285,7 @@ body > #v8588-enc-modal .v8595-help{margin-top:auto;padding:11px 16px;border-top
       else if(/^Quinteto inicial /i.test(t))old.outerHTML=cardHTML('ourStarters',ownEligible,s.ourStarters,false);
       else if(/^Capitán /i.test(t))old.outerHTML=cardHTML('ourCaptain',ownEligible,s.ourCaptain,true);
     });
-    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.116';
+    var ver=document.querySelector('#v8588-enc-modal .v8590-ver');if(ver)ver.textContent='V8.5.118';
   };
   if(document.getElementById('v813-form'))setTimeout(function(){X.render813Form()},40);
 })();
@@ -41383,8 +41383,8 @@ async function load(){
  var id=teamId();A.rows=[];A.encounters=[];if(!id)return;
  var tr=((window.DB&&DB.entrenamientos)||[]).filter(function(e){var xs=S(e.temporada||e.season_id);return S(e.equipo)===S(id)&&(!season()||!xs||xs===season())&&trainingFinished(e)&&dateOK(e.fecha)});
  var ids=tr.map(function(x){return x.id}).filter(Boolean);
- if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.116 training rows',e)}}
- try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.116 encounters',e)}
+ if(ids.length){try{var q=ids.map(function(x){return '"'+S(x).replace(/"/g,'')+'"'}).join(',');A.rows=await rest('entrenamiento_jugadores?entrenamiento_id=in.('+encodeURIComponent(q)+')&select=*')}catch(e){console.warn('V8.5.118 training rows',e)}}
+ try{var enc=await rest('encounters?select=*&order=game_date.asc,game_time.asc');A.encounters=(enc||[]).filter(function(e){return matchForTeam(e,id)&&matchFinished(e)&&dateOK(e.game_date||e.date)})}catch(e){console.warn('V8.5.118 encounters',e)}
  A.trainings=tr;
 }
 function perPlayer(){
@@ -41415,8 +41415,65 @@ function detail(){
  return '<div class="v85116-panel"><h3>Detalle por sesión</h3><div class="v85116-scroll"><table class="v85116-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="name">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+sessions.map(function(x){return '<tr><td>'+fmt(x.date)+'</td><td>'+x.type+'</td><td>'+esc(x.p.dorsal||'—')+'</td><td class="name">'+esc(x.p.nombre||x.p.name||'')+'</td><td>'+x.att+'</td><td>'+x.pun+'</td><td>'+x.vest+'</td><td>'+x.act+'</td></tr>'}).join('')+'</tbody></table></div></div>'
 }
 function buildPrint(pp,m){
- var t=team(teamId()),name=t?(t.nombre||t.name):'Equipo',period=(E('v85116-from').value?fmt(E('v85116-from').value):'Inicio')+' — '+(E('v85116-to').value?fmt(E('v85116-to').value):'Hoy');
- E('v85116-print').innerHTML='<div class="pr-head"><h1>Control de asistencia · '+esc(name)+'</h1><p>Temporada '+esc(season()||'Todas')+' · '+period+' · Solo entrenamientos realizados y partidos finalizados</p></div><div class="pr-kpis">'+[['Entrenos',m.trainings],['Partidos',m.matches],['Asistencia',fp(m.attendance)],['Puntualidad',fp(m.punctual)],['Vestimenta',fp(m.clothing)],['Actitud',m.attitude==null?'—':m.attitude.toFixed(2)]].map(function(x){return '<div class="pr-kpi"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'}).join('')+'</div><h2>Resumen por jugador</h2>'+summary(pp).replace(/<div class="v85116-panel"><h3>Resumen por jugador<\/h3><div class="v85116-scroll">/,'').replace(/<\/div><\/div>$/,'')+'<p style="font-size:7px;margin:6px 10px">Partidos: “No convocado” no se contabiliza como ausencia. Puntualidad, vestimenta y actitud proceden exclusivamente de los datos ya guardados en cada entrenamiento.</p>';
+ var id=teamId(),t=team(id),name=t?(t.nombre||t.name):'Equipo';
+ var period=(E('v85116-from').value?fmt(E('v85116-from').value):'Inicio')+' — '+(E('v85116-to').value?fmt(E('v85116-to').value):'Hoy');
+ var trs=(A.trainings||[]).slice().sort(function(a,b){return S(a.fecha).localeCompare(S(b.fecha))});
+ var matches=(A.encounters||[]).slice().sort(function(a,b){return S(a.game_date||a.date).localeCompare(S(b.game_date||b.date))});
+
+ var summaryRows=pp.map(function(x){
+   return '<tr><td>'+esc(x.p.dorsal||'—')+'</td><td class="left"><b>'+esc(x.p.nombre||x.p.name||'')+'</b></td>'+
+    '<td>'+x.trTotal+'</td><td>'+x.att+'</td><td>'+fp(pct(x.att,x.trTotal))+'</td>'+
+    '<td>'+fp(pct(x.pun,x.att))+'</td><td>'+fp(pct(x.vest,x.vestDen))+'</td>'+
+    '<td>'+(x.act==null?'—':x.act.toFixed(2))+'</td><td>'+x.matches+'</td><td>'+x.called+'</td><td>'+fp(pct(x.called,x.matches))+'</td></tr>'
+ }).join('');
+
+ var detailRows=[];
+ trs.forEach(function(tr){
+   var rr=(A.rows||[]).filter(function(r){return S(r.entrenamiento_id)===S(tr.id)});
+   pp.forEach(function(x){
+     var r=rr.find(function(q){return S(q.jugador_id)===S(x.p.id)});
+     var att=r&&yes(r.asistencia), pun=att&&yes(r.puntualidad);
+     var vest=att?S(r.vestimenta||'—').toUpperCase():'—';
+     var act=att&&r.actitud!=null?r.actitud:'—';
+     detailRows.push('<tr><td>'+fmt(tr.fecha)+'</td><td><span class="tag train">ENTRENO</span></td><td>'+esc(x.p.dorsal||'—')+'</td><td class="left">'+esc(x.p.nombre||x.p.name||'')+'</td>'+
+       '<td class="'+(att?'ok':'bad')+'">'+(att?'Sí':'No')+'</td><td>'+(att?(pun?'Sí':'No'):'—')+'</td><td>'+esc(vest)+'</td><td>'+esc(act)+'</td></tr>');
+   });
+ });
+ matches.forEach(function(ma){
+   var called=ownCalled(ma,id).map(S);
+   pp.forEach(function(x){
+     var c=called.indexOf(S(x.p.id))>=0;
+     detailRows.push('<tr><td>'+fmt(ma.game_date||ma.date)+'</td><td><span class="tag match">PARTIDO</span></td><td>'+esc(x.p.dorsal||'—')+'</td><td class="left">'+esc(x.p.nombre||x.p.name||'')+'</td>'+
+       '<td class="'+(c?'ok':'na')+'">'+(c?'Convocado':'No convocado')+'</td><td>—</td><td>—</td><td>—</td></tr>');
+   });
+ });
+
+ var sessionRows=trs.map(function(x){return '<tr><td>'+fmt(x.fecha)+'</td><td>Entrenamiento</td><td>'+esc(x.titulo||x.nombre||x.objetivo||'Entrenamiento')+'</td></tr>'}).join('')+
+ matches.map(function(x){var rival=S(x.home_team_id)===S(id)?S(x.away_team_name||x.away_name||'Rival'):S(x.home_team_name||x.home_name||'Rival');return '<tr><td>'+fmt(x.game_date||x.date)+'</td><td>Partido finalizado</td><td>'+esc(rival)+'</td></tr>'}).join('');
+
+ var cards=[
+  ['Entrenamientos',m.trainings,'Sesiones realizadas'],
+  ['Partidos',m.matches,'Finalizados'],
+  ['Asistencia',fp(m.attendance),'Entrenamientos'],
+  ['Puntualidad',fp(m.punctual),'Sobre asistentes'],
+  ['Vestimenta',fp(m.clothing),'Sobre registros válidos'],
+  ['Actitud',m.attitude==null?'—':m.attitude.toFixed(2),'Media del equipo'],
+  ['Convocatorias',m.calls,'Acumuladas']
+ ].map(function(x){return '<div class="pr-card"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>'}).join('');
+
+ E('v85116-print').innerHTML=
+ '<div class="pr-report">'+
+  '<header class="pr-head"><div><span class="eyebrow">BASKET MANAGER · CONTROL DE ASISTENCIA</span><h1>'+esc(name)+'</h1><p>Temporada '+esc(season()||'Todas')+' · '+period+'</p></div><div class="pr-badge">INFORME<br><b>DE EQUIPO</b></div></header>'+
+  '<section class="pr-cards">'+cards+'</section>'+
+  '<section class="pr-block"><div class="pr-title"><span>01</span><div><h2>Resumen del equipo</h2><p>Indicadores individuales de entrenamientos y convocatorias</p></div></div>'+
+   '<table><thead><tr><th>#</th><th class="left">Jugador</th><th>Entr.</th><th>Asiste</th><th>% Asist.</th><th>% Punt.</th><th>% Vest.</th><th>Actitud</th><th>Part.</th><th>Conv.</th><th>% Conv.</th></tr></thead><tbody>'+summaryRows+'</tbody></table></section>'+
+  '<section class="pr-block"><div class="pr-title"><span>02</span><div><h2>Sesiones computadas</h2><p>Solo entrenamientos realizados y partidos finalizados</p></div></div>'+
+   '<table class="sessions"><thead><tr><th>Fecha</th><th>Tipo</th><th class="left">Sesión / rival</th></tr></thead><tbody>'+(sessionRows||'<tr><td colspan="3">Sin sesiones en el periodo seleccionado</td></tr>')+'</tbody></table></section>'+
+  '<section class="pr-block pr-detail"><div class="pr-title"><span>03</span><div><h2>Detalle por sesión y jugador</h2><p>Asistencia, puntualidad, vestimenta, actitud y convocatorias</p></div></div>'+
+   '<table><thead><tr><th>Fecha</th><th>Tipo</th><th>#</th><th class="left">Jugador</th><th>Asistencia / convocatoria</th><th>Puntual</th><th>Vestimenta</th><th>Actitud</th></tr></thead><tbody>'+detailRows.join('')+'</tbody></table></section>'+
+  '<section class="pr-notes"><h2>Criterios del informe</h2><div><p><b>Entrenamientos:</b> los datos proceden directamente de los registros de asistencia, puntualidad, vestimenta y actitud ya guardados.</p><p><b>Partidos:</b> se incluyen únicamente encuentros finalizados. “No convocado” no se considera ausencia.</p></div></section>'+
+  '<footer><span>Basket Manager · Control de asistencia</span><span>'+esc(name)+'</span><span>V8.5.118</span></footer>'+
+ '</div>';
 }
 async function render(){
  var box=E('v85116-content');if(!box)return;if(!teamId()){box.innerHTML='<div class="empty"><div class="empty-icon">📋</div>Selecciona un equipo para generar el control de asistencia.</div>';return}
@@ -41425,10 +41482,92 @@ async function render(){
 }
 async function open(){fill();if(teamId())await render();else E('v85116-content').innerHTML='<div class="empty"><div class="empty-icon">📋</div>Selecciona un equipo para generar el control de asistencia.</div>'}
 function change(){fill();render()}
-function printPDF(){if(!teamId()){if(typeof toast==='function')toast('Selecciona un equipo','w');return}render().then(function(){setTimeout(function(){window.print()},80)})}
+function printPDF(){
+ if(!teamId()){if(typeof toast==='function')toast('Selecciona un equipo','w');return}
+ render().then(function(){
+   var report=E('v85116-print');
+   if(!report||!report.innerHTML.trim()){if(typeof toast==='function')toast('No se pudo generar el informe','e');return}
+   var css=`*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#17202a;font-family:Arial,Helvetica,sans-serif}
+   .pr-report{width:100%}.pr-head{display:flex;justify-content:space-between;align-items:flex-end;background:#15354c;color:#fff;padding:18px 20px}
+   .eyebrow{display:block;font-size:8px;letter-spacing:1.3px;color:#bcd7e8;font-weight:700}.pr-head h1{font-size:26px;margin:4px 0;color:#fff}.pr-head p{font-size:10px;margin:0;color:#dbeaf3}
+   .pr-badge{text-align:right;font-size:8px;line-height:1.35;border:1px solid #7895a9;padding:7px 10px}.pr-badge b{font-size:10px}
+   .pr-cards{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:11px 12px;background:#f2f5f7}
+   .pr-card{border:1px solid #d6e0e6;border-top:4px solid #d97706;background:#fff;padding:8px 5px;text-align:center;break-inside:avoid}
+   .pr-card span{display:block;font-size:7px;text-transform:uppercase;color:#657681;font-weight:700}.pr-card b{display:block;font-size:17px;color:#17354b;margin:3px 0}.pr-card small{display:block;font-size:6px;color:#88949c}
+   .pr-block{margin:13px 12px;break-inside:auto}.pr-title{display:flex;align-items:center;gap:8px;border-bottom:2px solid #17354b;padding-bottom:5px;margin-bottom:7px}
+   .pr-title>span{display:flex;align-items:center;justify-content:center;width:27px;height:27px;background:#d97706;color:#fff;font-size:9px;font-weight:800}
+   .pr-title h2{font-size:13px;color:#17354b;margin:0}.pr-title p{font-size:7px;color:#75838d;margin:2px 0 0}
+   table{width:100%;border-collapse:collapse;font-size:8px;margin:0}thead{display:table-header-group}tr{break-inside:avoid}
+   th,td{border:1px solid #dce3e8;padding:5px 4px;text-align:center;vertical-align:middle}th{background:#eaf0f4;color:#304a5d;font-size:7px;text-transform:uppercase;font-weight:800}
+   td.left,th.left{text-align:left}tbody tr:nth-child(even) td{background:#f8fafb}.ok{color:#137333;font-weight:700}.bad{color:#b42318;font-weight:700}.na{color:#7c8790}
+   .tag{display:inline-block;border-radius:10px;padding:2px 6px;font-size:6px;font-weight:800}.tag.train{background:#e5f2ff;color:#15558a}.tag.match{background:#fff0dd;color:#9a5200}
+   .pr-detail{break-before:page}.pr-notes{margin:13px 12px;padding:9px 11px;border:1px solid #d7e0e6;background:#f7f9fa;break-inside:avoid}
+   .pr-notes h2{font-size:10px;margin:0 0 5px;color:#17354b}.pr-notes>div{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pr-notes p{font-size:7px;line-height:1.45;margin:0}
+   footer{display:flex;justify-content:space-between;border-top:1px solid #cad5dc;margin:12px;padding-top:6px;color:#6d7c86;font-size:7px}
+   @page{size:A4 landscape;margin:8mm}@media print{html,body{width:100%;height:auto}.pr-report{width:100%}.pr-detail{break-before:page}}`;
+   var w=window.open('','_blank');
+   if(!w){if(typeof toast==='function')toast('Permite ventanas emergentes para generar el PDF','w');return}
+   w.document.open();
+   w.document.write('<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Control de asistencia - '+esc((team(teamId())||{}).nombre||'Equipo')+'</title><style>'+css+'</style></head><body>'+report.innerHTML+'</body></html>');
+   w.document.close();
+   w.focus();
+   setTimeout(function(){w.print()},350);
+ });
+}
 window.V85116={open:open,refresh:render,render:render,change:change,printPDF:printPDF,state:A};
 })();
 </script>
+
+
+<style id="v85117-attendance-pdf-css">
+@media print{
+ html,body{background:#fff!important;width:100%!important;height:auto!important;overflow:visible!important}
+ body>*{display:none!important}
+ body>#app, body>.app, body>#root{display:block!important}
+ #p-asistencia-equipo{display:block!important;position:static!important;overflow:visible!important}
+ #p-asistencia-equipo>*:not(#v85116-print){display:none!important}
+ #v85116-print{display:block!important;visibility:visible!important;position:static!important;width:100%!important;height:auto!important;overflow:visible!important;background:#fff!important;color:#17202a!important}
+ #v85116-print *{visibility:visible!important}
+ #v85116-print .pr-report{display:block!important;width:100%!important;font-family:Arial,Helvetica,sans-serif!important}
+ #v85116-print .pr-head{display:flex!important;justify-content:space-between!important;align-items:flex-end!important;background:#15354c!important;color:#fff!important;padding:16px 18px!important;border-radius:0!important}
+ #v85116-print .eyebrow{display:block!important;font-size:6.5pt!important;letter-spacing:1.2px!important;color:#bcd7e8!important;font-weight:700!important}
+ #v85116-print .pr-head h1{font-size:20pt!important;margin:3px 0!important;color:#fff!important}
+ #v85116-print .pr-head p{font-size:7.5pt!important;margin:0!important;color:#dbeaf3!important}
+ #v85116-print .pr-badge{text-align:right!important;font-size:6.5pt!important;line-height:1.3!important;border:1px solid #7895a9!important;padding:6px 8px!important}
+ #v85116-print .pr-badge b{font-size:8pt!important}
+ #v85116-print .pr-cards{display:grid!important;grid-template-columns:repeat(7,1fr)!important;gap:4px!important;padding:9px 10px!important;background:#f2f5f7!important}
+ #v85116-print .pr-card{display:block!important;border:1px solid #d6e0e6!important;border-top:3px solid #d97706!important;background:#fff!important;padding:6px 4px!important;text-align:center!important;break-inside:avoid!important}
+ #v85116-print .pr-card span{display:block!important;font-size:5.5pt!important;text-transform:uppercase!important;color:#657681!important;font-weight:700!important}
+ #v85116-print .pr-card b{display:block!important;font-size:12pt!important;color:#17354b!important;margin:2px 0!important}
+ #v85116-print .pr-card small{display:block!important;font-size:5pt!important;color:#88949c!important}
+ #v85116-print .pr-block{display:block!important;margin:10px!important;break-inside:auto!important}
+ #v85116-print .pr-title{display:flex!important;align-items:center!important;gap:7px!important;border-bottom:2px solid #17354b!important;padding-bottom:4px!important;margin-bottom:5px!important}
+ #v85116-print .pr-title>span{display:flex!important;align-items:center!important;justify-content:center!important;width:22px!important;height:22px!important;background:#d97706!important;color:#fff!important;font-size:7pt!important;font-weight:800!important}
+ #v85116-print .pr-title h2{font-size:10pt!important;color:#17354b!important;margin:0!important}
+ #v85116-print .pr-title p{font-size:5.5pt!important;color:#75838d!important;margin:1px 0 0!important}
+ #v85116-print table{display:table!important;width:100%!important;border-collapse:collapse!important;margin:0!important;font-size:6.2pt!important}
+ #v85116-print thead{display:table-header-group!important}
+ #v85116-print tbody{display:table-row-group!important}
+ #v85116-print tr{display:table-row!important;break-inside:avoid!important}
+ #v85116-print th,#v85116-print td{display:table-cell!important;border:1px solid #dce3e8!important;padding:3.5px 3px!important;text-align:center!important;vertical-align:middle!important}
+ #v85116-print th{background:#eaf0f4!important;color:#304a5d!important;font-size:5.5pt!important;text-transform:uppercase!important;font-weight:800!important}
+ #v85116-print td.left,#v85116-print th.left{text-align:left!important}
+ #v85116-print tbody tr:nth-child(even) td{background:#f8fafb!important}
+ #v85116-print .ok{color:#137333!important;font-weight:700!important}
+ #v85116-print .bad{color:#b42318!important;font-weight:700!important}
+ #v85116-print .na{color:#7c8790!important}
+ #v85116-print .tag{display:inline-block!important;border-radius:10px!important;padding:2px 5px!important;font-size:5pt!important;font-weight:800!important}
+ #v85116-print .tag.train{background:#e5f2ff!important;color:#15558a!important}
+ #v85116-print .tag.match{background:#fff0dd!important;color:#9a5200!important}
+ #v85116-print .pr-detail{break-before:page!important}
+ #v85116-print .pr-notes{display:block!important;margin:10px!important;padding:8px 10px!important;border:1px solid #d7e0e6!important;background:#f7f9fa!important;break-inside:avoid!important}
+ #v85116-print .pr-notes h2{font-size:8pt!important;margin:0 0 4px!important;color:#17354b!important}
+ #v85116-print .pr-notes>div{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}
+ #v85116-print .pr-notes p{font-size:5.8pt!important;line-height:1.4!important;margin:0!important}
+ #v85116-print footer{display:flex!important;justify-content:space-between!important;border-top:1px solid #cad5dc!important;margin:10px!important;padding-top:5px!important;color:#6d7c86!important;font-size:5.5pt!important}
+ @page{size:A4 landscape;margin:8mm}
+}
+</style>
 
 </body>
 </html>
