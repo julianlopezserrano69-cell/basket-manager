@@ -7472,7 +7472,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-clubs" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.145</div></div>
+      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.146</div></div>
       <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
     </div>
   </div>
@@ -14457,9 +14457,9 @@ function renderEquipos(data) {
       var vr = eq.vestimenta_reserva || '';
       function kitHex(v,fallback){var m={AMARILLO:'#FACC15',NEGRO:'#111827',AZUL:'#2563EB',NARANJA:'#F97316',VERDE:'#16A34A',ROJO:'#DC2626',BLANCO:'#FFFFFF'};return m[String(v||'').toUpperCase()]||fallback;}
       var colors =
-        '<div style="display:flex;flex-direction:column;gap:4px;min-width:105px">'+
-          '<span style="display:flex;align-items:center;gap:5px;font-size:10px"><i title="Principal" style="width:16px;height:16px;border-radius:50%;background:'+esc(kitHex(vp,color1))+';display:inline-block;border:1px solid var(--border)"></i><b>P</b> '+esc(vp||color1)+'</span>'+
-          '<span style="display:flex;align-items:center;gap:5px;font-size:10px"><i title="Reserva" style="width:16px;height:16px;border-radius:50%;background:'+esc(kitHex(vr,color2))+';display:inline-block;border:1px solid var(--border)"></i><b>R</b> '+esc(vr||color2)+'</span>'+
+        '<div style="display:flex;align-items:center;gap:10px;min-width:64px">'+
+          '<i title="Principal: '+esc(vp||color1)+'" style="width:22px;height:22px;border-radius:50%;background:'+esc(kitHex(vp,color1))+';display:inline-block;border:1px solid var(--border);box-shadow:0 0 0 1px rgba(255,255,255,.12)"></i>'+
+          '<i title="Reserva: '+esc(vr||color2)+'" style="width:22px;height:22px;border-radius:50%;background:'+esc(kitHex(vr,color2))+';display:inline-block;border:1px solid var(--border);box-shadow:0 0 0 1px rgba(255,255,255,.12)"></i>'+
         '</div>';
 
       var mapHtml = loc
@@ -29898,7 +29898,66 @@ X.load813=async function(){
   val(5).forEach(raw=>{const p=this.v8587Player(raw);if(p&&p.id)playerMap[p.id]=p;});
   try{((window.DB&&DB.jugadores)||[]).forEach(raw=>{const p=this.v8587Player(raw);if(p&&p.id&&!playerMap[p.id])playerMap[p.id]=p;});}catch(_e){}
   this.v813.players=Object.values(playerMap);
-  this.v813.categories=val(6);this.loaded=true;
+  this.v813.categories=val(6);
+
+  // V8.5.146: puente real entre la tabla histórica `encuentros` y la vista moderna.
+  // Los encuentros creados por la app histórica viven en public.encuentros, mientras
+  // esta pantalla moderna lee public.encounters. Los fusionamos en memoria sin tocar Supabase.
+  try{
+    var legacyRows=((window.DB&&DB.encuentros)||[]).slice();
+    var modernLegacyIds={};
+    (this.encounters||[]).forEach(function(e){
+      if(e&&e.legacy_encuentro_id) modernLegacyIds[String(e.legacy_encuentro_id)]=1;
+      if(e&&String(e.id||'').indexOf('legacy-')===0) modernLegacyIds[String(e.id).slice(7)]=1;
+    });
+    var self=this;
+    function normSeason(v){
+      var m=String(v||'').trim().match(/(20\d{2})\D+(?:20)?(\d{2})/);
+      return m?(m[1]+'-'+m[2]):String(v||'').trim();
+    }
+    function seasonIdFor(v){
+      var nv=normSeason(v), found='';
+      Object.keys(self.seasonByName||{}).some(function(k){
+        if(normSeason(k)===nv){found=self.seasonByName[k];return true;} return false;
+      });
+      return found||'';
+    }
+    function isOwnTeam(tid){
+      var t=self.teams&&self.teams[tid];
+      if(!t)return false;
+      var c=(self.v813.clubs&&self.v813.clubs[t.club_id])||{};
+      var txt=[t.name,t.nombre,c.name,c.nombre].join(' ').toUpperCase();
+      return txt.indexOf('NAVALCARNERO')!==-1;
+    }
+    legacyRows.forEach(function(r){
+      if(!r||!r.id||modernLegacyIds[String(r.id)])return;
+      var home=String(r.local||''), away=String(r.visitante||'');
+      if(!home&&!away)return;
+      var own=isOwnTeam(home)?home:(isOwnTeam(away)?away:home);
+      var opp=own===home?away:home;
+      var ownTeam=self.teams[own]||{}, homeTeam=self.teams[home]||{}, awayTeam=self.teams[away]||{};
+      var st=String(r.estado||'Programado');
+      if(st==='Jugado')st='Finalizado';
+      var modern={
+        id:'legacy-'+String(r.id), legacy_encuentro_id:String(r.id),
+        season_id:seasonIdFor(r.temporada||r['Temporada']||''),
+        team_id:own, opponent_team_id:opp,
+        category:r.categoria||ownTeam.category||homeTeam.category||awayTeam.category||'',
+        gender:r.genero||ownTeam.gender||'', home_away:own===home?'Local':'Visitante',
+        status:st, game_date:r.fecha||'', game_time:r.hora||null,
+        round_label:r.J||r.jornada||'', location:r.cancha||'', notes:r.notas||'',
+        home_team_id:home, away_team_id:away,
+        home_score:(r.ptsLocal!=null?Number(r.ptsLocal):null),
+        away_score:(r.ptsVis!=null?Number(r.ptsVis):null),
+        home_color:'', away_color:'', home_called_ids:[], away_called_ids:[],
+        home_starter_ids:[], away_starter_ids:[], captain_ids:[]
+      };
+      self.encounters.push(modern);
+    });
+    console.info('[V8.5.146] Encuentros modernos + históricos:',this.encounters.length,'(históricos disponibles:',legacyRows.length+')');
+  }catch(e){console.warn('[V8.5.146] No se pudo fusionar encuentros históricos',e);}
+
+  this.loaded=true;
   this.buildPage();this.render813();
 };
 const oldLoad=X.load.bind(X);
