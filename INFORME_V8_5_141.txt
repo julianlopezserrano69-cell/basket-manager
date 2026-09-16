@@ -1,0 +1,9 @@
+Basket Manager V8.5.141
+Base: V8.5.140 confirmada estable por el usuario.
+Cambios:
+- Equipos importa/exporta vestimenta_principal y vestimenta_reserva desde Supabase.
+- La tabla Equipos muestra principal/reserva con nombre y muestra de color.
+- Encuentros prioriza vestimenta principal/reserva para los colores de cada equipo.
+- Equipos usa fallback de iniciales/colores si falta o falla el logo.
+- No se añaden logos no verificados ni se alteran datos de Supabase.
+- Cache PWA actualizado a v8.5.141.

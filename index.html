@@ -14435,14 +14435,20 @@ function renderEquipos(data) {
           +(entEq.telefono?'<div style="font-size:11px;color:var(--muted)">📞 '+esc(entEq.telefono)+'</div>':'')
         : '<span style="color:var(--muted);font-size:12px">Sin asignar</span>';
 
+      var eqName = eq.nombre||eq.name||'EQ';
+      var initials = eqName.split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return (x[0]||'').toUpperCase();}).join('')||'EQ';
+      var fbLogo = '<span style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,'+esc(color1)+' 0 50%,'+esc(color2)+' 50% 100%);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;text-shadow:0 1px 2px #000">'+esc(initials)+'</span>';
       var logoHtml = logo
-        ? '<img src="'+esc(logo)+'" style="width:36px;height:36px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:8px;padding:2px" onerror="this.style.display=\'none\'">'
-        : '<div style="width:36px;height:36px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center">🏀</div>';
+        ? '<span style="display:inline-flex;align-items:center"><img src="'+esc(logo)+'" style="width:36px;height:36px;object-fit:contain;background:#fff;border:1px solid var(--border);border-radius:8px;padding:2px" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.style.display=\'inline-flex\'"><span style="display:none">'+fbLogo+'</span></span>'
+        : fbLogo;
 
+      var vp = eq.vestimenta_principal || '';
+      var vr = eq.vestimenta_reserva || '';
+      function kitHex(v,fallback){var m={AMARILLO:'#FACC15',NEGRO:'#111827',AZUL:'#2563EB',NARANJA:'#F97316',VERDE:'#16A34A',ROJO:'#DC2626',BLANCO:'#FFFFFF'};return m[String(v||'').toUpperCase()]||fallback;}
       var colors =
-        '<div style="display:flex;gap:8px">'+
-          '<span title="'+esc(color1)+'" style="width:23px;height:23px;border-radius:50%;background:'+esc(color1)+';display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)"></span>'+
-          '<span title="'+esc(color2)+'" style="width:23px;height:23px;border-radius:50%;background:'+esc(color2)+';display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px var(--border)"></span>'+
+        '<div style="display:flex;flex-direction:column;gap:4px;min-width:105px">'+
+          '<span style="display:flex;align-items:center;gap:5px;font-size:10px"><i title="Principal" style="width:16px;height:16px;border-radius:50%;background:'+esc(kitHex(vp,color1))+';display:inline-block;border:1px solid var(--border)"></i><b>P</b> '+esc(vp||color1)+'</span>'+
+          '<span style="display:flex;align-items:center;gap:5px;font-size:10px"><i title="Reserva" style="width:16px;height:16px;border-radius:50%;background:'+esc(kitHex(vr,color2))+';display:inline-block;border:1px solid var(--border)"></i><b>R</b> '+esc(vr||color2)+'</span>'+
         '</div>';
 
       var mapHtml = loc
@@ -19664,7 +19670,7 @@ function sbReadGenero(r) {
 }
 var SB_MAPS = {
   clubs:         { table: 'clubs',         toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad||null,contacto:o.contacto||null,telefono:o.telefono||null,mail:o.mail||null,web:o.web||null,logo:o.logo||o.logo_url||null,logo_url:o.logo_url||o.logo||null,color1:o.color1||o.primary_color||null,color2:o.color2||o.secondary_color||null,primary_color:o.primary_color||o.color1||null,secondary_color:o.secondary_color||o.color2||null,localizacion:o.localizacion||o.location||null,location:o.location||o.localizacion||null,notas:o.notas||null}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||r.name||'',ciudad:r.ciudad||r.city||'',contacto:r.contacto||'',telefono:r.telefono||'',mail:r.mail||'',web:r.web||'',logo:r.logo||r.logo_url||'',logo_url:r.logo_url||r.logo||'',color1:r.color1||r.primary_color||'#f97316',color2:r.color2||r.secondary_color||'#0b4f86',primary_color:r.primary_color||r.color1||'#f97316',secondary_color:r.secondary_color||r.color2||'#0b4f86',localizacion:r.localizacion||r.location||'',location:r.location||r.localizacion||'',notas:r.notas||''}; } },
-  equipos:        { table: 'equipos',        toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad,club_id:o.club_id||null,pabellon:o.pabellon||null,google_maps_url:o.google_maps_url||null,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,entrenador_id:o.entrenador_id||getEntrenadorEquipoId(o.id)||null,color:o.color,"Temporada":o.temporada,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||'',ciudad:r.ciudad||'',club_id:r.club_id||'',pabellon:r.pabellon||'',google_maps_url:r.google_maps_url||'',categoria:r.categoria||'',genero:sbReadGenero(r),entrenador_id:r.entrenador_id||'',entrenador:'',color:r.color||'#f97316',temporada:r["Temporada"]||r.temporada||'',notas:r.notas||''}; } },
+  equipos:        { table: 'equipos',        toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad,club_id:o.club_id||null,pabellon:o.pabellon||null,google_maps_url:o.google_maps_url||null,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,entrenador_id:o.entrenador_id||getEntrenadorEquipoId(o.id)||null,color:o.color,vestimenta_principal:o.vestimenta_principal||null,vestimenta_reserva:o.vestimenta_reserva||null,"Temporada":o.temporada,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||'',ciudad:r.ciudad||'',club_id:r.club_id||'',pabellon:r.pabellon||'',google_maps_url:r.google_maps_url||'',categoria:r.categoria||'',genero:sbReadGenero(r),entrenador_id:r.entrenador_id||'',entrenador:'',color:r.color||'#f97316',vestimenta_principal:r.vestimenta_principal||'',vestimenta_reserva:r.vestimenta_reserva||'',temporada:r["Temporada"]||r.temporada||'',notas:r.notas||''}; } },
   jugadores:      { table: 'jugadores',      toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,dorsal:o.dorsal,posicion:o.posicion,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,equipo:o.equipo||null,edad:calcularEdadPorAnoNacimiento(o.ano_nacimiento),ano_nacimiento:o.ano_nacimiento?parseInt(o.ano_nacimiento):null,altura:o.altura,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',dorsal:r.dorsal||'',posicion:r.posicion||'Base',categoria:r.categoria||'',genero:sbReadGenero(r),equipo:r.equipo||'',edad:r.edad||'',ano_nacimiento:r.ano_nacimiento||'',altura:r.altura||'',notas:r.notas||''}; } },
   entrenadores:   { table: 'entrenadores',   toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,club_id:o.club_id||null,equipo:o.equipo||((o.equipos_ids||[])[0])||null,equipos_ids:Array.isArray(o.equipos_ids)?o.equipos_ids:(o.equipo?[o.equipo]:[]),genero:sbGeneroValue(o.genero)||null,telefono:o.telefono,mail:o.mail,notas:o.notas}; }, fromRow: function(r){ var ids=Array.isArray(r.equipos_ids)?r.equipos_ids.filter(Boolean):(r.equipo?[r.equipo]:[]); return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',club_id:r.club_id||'',equipo:r.equipo||ids[0]||'',equipos_ids:ids,equipos:ids.slice(),genero:sbReadGenero(r),telefono:r.telefono||'',mail:r.mail||'',notas:r.notas||''}; } },
   encuentros:     { table: 'encuentros',     toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,fecha:o.fecha||null,diasemana:o.diasemana||null,hora:o.hora||null,genero:sbGeneroValue(o.genero)||null,local:o.local||null,visitante:o.visitante||null,pts_local:parseInt(o.ptsLocal)||0,pts_vis:parseInt(o.ptsVis)||0,cancha:o.cancha,google_maps_url:o.google_maps_url||googleMapsLinkFromText(o.cancha),localizacion_id:o.localizacion_id||null,pista_id:o.pista_id||null,estado:o.estado,convocados:o.convocados||[],quinteto_inicial:o.quinteto||[],capitan:o.capitan||null,eventos:o.eventos||[],notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',fecha:r.fecha||'',diasemana:r.diasemana||'',hora:r.hora||'',genero:sbReadGenero(r),local:r.local||'',visitante:r.visitante||'',ptsLocal:r.pts_local||0,ptsVis:r.pts_vis||0,cancha:r.cancha||'',google_maps_url:r.google_maps_url||'',localizacion_id:r.localizacion_id||'',pista_id:r.pista_id||'',estado:r.estado||'Programado',convocados:Array.isArray(r.convocados)?r.convocados:[],quinteto:Array.isArray(r.quinteto_inicial)?r.quinteto_inicial:[],capitan:r.capitan||'',eventos:Array.isArray(r.eventos)?r.eventos:[],notas:r.notas||''}; } },
@@ -29427,9 +29433,15 @@ X.teamLogo=function(t){
   return this.pick(t,['logo_url','logo','logoUrl','escudo_url','shield_url','crest_url','image_url'],
     this.pick(c,['logo_url','logo','logoUrl','escudo_url','shield_url','crest_url','image_url'],''));
 };
+X.kitColorHex=function(v){
+  const m={AMARILLO:'#FACC15',NEGRO:'#111827',AZUL:'#2563EB',NARANJA:'#F97316',VERDE:'#16A34A',ROJO:'#DC2626',BLANCO:'#FFFFFF'};
+  const k=String(v||'').trim().toUpperCase();return m[k]||(/^#[0-9A-F]{6}$/i.test(k)?k:'');
+};
 X.teamColors=function(t){
   const c=this.clubForTeam(t);
   const vals=[
+    this.kitColorHex(t&&t.vestimenta_principal),
+    this.kitColorHex(t&&t.vestimenta_reserva),
     this.pick(t,['primary_color','color1','color_1','color_principal','home_color'],null),
     this.pick(t,['secondary_color','color2','color_2','color_secundario','away_color'],null),
     this.pick(c,['primary_color','color1','color_1','color_principal'],null),
@@ -42189,5 +42201,6 @@ window.v85132BuildAuto=function(ent){
 window.v85132GenerateAuto=function(replace){var ent=typeof training==='function'?training(V8521.currentTrainingId):null;if(!ent)return;if(V8521.draftItems.length&&!replace){var ok=confirm('Ya hay ejercicios en el plan. ¿Quieres sustituirlos por la propuesta automática?');if(!ok)return}if(V8521.draftItems.length&&replace){var ok2=confirm('Se sustituirá la propuesta actual. Los cambios no serán definitivos hasta pulsar “Guardar plan de sesión”. ¿Continuar?');if(!ok2)return}V8521.draftItems=window.v85132BuildAuto(ent);if(typeof renderSession==='function')renderSession();if(typeof v8529RenderRecs==='function')v8529RenderRecs();if(typeof toast==='function')toast('Propuesta automática generada. Puedes modificarla antes de guardar.','s')};
 })();
 </script>
+<!-- V8.5.141 · RIVALES COMPLETOS: vestimenta Supabase + colores de encuentro + fallback logos en Equipos -->
 </body>
 </html>
