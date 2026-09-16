@@ -42050,5 +42050,80 @@ window.V85128={showNext:showNextWhenReady,tagRows:tagRows,openEdit:openEdit};
 })();
 </script>
 
+
+
+<!-- V8.5.129 · FIX DEFINITIVO TABLA ENTRENAMIENTOS + POPUP INDEPENDIENTE -->
+<style id="v85129-training-definitive-css">
+/* Un solo elemento hace los dos scrolls. La tabla queda como hijo directo del viewport. */
+#p-entrenamientos #ent-tbl-wrap{
+  position:relative!important;width:100%!important;max-width:100%!important;
+  max-height:min(64vh,640px)!important;overflow:auto!important;
+  scrollbar-gutter:stable!important;overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#p-entrenamientos #ent-tbl-wrap>#ent-tbl{
+  width:max-content!important;min-width:1580px!important;table-layout:fixed!important;
+  border-collapse:separate!important;border-spacing:0!important;margin:0!important;
+}
+#p-entrenamientos #ent-tbl thead th{position:sticky!important;top:0!important;z-index:100!important;background:#17243a!important}
+#p-entrenamientos #ent-tbl th:first-child,
+#p-entrenamientos #ent-tbl td:first-child{
+  position:sticky!important;left:0!important;z-index:130!important;
+  width:120px!important;min-width:120px!important;max-width:120px!important;
+  background:#0c1a2b!important;color:#eaf2ff!important;
+  border-right:2px solid #405b7b!important;box-shadow:9px 0 15px rgba(0,0,0,.42)!important;
+  background-clip:padding-box!important;
+}
+#p-entrenamientos #ent-tbl thead th:first-child{z-index:180!important;background:#1a2b45!important}
+#p-entrenamientos #ent-tbl tbody td:first-child{cursor:pointer!important;font-weight:800!important}
+#p-entrenamientos #ent-tbl tbody td:first-child:hover{background:#173a5b!important;color:#ff9b59!important}
+#p-entrenamientos #ent-tbl th.v836-actions-col,
+#p-entrenamientos #ent-tbl td.v836-actions-col,
+#p-entrenamientos #ent-tbl th:last-child,
+#p-entrenamientos #ent-tbl td:last-child{
+  position:sticky!important;right:0!important;z-index:135!important;background:#0c1a2b!important;
+  border-left:2px solid #405b7b!important;box-shadow:-9px 0 15px rgba(0,0,0,.42)!important;background-clip:padding-box!important
+}
+#p-entrenamientos #ent-tbl thead th.v836-actions-col,#p-entrenamientos #ent-tbl thead th:last-child{z-index:181!important;background:#1a2b45!important}
+
+#v85129-next-modal{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,8,23,.80);backdrop-filter:blur(6px)}
+#v85129-next-modal.open{display:flex!important}
+#v85129-next-box{width:min(940px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid #3a5576;border-radius:18px;background:#101c2f;box-shadow:0 30px 90px rgba(0,0,0,.62)}
+.v85129-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid #2d4564}.v85129-head>div{flex:1}.v85129-head h2{margin:0;font:400 29px 'Bebas Neue',sans-serif;color:#fff;letter-spacing:.7px}.v85129-head p{margin:4px 0 0;color:#91a9c6;font-size:11px}.v85129-close{width:40px;height:40px;border:1px solid #3b5475;border-radius:10px;background:#172741;color:#b7c6d8;font-size:22px;cursor:pointer}.v85129-list{padding:16px;overflow:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v85129-item{display:grid;grid-template-columns:92px minmax(0,1fr) 36px;gap:12px;align-items:center;padding:13px;border:1px solid #304b6d;border-radius:13px;background:#0b1829;color:#fff;text-align:left;cursor:pointer}.v85129-item:hover{border-color:#ff6b1a;background:#102641}.v85129-date{font:400 22px 'Bebas Neue',sans-serif;color:#ff9a55}.v85129-date small{display:block;font:600 10px 'DM Sans',sans-serif;color:#91a8c4;margin-top:4px}.v85129-team{font-size:12px;font-weight:800}.v85129-meta{display:block;margin-top:5px;color:#8fa8c5;font-size:10px}.v85129-pencil{width:34px;height:34px;border-radius:9px;background:#ff5a0a;display:grid;place-items:center;font-weight:900}.v85129-empty{grid-column:1/-1;padding:28px;text-align:center;color:#9ab0ca;border:1px dashed #3a5576;border-radius:12px}.v85129-foot{padding:11px 18px;border-top:1px solid #2d4564;color:#8098b5;font-size:10px}
+@media(max-width:720px){#v85129-next-modal{padding:8px}.v85129-list{grid-template-columns:1fr}.v85129-item{grid-template-columns:80px minmax(0,1fr) 34px}}
+</style>
+<div id="v85129-next-modal" aria-hidden="true"><div id="v85129-next-box" role="dialog" aria-modal="true"><div class="v85129-head"><div><h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2><p id="v85129-next-sub"></p></div><button type="button" id="v85129-next-close" class="v85129-close">×</button></div><div id="v85129-next-list" class="v85129-list"></div><div class="v85129-foot">Pulsa sobre un entrenamiento para abrirlo directamente en modo modificación.</div></div></div>
+<script id="v85129-training-definitive-js">
+(function(){
+'use strict';
+function E(id){return document.getElementById(id)} function S(v){return String(v==null?'':v)}
+function esc(v){return S(v).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}
+function active(){var p=E('p-entrenamientos');return !!(p&&p.classList.contains('active'))}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fdate(v){var a=S(v).slice(0,10).split('-');return a.length===3?a[2]+'/'+a[1]+'/'+a[0]:S(v)}
+function team(e){var x=((window.DB&&DB.equipos)||[]).find(function(t){return S(t.id)===S(e.equipo)});return x?S(x.nombre||x.name):'Equipo'}
+function loc(e){var a=S(e.localizacion_nombre||e.localizacion||''),b=S(e.pista_nombre||e.pista||'');return a+(a&&b?' · ':'')+b}
+function stamp(e){var x=new Date(S(e.fecha).slice(0,10)+'T'+(S(e.hora||'00:00').slice(0,5))+':00');return isNaN(x)?8640000000000000:x.getTime()}
+function upcoming(){var t=today();return ((window.DB&&DB.entrenamientos)||[]).filter(function(e){return S(e.fecha).slice(0,10)>=t}).sort(function(a,b){return stamp(a)-stamp(b)}).slice(0,8)}
+function find(id){return typeof window.getEnt==='function'?window.getEnt(id):(((window.DB&&DB.entrenamientos)||[]).find(function(e){return S(e.id)===S(id)})||null)}
+function close(){var m=E('v85129-next-modal');if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true')}}
+function edit(id){var e=find(id);if(!e)return;if(window.V85126&&typeof V85126.capture==='function')V85126.capture();close();setTimeout(function(){if(typeof window.v824EditTraining==='function')window.v824EditTraining(id);else if(typeof window.openModal==='function')window.openModal('entrenamiento',e)},20)}
+function renderPopup(){var a=upcoming(),l=E('v85129-next-list'),s=E('v85129-next-sub');if(!l)return;if(s)s.textContent='Desde hoy '+fdate(today())+' · '+a.length+' próximos entrenamientos';l.innerHTML=a.length?a.map(function(e){return '<button type="button" class="v85129-item" data-v85129-edit="'+esc(e.id)+'"><span class="v85129-date">'+esc(fdate(e.fecha))+'<small>'+esc(S(e.diasemana||''))+' · '+esc(S(e.hora||'').slice(0,5))+'</small></span><span><span class="v85129-team">'+esc(team(e))+'</span><span class="v85129-meta">'+esc(loc(e)||'Localización pendiente')+' · '+esc(S(e.dur||e.duracion||'—'))+' min</span></span><span class="v85129-pencil">✎</span></button>'}).join(''):'<div class="v85129-empty">No hay entrenamientos futuros cargados desde '+esc(fdate(today()))+'.</div>'}
+function show(){if(!active())return;renderPopup();var m=E('v85129-next-modal');if(m){m.classList.add('open');m.setAttribute('aria-hidden','false')}}
+function showWhenReady(){var n=0;(function wait(){if(!active())return;if((window.DB&&Array.isArray(DB.entrenamientos))||n>50){show();return}n++;setTimeout(wait,100)})()}
+/* Elimina el segundo viewport de scroll: es la causa que impedía sticky. */
+function normalizeTable(){var wrap=E('ent-tbl-wrap'),inner=E('ent-tbl-inner'),table=E('ent-tbl');if(!wrap||!table)return;if(inner&&table.parentNode===inner){var sl=wrap.scrollLeft,st=inner.scrollTop;wrap.insertBefore(table,inner);inner.remove();wrap.scrollLeft=sl;wrap.scrollTop=st}table.querySelectorAll('tbody tr[data-training-id]').forEach(function(tr){var td=tr.cells&&tr.cells[0];if(td){td.title='Modificar este entrenamiento';td.setAttribute('data-v85129-id',tr.getAttribute('data-training-id')||'')}});var top=wrap.previousElementSibling;if(top&&top.classList.contains('table-scroll-top')){var ti=top.firstElementChild;if(ti)ti.style.width=Math.max(table.scrollWidth,wrap.clientWidth)+'px'}}
+function enter(){normalizeTable();setTimeout(normalizeTable,80);setTimeout(normalizeTable,350);showWhenReady()}
+/* Este wrapper se instala al FINAL del documento: no depende de wrappers anteriores. */
+var oldNav=window.nav;if(typeof oldNav==='function'){window.nav=function(page){var r=oldNav.apply(this,arguments);if(page==='entrenamientos')setTimeout(enter,60);return r}}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-v85129-edit]');if(b){ev.preventDefault();ev.stopImmediatePropagation();edit(b.getAttribute('data-v85129-edit'));return}if(ev.target===E('v85129-next-modal')){close();return}var td=ev.target.closest&&ev.target.closest('#ent-tbl tbody td:first-child');if(td){var tr=td.closest('tr[data-training-id]');if(tr){ev.preventDefault();ev.stopImmediatePropagation();edit(tr.getAttribute('data-training-id'))}}},true);
+var c=E('v85129-next-close');if(c)c.addEventListener('click',function(ev){ev.preventDefault();close()});
+var tb=E('tb-ent');if(tb&&window.MutationObserver)new MutationObserver(function(){setTimeout(normalizeTable,0)}).observe(tb,{childList:true});
+function init(){normalizeTable();if(active())setTimeout(enter,100)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+window.V85129={show:show,enter:enter,edit:edit,normalizeTable:normalizeTable};
+})();
+</script>
+
 </body>
 </html>
