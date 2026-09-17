@@ -1,0 +1,5 @@
+Basket Manager V10.3.0 - Match Center 2.0
+Base: V10.2.0 confirmada por el usuario.
+Sin migraciones SQL.
+Fases: Prepartido, Durante, Postpartido.
+Ayuda actualizada a V10.3.0.
