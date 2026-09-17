@@ -7606,7 +7606,7 @@ window.bmOnReady(function(){
  <div class="bm960-grid"><section class="bm960-card"><h3>Evolución técnica</h3><div id="bm960-evolution"></div></section><section class="bm960-card"><h3>Carga de entrenamiento</h3><div id="bm960-load"></div></section></div>
  <div class="bm960-grid"><section class="bm960-card"><h3>Rendimiento en competición</h3><div id="bm960-games"></div></section><section class="bm960-card"><h3>Alertas y seguimiento</h3><div id="bm960-alerts"></div></section></div>
 </div>
-<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.6.1 incluida en el ZIP.</small></div></div>
+<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.6.2 incluida en el ZIP.</small></div></div>
 
 <div class="page" id="p-match-center">
   <div class="bm950-head"><div><span>COMPETICIÓN · DATOS REALES</span><h1>🏟️ Match Center</h1><p>Encuentros, convocatoria, quinteto, capitán y estadísticas registradas en directo.</p></div><button onclick="BM950.render()">↻ Actualizar</button></div>
@@ -31146,7 +31146,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V9.6.1: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31748,7 +31748,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V9.6.1: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32145,7 +32145,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V9.6.1: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -36356,7 +36356,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V9.6.1: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V9.6.2: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37723,7 +37723,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')+(e.__legacy?' · histórico':'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.6.1</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.6.2</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -37735,7 +37735,7 @@ async function load(){mount();msg('Cargando datos...');try{
   req('scouting_projects?select=*&order=created_at.desc').catch(function(){return []}),
   req('encuentros?select=*').catch(function(){return []})
  ]);
- /* V9.6.1: Scouting consume TODOS los encuentros. La consulta antigua filtraba
+ /* V9.6.2: Scouting consume TODOS los encuentros. La consulta antigua filtraba
     legacy_encuentro_id=not.is.null y podía dejar la pantalla a cero. */
  var modern=base[0]||[], legacy=base[3]||[], seen={};
  S.encounters=[];
@@ -41715,7 +41715,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V9.6.1 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V9.6.2 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41802,7 +41802,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V9.6.1 — un único reloj de mantenimiento para las vistas que necesitan
+/* V9.6.2 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41819,7 +41819,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V9.6.1 active-view refresh:',err); }
+  }catch(err){ console.warn('V9.6.2 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41827,7 +41827,7 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V9.6.1 — helper de inicialización corregido y adelantado.
+/* V9.6.2 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
 window.BM_BUILD_VERSION='9.5.0';
 })();</script>
@@ -42019,6 +42019,36 @@ X.openLoad=function(){fill();var ps=A(DB.jugadores).filter(j=>!teamId()||pteam(j
     item.style.setProperty('opacity','1','important');
   }
   window.bmOnReady(function(){ ensureNav(); setTimeout(ensureNav,300); });
+})();
+</script>
+
+
+<style id="bm962-rpe-crud-css">
+.bm962-actions{display:flex;gap:5px;justify-content:center}.bm962-actions button{width:28px;height:28px;padding:0;border:1px solid rgba(120,165,220,.22);border-radius:7px;background:#122744;color:#fff;cursor:pointer}.bm962-actions button:hover{border-color:#ff7a1a}.bm962-help{margin:8px 0 12px;padding:10px 12px;border:1px solid rgba(120,165,220,.14);border-radius:10px;background:#101f34;color:#9db0c8;font-size:9px;line-height:1.5}.bm962-help b{color:#fff}.bm962-detail{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.bm962-detail div{padding:10px;border-radius:9px;background:#101f34;border:1px solid rgba(120,165,220,.12)}.bm962-detail span{display:block;color:#8299b5;font-size:8px;text-transform:uppercase}.bm962-detail b{display:block;margin-top:3px}.bm962-period{border:1px solid rgba(120,165,220,.2);background:#10223a;color:#eaf2ff;border-radius:10px;padding:9px 11px}
+</style>
+<div class="bm960-modal" id="bm962-view-modal"><div><button class="bm960-x" onclick="BM962.closeView()">×</button><h2>Detalle de carga RPE</h2><div id="bm962-view-body"></div><button class="bm960-save" onclick="BM962.closeView()">Cerrar</button></div></div>
+<script id="bm962-rpe-crud-js">
+(function(){'use strict';
+var A=x=>Array.isArray(x)?x:[],S=x=>x==null?'':String(x),E=x=>S(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),N=x=>{x=parseFloat(x);return isFinite(x)?x:null};
+var X=window.BM962={editingId:null};
+function pname(id){var p=A(DB.jugadores).find(j=>S(j.id)===S(id));return p?(p.dorsal?'#'+p.dorsal+' ':'')+(p.nombre||p.name||''):S(id)}
+function trainingName(id){var t=A(DB.entrenamientos).find(x=>S(x.id)===S(id));return t?S((t.fecha||'')+' · '+(t.tipo||t.titulo||'Entrenamiento')):S(id)}
+function periodDays(){var el=document.getElementById('bm962-period');return el?parseInt(el.value||'0',10):0}
+function inPeriod(l){var d=periodDays();if(!d)return true;var f=new Date(S(l.fecha)+'T12:00:00');if(isNaN(f))return true;var now=new Date(),cut=new Date(now.getFullYear(),now.getMonth(),now.getDate()-d+1);return f>=cut}
+function filteredLoads(){var tid=S((document.getElementById('bm960-team')||{}).value),pid=S((document.getElementById('bm960-player')||{}).value);return A(BM960.loads).filter(l=>(!tid||S(l.equipo_id)===tid)&&(!pid||S(l.jugador_id)===pid)&&inPeriod(l))}
+function enhanceToolbar(){var tb=document.querySelector('#p-rendimiento-360 .bm960-toolbar');if(tb&&!document.getElementById('bm962-period')){var sel=document.createElement('select');sel.id='bm962-period';sel.className='bm962-period';sel.innerHTML='<option value="0">Periodo: todo</option><option value="7">Últimos 7 días</option><option value="28">Últimos 28 días</option>';sel.onchange=function(){BM960.renderPlayer()};tb.insertBefore(sel,tb.lastElementChild)}}
+function renderRPE(){enhanceToolbar();var loads=filteredLoads(),box=document.getElementById('bm960-load');if(!box)return;var total=loads.reduce((z,l)=>z+(N(l.carga)||((N(l.rpe)||0)*(N(l.duracion)||0))),0),avgR=loads.length?loads.reduce((z,l)=>z+(N(l.rpe)||0),0)/loads.length:null,avgC=loads.length?total/loads.length:null,period=periodDays(),label=period?('últimos '+period+' días'):'todo el histórico';
+var k=document.getElementById('bm960-kpis');if(k){var cards=k.querySelectorAll(':scope > div');if(cards[4])cards[4].innerHTML='<span>Carga acumulada · '+E(label)+'</span><b>'+(loads.length?Math.round(total):'—')+'</b>';}
+var help='<div class="bm962-help"><b>Cómo leer la carga:</b> cada sesión = RPE × minutos. La carga acumulada suma esas sesiones dentro del periodo seleccionado. '+(loads.length?('Ahora: <b>'+loads.length+' registros</b> · RPE medio <b>'+avgR.toFixed(1)+'</b> · carga media/sesión <b>'+Math.round(avgC)+' UA</b>.'):'Aún no hay registros en este periodo.')+'</div>';
+box.innerHTML=help+(loads.length?'<table class="bm960-table"><tr><th>Fecha</th><th>Jugador</th><th>RPE</th><th>Min</th><th>Carga</th><th>Acciones</th></tr>'+loads.map(l=>'<tr><td>'+E(l.fecha||'')+'</td><td>'+E(pname(l.jugador_id))+'</td><td>'+E(l.rpe)+'</td><td>'+E(l.duracion)+'</td><td>'+E(l.carga||Math.round((N(l.rpe)||0)*(N(l.duracion)||0)))+' UA</td><td><div class="bm962-actions"><button title="Ver" onclick="BM962.view(\''+E(l.id)+'\')">👁</button><button title="Modificar" onclick="BM962.edit(\''+E(l.id)+'\')">✏️</button><button title="Borrar" onclick="BM962.remove(\''+E(l.id)+'\')">🗑</button></div></td></tr>').join('')+'</table>':'<div class="bm960-empty">No hay cargas RPE en el periodo seleccionado.</div>')}
+X.view=function(id){var l=A(BM960.loads).find(x=>S(x.id)===S(id));if(!l)return;var c=N(l.carga)||((N(l.rpe)||0)*(N(l.duracion)||0));document.getElementById('bm962-view-body').innerHTML='<div class="bm962-detail"><div><span>Fecha</span><b>'+E(l.fecha||'—')+'</b></div><div><span>Jugador</span><b>'+E(pname(l.jugador_id))+'</b></div><div><span>Entrenamiento</span><b>'+E(trainingName(l.entrenamiento_id))+'</b></div><div><span>RPE</span><b>'+E(l.rpe)+'</b></div><div><span>Duración</span><b>'+E(l.duracion)+' min</b></div><div><span>Carga</span><b>'+E(c)+' UA</b></div></div><div class="bm962-help"><b>Notas:</b> '+E(l.notas||'Sin notas')+'</div>';document.getElementById('bm962-view-modal').classList.add('open')};
+X.closeView=function(){document.getElementById('bm962-view-modal').classList.remove('open')};
+X.edit=function(id){var l=A(BM960.loads).find(x=>S(x.id)===S(id));if(!l)return;X.editingId=id;BM960.openLoad();setTimeout(function(){document.getElementById('bm960-training').value=S(l.entrenamiento_id);document.getElementById('bm960-load-player').value=S(l.jugador_id);document.getElementById('bm960-rpe').value=l.rpe;document.getElementById('bm960-duration').value=l.duracion;document.getElementById('bm960-notes').value=l.notas||'';var h=document.querySelector('#bm960-modal h2'),b=document.querySelector('#bm960-modal .bm960-save');if(h)h.textContent='Modificar carga RPE';if(b)b.textContent='Guardar cambios'},30)};
+X.remove=async function(id){var l=A(BM960.loads).find(x=>S(x.id)===S(id));if(!l)return;if(!confirm('¿Borrar el RPE de '+pname(l.jugador_id)+' del '+S(l.fecha||'entrenamiento')+'?'))return;try{var r=await sbFetch('training_load?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{'Prefer':'return=representation'}});if(!r.ok){var e=await r.json();throw Error(e.message||'Error')}toast('RPE borrado','s');await BM960.refresh()}catch(e){toast('No se pudo borrar · '+e.message,'e')}};
+var originalSave=BM960.saveLoad.bind(BM960);BM960.saveLoad=async function(){if(!X.editingId)return originalSave();if(!(window.SB&&SB.ready&&typeof sbFetch==='function'))return toast('Supabase no está conectado','e');var tid=S(document.getElementById('bm960-training').value),pid=S(document.getElementById('bm960-load-player').value),r=N(document.getElementById('bm960-rpe').value),dur=N(document.getElementById('bm960-duration').value);if(!tid||!pid||r==null||dur==null)return toast('Completa entrenamiento, jugador, RPE y duración','e');var opt=document.querySelector('#bm960-training option:checked'),row={entrenamiento_id:tid,jugador_id:pid,equipo_id:S((document.getElementById('bm960-team')||{}).value)||null,fecha:opt?opt.dataset.date:null,rpe:r,duracion:dur,notas:S(document.getElementById('bm960-notes').value),updated_at:new Date().toISOString()};try{var res=await sbFetch('training_load?id=eq.'+encodeURIComponent(X.editingId),{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(row)});if(!res.ok){var er=await res.json();throw Error(er.message||'Error')}toast('RPE modificado','s');X.editingId=null;BM960.closeLoad();await BM960.refresh()}catch(e){toast('No se pudo modificar · '+e.message,'e')}};
+var oldClose=BM960.closeLoad.bind(BM960);BM960.closeLoad=function(){X.editingId=null;var h=document.querySelector('#bm960-modal h2'),b=document.querySelector('#bm960-modal .bm960-save');if(h)h.textContent='Registrar carga RPE';if(b)b.textContent='Guardar carga';oldClose()};
+var oldRender=BM960.renderPlayer.bind(BM960);BM960.renderPlayer=function(){oldRender();renderRPE()};
+window.bmOnReady(function(){enhanceToolbar();setTimeout(renderRPE,120)});
 })();
 </script>
 
