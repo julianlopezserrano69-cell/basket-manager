@@ -32,7 +32,7 @@
 }
 </style>
 <script id="v85164-ready-helper">
-/* v8.5.165: helper de inicialización disponible antes de cualquier consumidor. */
+/* v8.5.167: helper de inicialización disponible antes de cualquier consumidor. */
 (function(){
   'use strict';
   if(window.bmOnReady) return;
@@ -81,11 +81,7 @@
     }
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',install,{once:true});
-  }else{
-    install();
-  }
+  window.bmOnReady(install);
 })();
 </script>
 <style id="bm-v8598-no-legacy-encuentros-flash">
@@ -114,7 +110,7 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded',function(){
+  window.bmOnReady(function(){
     syncEncModern();
     new MutationObserver(syncEncModern).observe(document.body,{
       childList:true,subtree:true
@@ -6577,7 +6573,7 @@ body.v8537-ready{overflow:auto}
   }
   /* Cierra a los 6,3 s (6 s de animación + margen) */
   setTimeout(closeSplash, 6300);
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     var el = document.getElementById('splash-overlay');
     if (el) el.addEventListener('click', closeSplash);
   });
@@ -6825,7 +6821,7 @@ window.getDeviceMode = function(){
   if (document.body) {
     setDeviceMode(saved, false);
   } else {
-    document.addEventListener('DOMContentLoaded', function(){ setDeviceMode(saved, false); });
+    window.bmOnReady(function(){ setDeviceMode(saved, false); });
   }
 })();
 
@@ -7083,7 +7079,7 @@ function onLoginSeasonChange() {
   panel.textContent = '📆 Del 1 Sep '+y1+' al 30 Jun '+(y1+1);
 }
 
-window.addEventListener('DOMContentLoaded', function(){
+window.bmOnReady(function(){
   fillLoginSeasonDropdown();
   if (isLoggedIn()) {
     document.getElementById('login-overlay').style.display='none';
@@ -7323,7 +7319,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-clubs">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.165</div></div>
+<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.167</div></div>
 <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
 </div>
 </div>
@@ -7385,7 +7381,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-equipos">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
 <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.165</div></div>
+<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.167</div></div>
 <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
 <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
 <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7467,7 +7463,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-jugadores">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;">
-<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.165</div></div>
+<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.167</div></div>
 <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
 </div>
 <div class="jg-category-cards">
@@ -19917,7 +19913,7 @@ function gsKeyNav(e) {
 // ═══════════════════════════════════════════════════════════
 // MEJORA: Añadir Ctrl+K hint en el header del main
 // ═══════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', function() {
+window.bmOnReady(function() {
   // Añadir botón de búsqueda rápida flotante
   var fab = document.createElement('button');
   fab.innerHTML = '🔍';
@@ -20170,7 +20166,7 @@ function viewEntrenamiento(id) {
   window._playLightning = playLightning;
 
   // Play on first load
-  window.addEventListener('DOMContentLoaded', function() {
+  window.bmOnReady(function() {
     ctx = canvas.getContext('2d');
     resize();
     playLightning();
@@ -24849,7 +24845,7 @@ el.addEventListener('mousedown', function(e){
       return r;
     };
   }
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     normalizeAllGeneros();
     try { if (typeof renderAll === 'function') renderAll(); } catch(e){}
   });
@@ -24915,7 +24911,7 @@ el.addEventListener('mousedown', function(e){
 
   window.initTopTableScrolls = setupTopTableScrolls;
 
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     setupTopTableScrolls();
     setTimeout(setupTopTableScrolls, 500);
     setTimeout(setupTopTableScrolls, 1500);
@@ -25225,7 +25221,7 @@ el.addEventListener('mousedown', function(e){
       if(p==='sugerencias') setTimeout(window.renderSugerencias,30);
     };
   }
-  document.addEventListener('DOMContentLoaded', function(){ ensureV7(); populateSugerenciaClubEmails(); window.renderSolicitudesJugadores(); window.renderSugerencias(); });
+  window.bmOnReady(function(){ ensureV7(); populateSugerenciaClubEmails(); window.renderSolicitudesJugadores(); window.renderSugerencias(); });
 })();
 </script>
 <script id="fix-sugerencias-unete-top-scroll-v3">
@@ -25254,7 +25250,7 @@ el.addEventListener('mousedown', function(e){
     });
   }
   window.setupTopScrollForCaptacion = setupTopScrollForCaptacion;
-  document.addEventListener('DOMContentLoaded', setupTopScrollForCaptacion);
+  window.bmOnReady(setupTopScrollForCaptacion);
   var oldNav = window.nav;
   if (typeof oldNav === 'function' && !oldNav.__capScrollWrapped){
     var wrapped = function(page){
@@ -25295,8 +25291,7 @@ el.addEventListener('mousedown', function(e){
 <script id="accordion-menu-js-only-final-safe">
 (function(){
   function ready(fn){
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn);
-    else fn();
+    window.bmOnReady(fn);
   }
   function injectCss(){
     if(document.getElementById('accordion-menu-css-only-final-safe')) return;
@@ -25734,7 +25729,7 @@ el.addEventListener('mousedown', function(e){
       encSel.addEventListener('change', function(){ markActive('#p-encuentros .enc-category-cards', this.value || ''); });
     }
   }
-  document.addEventListener('DOMContentLoaded', initCategoryCardFilters);
+  window.bmOnReady(initCategoryCardFilters);
   window.addEventListener('load', initCategoryCardFilters);
   window.initCategoryCardFilters = initCategoryCardFilters;
 })();
@@ -26053,7 +26048,7 @@ el.addEventListener('mousedown', function(e){
     }
   };
   window.bmOnReady(function(){ setTimeout(showLogin, 10000); });
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     var btn=document.getElementById('login-submit-btn');
     if(btn){ btn.addEventListener('click', function(){ setTimeout(function(){ if(sessionStorage.getItem('cbNav_logged')==='1') openAppSafe(sessionStorage.getItem('cbNav_role')||'admin'); }, 1300); }); }
     if(sessionStorage.getItem('cbNav_logged')==='1') setTimeout(function(){ openAppSafe(sessionStorage.getItem('cbNav_role')||'admin'); }, 300);
@@ -27767,7 +27762,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){var ov=docu
     }
   };
 
-  document.addEventListener('DOMContentLoaded',function(){
+  window.bmOnReady(function(){
     fillCategory('');
   });
 })();
@@ -28109,8 +28104,13 @@ function enableTableSort(table){
 }
 function scanTables(){document.querySelectorAll('table').forEach(enableTableSort)}
 setTimeout(function(){fillTrainingClub('');scanTables()},0);
-var mo=new MutationObserver(function(){scanTables()});
-mo.observe(document.body,{childList:true,subtree:true});
+var bmSortPending=false;
+var mo=new MutationObserver(function(){
+  if(bmSortPending)return;
+  bmSortPending=true;
+  requestAnimationFrame(function(){bmSortPending=false;scanTables()});
+});
+mo.observe(document.getElementById('main')||document.body,{childList:true,subtree:true});
 })();
 </script>
 <script id="basket-manager-pwa-register">
@@ -29495,7 +29495,7 @@ window.addEventListener('load',()=>{const m=document.getElementById('v8-auth-mod
     var w=document.getElementById('ent-tbl-wrap');
     if(w){ delete w.dataset.userScrolled; w.scrollLeft=0; }
   }
-  document.addEventListener('DOMContentLoaded',function(){
+  window.bmOnReady(function(){
     var w=document.getElementById('ent-tbl-wrap');
     if(w) w.addEventListener('scroll',function(){
       if(this.scrollLeft>3) this.dataset.userScrolled='1';
@@ -30394,17 +30394,11 @@ function install(){
   mutations.forEach(wrapMutation);
 }
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',function(){
-    install();
-    setTimeout(install,250);
-    setTimeout(install,1000);
-  });
-}else{
+window.bmOnReady(function(){
   install();
   setTimeout(install,250);
   setTimeout(install,1000);
-}
+});
 
 // V8.5.157: sin polling global. Los wrappers se instalan durante la inicialización.
 // Evita ejecutar install() cada 3 s durante toda la vida de la aplicación.
@@ -30800,7 +30794,7 @@ function hook(){
   }
   refreshGlobal();
 }
-document.addEventListener('DOMContentLoaded',function(){setTimeout(hook,300)});
+window.bmOnReady(function(){setTimeout(hook,300)});
 setTimeout(hook,1200);
 window.V840={
   refresh:function(){cache={};hook();if(typeof window.filterEnt==='function')setTimeout(function(){filterEnt();},0);},
@@ -31114,7 +31108,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.167: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31716,7 +31710,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.167: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32061,6 +32055,7 @@ try{
   var obs=new MutationObserver(function(){
     if(document.getElementById('v852-category-cards') && !document.getElementById('v855-period-layout')){
       install();
+      if(document.getElementById('v855-period-layout'))obs.disconnect();
     }
   });
   obs.observe(document.documentElement,{childList:true,subtree:true});
@@ -32112,7 +32107,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.167: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -33820,7 +33815,7 @@ document.addEventListener('click',function(ev){
   var b=ev.target.closest&&ev.target.closest('[data-v8521-plan]');if(b){ev.preventDefault();ev.stopPropagation();v8521OpenSessionPlan(b.getAttribute('data-v8521-plan'))}
 },true);
 var mo=new MutationObserver(function(){addPlanButtons()});
-document.addEventListener('DOMContentLoaded',function(){var tb=E('tb-ent');if(tb)mo.observe(tb,{childList:true,subtree:true});setTimeout(addPlanButtons,500);load().then(v8521RenderLibrary)});
+window.bmOnReady(function(){var tb=E('tb-ent');if(tb)mo.observe(tb,{childList:true,subtree:true});setTimeout(addPlanButtons,500);load().then(v8521RenderLibrary)});
 setTimeout(function(){var tb=E('tb-ent');if(tb)mo.observe(tb,{childList:true,subtree:true});addPlanButtons();load().then(v8521RenderLibrary)},1200);
 
 
@@ -33993,7 +33988,7 @@ function decorate31(){
 }
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-v8531-play-ex]');if(!b)return;ev.preventDefault();ev.stopPropagation();v8531PlayLibraryExercise(b.getAttribute('data-v8531-play-ex'))},true);
 var observer31=new MutationObserver(function(){decorate31()});
-document.addEventListener('DOMContentLoaded',function(){var g=E31('v8521-ex-grid');if(g)observer31.observe(g,{childList:true,subtree:true});setTimeout(decorate31,800)});
+window.bmOnReady(function(){var g=E31('v8521-ex-grid');if(g)observer31.observe(g,{childList:true,subtree:true});setTimeout(decorate31,800)});
 setTimeout(function(){var g=E31('v8521-ex-grid');if(g)observer31.observe(g,{childList:true,subtree:true});decorate31()},1500);
 })();
 </script>
@@ -34382,7 +34377,7 @@ document.addEventListener('click',function(ev){
   ev.preventDefault();ev.stopPropagation();
   v8541OpenVideo(b.getAttribute('data-v8541-video'));
 },true);
-document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){v8541PreviewVideoQr()},300)});
+window.bmOnReady(function(){setTimeout(function(){v8541PreviewVideoQr()},300)});
 })();
 </script>
 <script id="v8543-image-url-fix">
@@ -34422,7 +34417,7 @@ function run43(){
     if(url&&!n.querySelector('.v8543-image-badge'))n.insertAdjacentHTML('beforeend','<span class="v8543-image-badge">🏀 PIZARRA</span>');
   });
 }
-document.addEventListener('DOMContentLoaded',function(){setTimeout(run43,900)});
+window.bmOnReady(function(){setTimeout(run43,900)});
 window.v8543DecorateImages=run43;
 })();
 </script>
@@ -34805,7 +34800,7 @@ window.v8548FundamentChanged=async function(sel){
   }
 };
 
-document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){v8548LoadFundaments(false).catch(function(){v8548RenderFundaments('Bote')})},900)});
+window.bmOnReady(function(){setTimeout(function(){v8548LoadFundaments(false).catch(function(){v8548RenderFundaments('Bote')})},900)});
 })();
 </script>
 <div class="modal-overlay" id="m-v8550-micro-library">
@@ -36320,10 +36315,10 @@ function clean8563(){
 }
 var tm8563;
 function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
-document.addEventListener('DOMContentLoaded',queue8563);
+window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V8.5.165: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V8.5.167: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37175,7 +37170,7 @@ function bind77(){
   });
 }
 
-document.addEventListener('DOMContentLoaded',function(){
+window.bmOnReady(function(){
   bind77();
   setTimeout(bind77,300);
   setTimeout(bind77,1200);
@@ -37394,7 +37389,7 @@ if(typeof oldRender78==='function'&&!oldRender78.__v8578){
   window.v8521RenderLibrary=wrapped;
 }
 
-document.addEventListener('DOMContentLoaded',function(){setTimeout(updateBulk78,300)});
+window.bmOnReady(function(){setTimeout(updateBulk78,300)});
 })();
 </script>
 <script id="v8579-js">(function(){'use strict';
@@ -37412,7 +37407,7 @@ function analyse(){V8579.issues=[];var ex=EX(),tr=TR(),tm=TM(),pl=PL(),pn=PN(),b
 function kpis(){E('v8579-kpis').innerHTML=V8579.metrics.map(function(m){return '<button class="v8579-kpi '+(V8579.active===m.id?'active':'')+'" onclick="v8579Filter(\''+m.id+'\')"><span>'+m.icon+'</span><span class="n">'+m.count+'</span><span class="l">'+X(m.label)+'</span><span class="h">Pulsa para ver registros</span></button>'}).join('')}
 window.v8579Filter=function(id){V8579.active=id;kpis();v8579Details()};window.v8579Details=function(){var q=N(E('v8579-q').value),d=E('v8579-domain').value,s=E('v8579-sev').value,rows=V8579.issues.filter(function(i){return (!V8579.active||i.type===V8579.active)&&(!d||i.domain===d)&&(!s||i.sev===s)&&(!q||N(i.domain+' '+i.name+' '+i.detail).indexOf(q)>=0)}),m=V8579.metrics.find(function(x){return x.id===V8579.active});E('v8579-title').textContent=m?m.label:'Todas las incidencias';E('v8579-sub').textContent=rows.length+' registros';E('v8579-body').innerHTML=rows.length?rows.map(function(i){return '<tr><td>'+X(i.domain)+'</td><td>'+X(i.type)+'</td><td><b>'+X(i.name)+'</b></td><td>'+X(i.detail)+'</td><td><span class="v8579-pill '+i.sev+'">'+i.sev.toUpperCase()+'</span></td><td><button class="btn btn-secondary btn-sm" onclick="v8579Go(\''+X(i.page)+'\')">Abrir</button></td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;padding:24px;color:#86efac">✓ Sin incidencias con estos filtros.</td></tr>'};
 window.v8579Go=function(page){if(typeof window.nav==='function')window.nav(page)};window.v8579Refresh=async function(){try{if(typeof window.v8546ReloadLibraryFromSupabase==='function')await window.v8546ReloadLibraryFromSupabase()}catch(e){}analyse();kpis();v8579Details()};window.v8579Export=function(){var r=[['Modulo','Incidencia','Registro','Detalle','Prioridad']];V8579.issues.forEach(function(i){r.push([i.domain,i.type,i.name,i.detail,i.sev])});function c(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}var b=new Blob(['\uFEFF'+r.map(function(x){return x.map(c).join(';')}).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='basket_manager_calidad_datos_'+new Date().toISOString().slice(0,10)+'.csv';a.click()};
-document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){if(E('p-calidad-datos')&&E('p-calidad-datos').classList.contains('active')){analyse();kpis();v8579Details()}},400)});})();</script><script id="v8580-quality-actions-js">(function(){'use strict';
+window.bmOnReady(function(){setTimeout(function(){if(E('p-calidad-datos')&&E('p-calidad-datos').classList.contains('active')){analyse();kpis();v8579Details()}},400)});})();</script><script id="v8580-quality-actions-js">(function(){'use strict';
 window.V8580=window.V8580||{visible:[]};
 function E(id){return document.getElementById(id)} function N(s){return String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()} function X(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function EX(id){return (window.V8521&&V8521.exercises||[]).find(function(x){return String(x.id)===String(id)})} function TR(id){return (window.DB&&DB.entrenamientos||[]).find(function(x){return String(x.id)===String(id)})} function TM(id){return (window.DB&&DB.equipos||[]).find(function(x){return String(x.id)===String(id)})} function PL(id){return (window.DB&&DB.jugadores||[]).find(function(x){return String(x.id)===String(id)})}
@@ -37429,7 +37424,7 @@ window.v8580Fix=function(n){var rr=V8580.visible&&V8580.visible.length?V8580.vis
  }catch(e){console.error('V8.5.85',e);alert('No se pudo abrir el registro.\n\n'+(e.message||e))}};
 function back(){if(E('v8580-back-quality'))return;var b=document.createElement('button');b.id='v8580-back-quality';b.className='btn btn-primary';b.textContent='🩺 Volver a Calidad';b.style.cssText='position:fixed;right:18px;bottom:18px;z-index:980;display:none;box-shadow:0 8px 24px rgba(0,0,0,.35)';b.onclick=function(){if(typeof window.nav==='function')window.nav('calidad-datos');b.style.display='none'};document.body.appendChild(b)}
 
-document.addEventListener('DOMContentLoaded',back);})();</script>
+window.bmOnReady(back);})();</script>
 <div class="modal-overlay" id="m-v8581-diag" style="z-index:999">
 <div class="modal" style="width:min(980px,96vw)">
 <div class="modal-hd"><div><div class="modal-title">⚙ DIAGNÓSTICO TÉCNICO</div><div style="font-size:8px;color:var(--muted);margin-top:3px">Estado interno de Basket Manager · V8.5.85</div></div><button class="modal-close" onclick="v8581CloseDiag()">×</button></div>
@@ -37571,7 +37566,7 @@ function check(){
  else{b.textContent='⚠ IDs duplicados: '+d.join(', ');b.className='v8582-integrity-badge warn'}
 }
 window.v8582CheckIntegrity=check;
-document.addEventListener('DOMContentLoaded',function(){setTimeout(check,400)});
+window.bmOnReady(function(){setTimeout(check,400)});
 
 })();
 </script>
@@ -40251,8 +40246,14 @@ body > #v8588-enc-modal .v8595-subtitle{
     });
   }
   window.bmOnReady(polishMapsButton);
-  new MutationObserver(function(){setTimeout(polishMapsButton,20)})
-    .observe(document.documentElement,{childList:true,subtree:true});
+  (function(){
+    var pending=false;
+    new MutationObserver(function(){
+      if(pending)return;
+      pending=true;
+      setTimeout(function(){pending=false;polishMapsButton()},40);
+    }).observe(document.body,{childList:true,subtree:true});
+  })();
 })();
 </script>
 <style id="bm-v85102-match-color-selector">
@@ -41600,7 +41601,7 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 })();
 </script>
 <script id="v85151-core-stability-marker">
-(function(){'use strict';window.BM_VERSION='8.5.163';})();
+(function(){'use strict';window.BM_VERSION='8.5.167';})();
 </script>
 <!-- V8.5.157: UX / responsive global, sin cambios de lógica -->
 <style id="bm-v85157-ux-stable">
@@ -41650,7 +41651,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V8.5.165 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V8.5.167 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41704,7 +41705,7 @@ document.addEventListener('click',function(ev){
 })();
 </script>
 <script id="v85151-core-stability-marker">
-(function(){'use strict';window.BM_VERSION='8.5.163';})();
+(function(){'use strict';window.BM_VERSION='8.5.167';})();
 </script>
 <style id="bm-v85156-performance-css">
 /* V8.5.157 — rendimiento global conservador */
@@ -41718,7 +41719,7 @@ document.addEventListener('click',function(ev){
 <script id="bm-v85156-performance-core">
 (function(){
 'use strict';
-window.BM_VERSION='8.5.163';
+window.BM_VERSION='8.5.167';
 // Cuando la pestaña vuelve a primer plano, refrescar solo la vista activa que lo necesita.
 document.addEventListener('visibilitychange',function(){
   if(document.hidden)return;
@@ -41737,7 +41738,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V8.5.165 — un único reloj de mantenimiento para las vistas que necesitan
+/* V8.5.167 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41754,7 +41755,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V8.5.165 active-view refresh:',err); }
+  }catch(err){ console.warn('V8.5.167 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41762,10 +41763,19 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V8.5.165 — helper de inicialización corregido y adelantado.
+/* V8.5.167 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
-window.BM_BUILD_VERSION='8.5.165';
+window.BM_BUILD_VERSION='8.5.167';
 })();</script>
+
+
+<script id="bm-v85167-final-stability">
+(function(){
+'use strict';
+window.BM_VERSION='8.5.167';
+window.BM_BUILD_VERSION='8.5.167';
+})();
+</script>
 
 </body>
 </html>
