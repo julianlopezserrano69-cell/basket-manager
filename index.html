@@ -7117,6 +7117,7 @@ window.bmOnReady(function(){
 <div class="nav-sec">Dashboard</div>
 <div class="nav-item" id="nav-dashboard" onclick="nav('dashboard')"><span>📊</span> Dashboard</div>
 <div class="nav-item" id="nav-centro-tecnico" onclick="nav('centro-tecnico')"><span>🧠</span> Centro Técnico</div>
+<div class="nav-item" id="nav-rendimiento-360" onclick="nav('rendimiento-360')"><span>📈</span> Rendimiento 360º</div>
 <div class="nav-sec">Gestion</div>
 <div class="nav-item" id="nav-clubs" onclick="nav('clubs')"><span class="nav-icon">🏛️</span> Club</div>
 <div class="nav-sub" id="nav-solicitudes" onclick="nav('solicitudes')"><span class="nav-sub-icon">📝</span> Únete al Club</div>
@@ -7596,6 +7597,16 @@ window.bmOnReady(function(){
 </div>
 </div>
 <!-- ENTRENAMIENTOS -->
+
+<div class="page" id="p-rendimiento-360">
+ <div class="bm960-head"><div><span>ANÁLISIS · CARGA · EVOLUCIÓN</span><h1>📈 Rendimiento 360º</h1><p>Jugador, entrenamiento y competición conectados con datos reales.</p></div><button onclick="BM960.refresh()">↻ Actualizar</button></div>
+ <div class="bm960-toolbar"><select id="bm960-team" onchange="BM960.render()"></select><select id="bm960-player" onchange="BM960.renderPlayer()"><option value="">Todos los jugadores</option></select><button onclick="BM960.openLoad()">＋ Registrar carga RPE</button><button onclick="nav('informes')">📄 Informes</button></div>
+ <div id="bm960-kpis" class="bm960-kpis"></div>
+ <div class="bm960-grid"><section class="bm960-card"><h3>Evolución técnica</h3><div id="bm960-evolution"></div></section><section class="bm960-card"><h3>Carga de entrenamiento</h3><div id="bm960-load"></div></section></div>
+ <div class="bm960-grid"><section class="bm960-card"><h3>Rendimiento en competición</h3><div id="bm960-games"></div></section><section class="bm960-card"><h3>Alertas y seguimiento</h3><div id="bm960-alerts"></div></section></div>
+</div>
+<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.6.0 incluida en el ZIP.</small></div></div>
+
 <div class="page" id="p-match-center">
   <div class="bm950-head"><div><span>COMPETICIÓN · DATOS REALES</span><h1>🏟️ Match Center</h1><p>Encuentros, convocatoria, quinteto, capitán y estadísticas registradas en directo.</p></div><button onclick="BM950.render()">↻ Actualizar</button></div>
   <div id="bm950-kpis" class="bm950-kpis"></div>
@@ -13159,7 +13170,7 @@ function nav(page) {
   window.scrollTo(0, 0);
   if (window._playLightning) window._playLightning();
   rollBall();
-  var pages = ['dashboard','centro-tecnico','clubs','localizaciones','equipos','jugadores','entrenadores','encuentros','entrenamientos','asistencia-equipo','plan-entrenamientos','valoraciones','scouting','informes','config','calendario','tips','temporadas','directo','pizarra','solicitudes','sugerencias','calidad-datos'];
+  var pages = ['dashboard','centro-tecnico','rendimiento-360','clubs','localizaciones','equipos','jugadores','entrenadores','encuentros','entrenamientos','asistencia-equipo','plan-entrenamientos','valoraciones','scouting','informes','config','calendario','tips','temporadas','directo','pizarra','solicitudes','sugerencias','calidad-datos'];
   pages.forEach(function(p) {
     var el = document.getElementById('p-' + p);
     if (el) el.classList.toggle('active', p === page);
@@ -31133,7 +31144,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V9.5.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31735,7 +31746,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V9.5.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32132,7 +32143,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V9.5.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.6.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -36343,7 +36354,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V9.5.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V9.6.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37710,7 +37721,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')+(e.__legacy?' · histórico':'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.5.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.6.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -37722,7 +37733,7 @@ async function load(){mount();msg('Cargando datos...');try{
   req('scouting_projects?select=*&order=created_at.desc').catch(function(){return []}),
   req('encuentros?select=*').catch(function(){return []})
  ]);
- /* V9.5.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
+ /* V9.6.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
     legacy_encuentro_id=not.is.null y podía dejar la pantalla a cero. */
  var modern=base[0]||[], legacy=base[3]||[], seen={};
  S.encounters=[];
@@ -41702,7 +41713,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V9.5.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V9.6.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41789,7 +41800,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V9.5.0 — un único reloj de mantenimiento para las vistas que necesitan
+/* V9.6.0 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41806,7 +41817,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V9.5.0 active-view refresh:',err); }
+  }catch(err){ console.warn('V9.6.0 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41814,7 +41825,7 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V9.5.0 — helper de inicialización corregido y adelantado.
+/* V9.6.0 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
 window.BM_BUILD_VERSION='9.5.0';
 })();</script>
@@ -41959,5 +41970,19 @@ function parse(v){if(Array.isArray(v))return v;try{return JSON.parse(v||'[]')}ca
 var oldNav=window.nav;window.nav=function(page){var r=oldNav.apply(this,arguments);if(page==='match-center')setTimeout(function(){X.render()},0);return r};window.bmOnReady(function(){if(document.getElementById('p-match-center'))X.render()});
 })();
 </script>
+
+<style id="bm960-css">
+#p-rendimiento-360{padding:24px}.bm960-head{display:flex;justify-content:space-between;align-items:center;padding:22px 24px;border-radius:18px;background:linear-gradient(135deg,#10233c,#0a1728);border:1px solid rgba(120,165,220,.18)}.bm960-head span{font-size:9px;letter-spacing:1.5px;color:#ff9b55;font-weight:900}.bm960-head h1{font-size:28px;margin:4px 0}.bm960-head p{margin:0;color:#8da5c1;font-size:10px}.bm960-head button,.bm960-toolbar button,.bm960-toolbar select{border:1px solid rgba(120,165,220,.2);background:#10223a;color:#edf5ff;border-radius:10px;padding:9px 11px}.bm960-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.bm960-toolbar select{min-width:210px}.bm960-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}.bm960-kpis>div,.bm960-card{background:#0d1b2e;border:1px solid rgba(120,165,220,.16);border-radius:15px}.bm960-kpis>div{padding:14px}.bm960-kpis span{display:block;font-size:8px;color:#8299b5;text-transform:uppercase;font-weight:900}.bm960-kpis b{font-size:23px;display:block;margin-top:3px}.bm960-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.bm960-card{padding:14px;min-height:210px}.bm960-card h3{font-size:11px;margin:0 0 12px}.bm960-row{display:grid;grid-template-columns:100px 1fr 50px;gap:8px;align-items:center;margin:8px 0;font-size:9px}.bm960-bar{height:8px;border-radius:8px;background:#172a43;overflow:hidden}.bm960-bar i{display:block;height:100%;background:linear-gradient(90deg,#ff7a1a,#ffb36f);border-radius:8px}.bm960-table{width:100%;border-collapse:collapse;font-size:9px}.bm960-table td,.bm960-table th{padding:7px;border-bottom:1px solid rgba(120,165,220,.12);text-align:left}.bm960-alert{padding:9px 11px;border-radius:9px;background:#101f34;border-left:3px solid #ffb020;margin:7px 0;font-size:9px;line-height:1.45}.bm960-alert.good{border-color:#38c982}.bm960-empty{color:#8097b3;font-size:9px;padding:20px;text-align:center}.bm960-modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,8,18,.76);z-index:99999}.bm960-modal.open{display:grid}.bm960-modal>div{width:min(520px,92vw);background:#0d1b2e;border:1px solid #29415f;border-radius:16px;padding:20px;position:relative}.bm960-modal label{display:block;font-size:9px;color:#91a8c4;margin:10px 0}.bm960-modal input,.bm960-modal select,.bm960-modal textarea{display:block;width:100%;box-sizing:border-box;margin-top:5px;background:#101f34;color:white;border:1px solid #29415f;border-radius:8px;padding:9px}.bm960-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bm960-x{position:absolute;right:12px;top:10px;background:none;border:0;color:white;font-size:22px}.bm960-save{width:100%;padding:10px;border:0;border-radius:9px;background:#ff7a1a;font-weight:900}.bm960-modal small{display:block;color:#8097b3;margin-top:9px}@media(max-width:900px){.bm960-grid{grid-template-columns:1fr}.bm960-kpis{grid-template-columns:1fr 1fr}}
+</style>
+<script id="bm960-js">
+(function(){'use strict';var A=x=>Array.isArray(x)?x:[],S=x=>x==null?'':String(x),E=x=>S(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));var X=window.BM960={loads:[],direct:[]};
+function teamId(){return S((document.getElementById('bm960-team')||{}).value)}function playerId(){return S((document.getElementById('bm960-player')||{}).value)}function pteam(j){return S(j.equipo||j.equipo_id||j.team_id)}function tteam(t){return S(t.equipo||t.equipo_id||t.team_id)}function pname(id){var p=A(DB.jugadores).find(j=>S(j.id)===S(id));return p?(p.dorsal?'#'+p.dorsal+' ':'')+(p.nombre||p.name||''):S(id)}function n(v){v=parseFloat(v);return isFinite(v)?v:null}
+function fill(){var ts=A(DB.equipos),sel=document.getElementById('bm960-team'),old=sel.value;sel.innerHTML=ts.map(t=>'<option value="'+E(t.id)+'">'+E(t.nombre||t.name)+'</option>').join('');if(old&&ts.some(t=>S(t.id)===old))sel.value=old;var ps=A(DB.jugadores).filter(j=>!teamId()||pteam(j)===teamId()),pl=document.getElementById('bm960-player'),po=pl.value;pl.innerHTML='<option value="">Todos los jugadores</option>'+ps.map(p=>'<option value="'+E(p.id)+'">'+E(pname(p.id))+'</option>').join('');if(po&&ps.some(p=>S(p.id)===po))pl.value=po}
+function vals(){var ids=A(DB.jugadores).filter(j=>!teamId()||pteam(j)===teamId()).map(j=>S(j.id)),pid=playerId();return A(DB.valoraciones).filter(v=>(!pid||S(v.jugador)===pid)&&ids.includes(S(v.jugador)))}function avg(a,k){var z=a.map(x=>n(x[k])).filter(x=>x!=null);return z.length?z.reduce((a,b)=>a+b,0)/z.length:null}
+X.refresh=async function(){fill();this.loads=[];this.direct=[];if(window.SB&&SB.ready&&typeof sbFetch==='function'){try{var r=await sbFetch('training_load?select=*&order=fecha.desc');if(r.ok)this.loads=A(await r.json())}catch(e){}try{var q=await sbFetch('partidos_directo?select=*&order=fecha.desc');if(q.ok)this.direct=A(await q.json())}catch(e){}}this.render()};
+X.render=function(){fill();this.renderPlayer()};X.renderPlayer=function(){var v=vals(),pid=playerId(),players=A(DB.jugadores).filter(j=>(!teamId()||pteam(j)===teamId())&&(!pid||S(j.id)===pid)),train=A(DB.entrenamientos).filter(t=>!teamId()||tteam(t)===teamId()),loads=this.loads.filter(l=>(!teamId()||S(l.equipo_id)===teamId())&&(!pid||S(l.jugador_id)===pid)),g=this.direct.filter(d=>!teamId()||S(d.equipo_id||d.equipo_local||d.equipo_visitante).includes(teamId()));var gl=avg(v,'global'),rpe=avg(loads,'rpe'),wl=loads.reduce((z,l)=>z+(n(l.carga)||((n(l.rpe)||0)*(n(l.duracion)||0))),0);document.getElementById('bm960-kpis').innerHTML=[['Jugadores',players.length],['Valoración',gl==null?'—':gl.toFixed(1)],['Entrenamientos',train.length],['RPE medio',rpe==null?'—':rpe.toFixed(1)],['Carga acumulada',wl?Math.round(wl):'—']].map(k=>'<div><span>'+k[0]+'</span><b>'+k[1]+'</b></div>').join('');var cats=[['Ataque','ataque'],['Defensa','defensa'],['Físico','fisico'],['Fundamentos','fundamentos'],['Táctica','tactica'],['Spacing','spacing'],['Actitud','actitud']];document.getElementById('bm960-evolution').innerHTML=v.length?cats.map(c=>{var a=avg(v,c[1]);return '<div class="bm960-row"><span>'+c[0]+'</span><div class="bm960-bar"><i style="width:'+Math.min(100,(a||0)*20)+'%"></i></div><b>'+(a==null?'—':a.toFixed(1))+'</b></div>'}).join(''):'<div class="bm960-empty">Sin valoraciones para este filtro.</div>';document.getElementById('bm960-load').innerHTML=loads.length?'<table class="bm960-table"><tr><th>Fecha</th><th>Jugador</th><th>RPE</th><th>Min</th><th>Carga</th></tr>'+loads.slice(0,12).map(l=>'<tr><td>'+E(l.fecha||'')+'</td><td>'+E(pname(l.jugador_id))+'</td><td>'+E(l.rpe)+'</td><td>'+E(l.duracion)+'</td><td>'+E(l.carga||Math.round((n(l.rpe)||0)*(n(l.duracion)||0)))+'</td></tr>').join('')+'</table>':'<div class="bm960-empty">Aún no hay cargas RPE. Ejecuta la migración incluida y registra la primera.</div>';var statrows=[];g.forEach(d=>{['stats_local','stats_visitante'].forEach(k=>{var x=d[k];if(typeof x==='string')try{x=JSON.parse(x)}catch(e){x=[]}A(x).forEach(p=>{if(!pid||S(p.id||p.jugador_id)===pid||S(p.nombre)===S(pname(pid)).replace(/^#\\S+ /,''))statrows.push({f:d.fecha,n:p.nombre,pts:p.pts||0,t2:p.t2||0,t3:p.t3||0,tl:p.tl||0})})})});document.getElementById('bm960-games').innerHTML=statrows.length?'<table class="bm960-table"><tr><th>Fecha</th><th>Jugador</th><th>PTS</th><th>T2</th><th>T3</th><th>TL</th></tr>'+statrows.slice(0,15).map(r=>'<tr><td>'+E(r.f||'')+'</td><td>'+E(r.n||'')+'</td><td>'+E(r.pts)+'</td><td>'+E(r.t2)+'</td><td>'+E(r.t3)+'</td><td>'+E(r.tl)+'</td></tr>').join('')+'</table>':'<div class="bm960-empty">Sin estadísticas detalladas de competición para este filtro.</div>';var al=[];if(v.length<players.length)al.push('Hay jugadores con seguimiento técnico insuficiente o sin valoraciones.');if(loads.length===0)al.push('No hay carga RPE registrada: no se puede calcular carga real ni tendencias.');if(rpe!=null&&rpe>=8)al.push('RPE medio alto ('+rpe.toFixed(1)+'). Revisar recuperación antes de aumentar carga.');if(gl!=null&&gl<3)al.push('Valoración técnica media por debajo de 3,0. Revisar objetivos del microciclo.');if(!al.length)al.push('No se detectan alertas básicas con los datos disponibles.');document.getElementById('bm960-alerts').innerHTML=al.map((a,i)=>'<div class="bm960-alert '+(!i&&al.length===1?'good':'')+'">'+E(a)+'</div>').join('')};
+X.openLoad=function(){fill();var ps=A(DB.jugadores).filter(j=>!teamId()||pteam(j)===teamId()),tr=A(DB.entrenamientos).filter(t=>!teamId()||tteam(t)===teamId()).sort((a,b)=>S(b.fecha).localeCompare(S(a.fecha)));document.getElementById('bm960-load-player').innerHTML=ps.map(p=>'<option value="'+E(p.id)+'">'+E(pname(p.id))+'</option>').join('');document.getElementById('bm960-training').innerHTML=tr.map(t=>'<option value="'+E(t.id)+'" data-date="'+E(t.fecha||'')+'">'+E((t.fecha||'')+' · '+(t.tipo||t.titulo||'Entrenamiento'))+'</option>').join('');document.getElementById('bm960-modal').classList.add('open')};X.closeLoad=function(){document.getElementById('bm960-modal').classList.remove('open')};X.saveLoad=async function(){if(!(window.SB&&SB.ready&&typeof sbFetch==='function'))return toast('Supabase no está conectado','e');var tid=S(document.getElementById('bm960-training').value),pid=S(document.getElementById('bm960-load-player').value),r=n(document.getElementById('bm960-rpe').value),dur=n(document.getElementById('bm960-duration').value);if(!tid||!pid||r==null||dur==null)return toast('Completa entrenamiento, jugador, RPE y duración','e');var opt=document.querySelector('#bm960-training option:checked'),row={entrenamiento_id:tid,jugador_id:pid,equipo_id:teamId()||null,fecha:opt?opt.dataset.date:null,rpe:r,duracion:dur,notas:S(document.getElementById('bm960-notes').value)};try{var res=await sbFetch('training_load',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(row)});if(!res.ok){var er=await res.json();throw Error(er.message||'Error')}toast('Carga RPE guardada','s');this.closeLoad();await this.refresh()}catch(e){toast('No se pudo guardar. Ejecuta MIGRACION_V9_6_0_RENDIMIENTO.sql · '+e.message,'e')}};var old=window.nav;window.nav=function(page){var r=old.apply(this,arguments);if(page==='rendimiento-360')setTimeout(()=>X.refresh(),0);return r};window.bmOnReady(()=>{if(document.getElementById('p-rendimiento-360'))X.refresh()});})();
+</script>
+
 </body>
 </html>
