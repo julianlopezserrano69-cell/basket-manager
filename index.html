@@ -7606,7 +7606,7 @@ window.bmOnReady(function(){
  <div class="bm960-grid"><section class="bm960-card"><h3>Evolución técnica</h3><div id="bm960-evolution"></div></section><section class="bm960-card"><h3>Carga de entrenamiento</h3><div id="bm960-load"></div></section></div>
  <div class="bm960-grid"><section class="bm960-card"><h3>Rendimiento en competición</h3><div id="bm960-games"></div></section><section class="bm960-card"><h3>Alertas y seguimiento</h3><div id="bm960-alerts"></div></section></div>
 </div>
-<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.6.2 incluida en el ZIP.</small></div></div>
+<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.7.0 incluida en el ZIP.</small></div></div>
 
 <div class="page" id="p-match-center">
   <div class="bm950-head"><div><span>COMPETICIÓN · DATOS REALES</span><h1>🏟️ Match Center</h1><p>Encuentros, convocatoria, quinteto, capitán y estadísticas registradas en directo.</p></div><button onclick="BM950.render()">↻ Actualizar</button></div>
@@ -31146,7 +31146,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.7.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31748,7 +31748,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.7.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32145,7 +32145,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V9.6.2: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.7.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -36356,7 +36356,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V9.6.2: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V9.7.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37723,7 +37723,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')+(e.__legacy?' · histórico':'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.6.2</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.7.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -37735,7 +37735,7 @@ async function load(){mount();msg('Cargando datos...');try{
   req('scouting_projects?select=*&order=created_at.desc').catch(function(){return []}),
   req('encuentros?select=*').catch(function(){return []})
  ]);
- /* V9.6.2: Scouting consume TODOS los encuentros. La consulta antigua filtraba
+ /* V9.7.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
     legacy_encuentro_id=not.is.null y podía dejar la pantalla a cero. */
  var modern=base[0]||[], legacy=base[3]||[], seen={};
  S.encounters=[];
@@ -41715,7 +41715,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V9.6.2 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V9.7.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41802,7 +41802,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V9.6.2 — un único reloj de mantenimiento para las vistas que necesitan
+/* V9.7.0 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41819,7 +41819,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V9.6.2 active-view refresh:',err); }
+  }catch(err){ console.warn('V9.7.0 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41827,7 +41827,7 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V9.6.2 — helper de inicialización corregido y adelantado.
+/* V9.7.0 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
 window.BM_BUILD_VERSION='9.5.0';
 })();</script>
@@ -42049,6 +42049,28 @@ var originalSave=BM960.saveLoad.bind(BM960);BM960.saveLoad=async function(){if(!
 var oldClose=BM960.closeLoad.bind(BM960);BM960.closeLoad=function(){X.editingId=null;var h=document.querySelector('#bm960-modal h2'),b=document.querySelector('#bm960-modal .bm960-save');if(h)h.textContent='Registrar carga RPE';if(b)b.textContent='Guardar carga';oldClose()};
 var oldRender=BM960.renderPlayer.bind(BM960);BM960.renderPlayer=function(){oldRender();renderRPE()};
 window.bmOnReady(function(){enhanceToolbar();setTimeout(renderRPE,120)});
+})();
+</script>
+
+
+<style id="bm970-objectives-css">
+.bm970-section{margin-top:12px;background:#0d1b2e;border:1px solid rgba(120,165,220,.16);border-radius:15px;padding:16px}.bm970-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.bm970-head h3{margin:0;font-size:12px}.bm970-head p{margin:3px 0 0;color:#8299b5;font-size:9px}.bm970-head button,.bm970-btn{border:1px solid rgba(120,165,220,.22);background:#122744;color:#fff;border-radius:8px;padding:8px 10px;cursor:pointer}.bm970-head button.primary{background:#ff7a1a;border-color:#ff7a1a;color:#111;font-weight:900}.bm970-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.bm970-progress{height:7px;background:#172a43;border-radius:8px;overflow:hidden;min-width:100px}.bm970-progress i{display:block;height:100%;background:linear-gradient(90deg,#ff7a1a,#ffb36f)}.bm970-state{display:inline-block;padding:3px 7px;border-radius:10px;background:#142944;font-size:8px}.bm970-chart{display:flex;align-items:flex-end;gap:5px;height:150px;padding:12px 4px 24px;border-bottom:1px solid rgba(120,165,220,.12)}.bm970-col{flex:1;min-width:12px;max-width:40px;height:100%;display:flex;align-items:flex-end;position:relative}.bm970-col i{display:block;width:100%;min-height:2px;background:linear-gradient(180deg,#ffb36f,#ff7a1a);border-radius:5px 5px 2px 2px}.bm970-col span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:7px;color:#8097b3;white-space:nowrap}.bm970-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.bm970-summary div{padding:9px;background:#101f34;border-radius:9px}.bm970-summary span{display:block;font-size:7px;color:#8299b5;text-transform:uppercase}.bm970-summary b{display:block;font-size:15px;margin-top:2px}.bm970-actions{display:flex;gap:4px}.bm970-actions button{width:27px;height:27px;padding:0;border:1px solid rgba(120,165,220,.2);border-radius:7px;background:#122744;color:white}.bm970-form textarea{min-height:72px}.bm970-form input,.bm970-form select,.bm970-form textarea{width:100%;box-sizing:border-box;background:#101f34;color:#fff;border:1px solid #29415f;border-radius:8px;padding:9px;margin-top:5px}.bm970-form label{display:block;color:#91a8c4;font-size:9px;margin:9px 0}.bm970-two{display:grid;grid-template-columns:1fr 1fr;gap:9px}@media(max-width:900px){.bm970-layout{grid-template-columns:1fr}.bm970-summary{grid-template-columns:1fr 1fr}}
+</style>
+<div class="bm960-modal" id="bm970-objective-modal"><div class="bm970-form"><button class="bm960-x" onclick="BM970.close()">×</button><h2 id="bm970-title">Nuevo objetivo individual</h2><label>Jugador<select id="bm970-player"></select></label><div class="bm970-two"><label>Categoría<select id="bm970-category"><option>Fundamentos</option><option>Ataque</option><option>Defensa</option><option>Táctica</option><option>Físico</option><option>Actitud</option><option>Spacing</option><option>Otro</option></select></label><label>Estado<select id="bm970-state"><option>Activo</option><option>En progreso</option><option>Conseguido</option><option>Pausado</option></select></label></div><label>Objetivo<textarea id="bm970-objective" placeholder="Ej.: Mejorar toma de decisiones tras penetración"></textarea></label><div class="bm970-two"><label>Fecha inicio<input type="date" id="bm970-start"></label><label>Fecha fin<input type="date" id="bm970-end"></label></div><label>Progreso (%)<input type="number" id="bm970-progress" min="0" max="100" step="5" value="0"></label><label>Notas<textarea id="bm970-notes"></textarea></label><button class="bm960-save" onclick="BM970.save()">Guardar objetivo</button></div></div>
+<script id="bm970-objectives-js">
+(function(){'use strict';
+var A=x=>Array.isArray(x)?x:[],S=x=>x==null?'':String(x),E=x=>S(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),N=x=>{x=parseFloat(x);return isFinite(x)?x:null};
+var X=window.BM970={objectives:[],editing:null};
+function tid(){return S((document.getElementById('bm960-team')||{}).value)}function pid(){return S((document.getElementById('bm960-player')||{}).value)}function pteam(p){return S(p.equipo||p.equipo_id||p.team_id)}function pname(id){var p=A(DB.jugadores).find(x=>S(x.id)===S(id));return p?(p.dorsal?'#'+p.dorsal+' ':'')+(p.nombre||p.name||''):S(id)}function loadValue(l){return N(l.carga)||((N(l.rpe)||0)*(N(l.duracion)||0))}
+function ensure(){var page=document.getElementById('p-rendimiento-360');if(!page||document.getElementById('bm970-section'))return;var sec=document.createElement('section');sec.id='bm970-section';sec.className='bm970-section';sec.innerHTML='<div class="bm970-head"><div><h3>🎯 Objetivos individuales y tendencia de carga</h3><p>Seguimiento del jugador conectado con los RPE ya registrados.</p></div><button class="primary" onclick="BM970.open()">＋ Nuevo objetivo</button></div><div class="bm970-layout"><div><div id="bm970-objectives"></div></div><div><h3 style="font-size:10px;margin:0 0 8px">Carga por sesión</h3><div id="bm970-chart"></div></div></div>';var grid=page.querySelector('.bm960-grid');if(grid)grid.insertAdjacentElement('afterend',sec);else page.appendChild(sec)}
+X.fetch=async function(){this.objectives=[];if(window.SB&&SB.ready&&typeof sbFetch==='function'){try{var r=await sbFetch('player_objectives?select=*&order=fecha_inicio.desc');if(r.ok)this.objectives=A(await r.json())}catch(e){}}this.render()};
+X.render=function(){ensure();var team=tid(),player=pid(),rows=this.objectives.filter(o=>(!team||S(o.equipo_id)===team)&&(!player||S(o.jugador_id)===player)),box=document.getElementById('bm970-objectives');if(box)box.innerHTML=rows.length?'<table class="bm960-table"><tr><th>Jugador</th><th>Categoría</th><th>Objetivo</th><th>Estado</th><th>Progreso</th><th>Acciones</th></tr>'+rows.map(o=>'<tr><td>'+E(pname(o.jugador_id))+'</td><td>'+E(o.categoria||'—')+'</td><td>'+E(o.objetivo||'')+'</td><td><span class="bm970-state">'+E(o.estado||'Activo')+'</span></td><td><div style="display:flex;align-items:center;gap:6px"><div class="bm970-progress"><i style="width:'+Math.max(0,Math.min(100,N(o.progreso)||0))+'%"></i></div><b>'+(N(o.progreso)||0)+'%</b></div></td><td><div class="bm970-actions"><button title="Modificar" onclick="BM970.edit(\''+E(o.id)+'\')">✏️</button><button title="Borrar" onclick="BM970.remove(\''+E(o.id)+'\')">🗑</button></div></td></tr>').join('')+'</table>':'<div class="bm960-empty">Sin objetivos individuales para este filtro.</div>';this.chart()};
+X.chart=function(){var team=tid(),player=pid(),loads=A(BM960.loads).filter(l=>(!team||S(l.equipo_id)===team)&&(!player||S(l.jugador_id)===player)).sort((a,b)=>S(a.fecha).localeCompare(S(b.fecha))).slice(-12),box=document.getElementById('bm970-chart');if(!box)return;if(!loads.length){box.innerHTML='<div class="bm960-empty">Registra RPE para ver la tendencia.</div>';return}var max=Math.max.apply(null,loads.map(loadValue).concat([1])),total=loads.reduce((a,l)=>a+loadValue(l),0),avg=total/loads.length,peak=Math.max.apply(null,loads.map(loadValue));box.innerHTML='<div class="bm970-chart">'+loads.map(l=>'<div class="bm970-col" title="'+E((l.fecha||'')+' · '+pname(l.jugador_id)+' · '+Math.round(loadValue(l))+' UA')+'"><i style="height:'+Math.max(3,Math.round(loadValue(l)/max*100))+'%"></i><span>'+E(S(l.fecha||'').slice(5))+'</span></div>').join('')+'</div><div class="bm970-summary"><div><span>Sesiones</span><b>'+loads.length+'</b></div><div><span>Media</span><b>'+Math.round(avg)+' UA</b></div><div><span>Pico</span><b>'+Math.round(peak)+' UA</b></div></div>'};
+X.open=function(o){ensure();this.editing=o?S(o.id):null;var ps=A(DB.jugadores).filter(p=>!tid()||pteam(p)===tid()),sel=document.getElementById('bm970-player');sel.innerHTML=ps.map(p=>'<option value="'+E(p.id)+'">'+E(pname(p.id))+'</option>').join('');if(pid())sel.value=pid();document.getElementById('bm970-title').textContent=o?'Modificar objetivo':'Nuevo objetivo individual';document.getElementById('bm970-category').value=o&&o.categoria||'Fundamentos';document.getElementById('bm970-state').value=o&&o.estado||'Activo';document.getElementById('bm970-objective').value=o&&o.objetivo||'';document.getElementById('bm970-start').value=o&&o.fecha_inicio||new Date().toISOString().slice(0,10);document.getElementById('bm970-end').value=o&&o.fecha_fin||'';document.getElementById('bm970-progress').value=o&&N(o.progreso)!=null?o.progreso:0;document.getElementById('bm970-notes').value=o&&o.notas||'';document.getElementById('bm970-objective-modal').classList.add('open')};X.close=function(){this.editing=null;document.getElementById('bm970-objective-modal').classList.remove('open')};
+X.edit=function(id){var o=this.objectives.find(x=>S(x.id)===S(id));if(o)this.open(o)};
+X.save=async function(){if(!(window.SB&&SB.ready&&typeof sbFetch==='function'))return toast('Supabase no está conectado','e');var player=S(document.getElementById('bm970-player').value),objective=S(document.getElementById('bm970-objective').value).trim(),progress=N(document.getElementById('bm970-progress').value);if(!player||!objective)return toast('Selecciona jugador y escribe el objetivo','e');if(progress==null||progress<0||progress>100)return toast('El progreso debe estar entre 0 y 100','e');var row={jugador_id:player,equipo_id:tid()||null,fecha_inicio:document.getElementById('bm970-start').value||new Date().toISOString().slice(0,10),fecha_fin:document.getElementById('bm970-end').value||null,categoria:S(document.getElementById('bm970-category').value),objetivo:objective,estado:S(document.getElementById('bm970-state').value),progreso:progress,notas:S(document.getElementById('bm970-notes').value),updated_at:new Date().toISOString()};try{var url='player_objectives'+(this.editing?'?id=eq.'+encodeURIComponent(this.editing):''),method=this.editing?'PATCH':'POST',r=await sbFetch(url,{method:method,headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(row)});if(!r.ok){var er=await r.json();throw Error(er.message||'Error')}toast(this.editing?'Objetivo modificado':'Objetivo creado','s');this.close();await this.fetch()}catch(e){toast('No se pudo guardar el objetivo · '+e.message,'e')}};
+X.remove=async function(id){var o=this.objectives.find(x=>S(x.id)===S(id));if(!o||!confirm('¿Borrar este objetivo de '+pname(o.jugador_id)+'?'))return;try{var r=await sbFetch('player_objectives?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{'Prefer':'return=representation'}});if(!r.ok){var er=await r.json();throw Error(er.message||'Error')}toast('Objetivo borrado','s');await this.fetch()}catch(e){toast('No se pudo borrar · '+e.message,'e')}};
+var oldRefresh=BM960.refresh.bind(BM960);BM960.refresh=async function(){await oldRefresh();await X.fetch()};var oldRender=BM960.renderPlayer.bind(BM960);BM960.renderPlayer=function(){oldRender();X.render()};window.bmOnReady(function(){ensure();setTimeout(function(){X.fetch()},180)});
 })();
 </script>
 
