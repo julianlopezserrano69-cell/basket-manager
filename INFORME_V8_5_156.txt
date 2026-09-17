@@ -1,0 +1,9 @@
+Basket Manager V8.5.156 — Responsive y rendimiento global (fase conservadora)
+
+- Eliminado polling global de reinstalación de wrappers cada 3 segundos.
+- Refresco periódico de Entrenamientos solo cuando la página está activa.
+- Refresco periódico del Dashboard solo cuando la página está activa.
+- Planificación ya conservaba refresco condicionado a página activa.
+- Refresco puntual al volver a la pestaña, solo para la vista activa.
+- Aislamiento de repintado en contenedores de tablas.
+- Sin cambios en Supabase, CRUD, IDs, relaciones ni datos.

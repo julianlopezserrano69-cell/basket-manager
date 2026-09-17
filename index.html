@@ -7499,7 +7499,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-clubs" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.155</div></div>
+      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.156</div></div>
       <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
     </div>
   </div>
@@ -7564,7 +7564,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-equipos" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.155</div></div>
+      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.156</div></div>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
         <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
         <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7648,7 +7648,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-jugadores" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
-      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.155</div></div>
+      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.156</div></div>
       <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
     </div>
     <div class="jg-category-cards">
@@ -31008,8 +31008,8 @@ if(document.readyState==='loading'){
   setTimeout(install,1000);
 }
 
-// Reinstalar wrappers si algún script posterior redefine funciones.
-setInterval(install,3000);
+// V8.5.156: sin polling global. Los wrappers se instalan durante la inicialización.
+// Evita ejecutar install() cada 3 s durante toda la vida de la aplicación.
 
 })();
 </script>
@@ -31749,7 +31749,8 @@ if(document.readyState==='loading'){
 }
 setTimeout(install,1200);
 setInterval(function(){
-  if(document.getElementById('p-entrenamientos'))v845RefreshAllTrainingCards();
+  var p=document.getElementById('p-entrenamientos');
+  if(p&&p.classList.contains('active'))v845RefreshAllTrainingCards();
 },60000);
 
 })();
@@ -32365,7 +32366,10 @@ window.v853RefreshDashboard=function(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(v853RefreshDashboard,500)});
 else setTimeout(v853RefreshDashboard,500);
 setTimeout(v853RefreshDashboard,1500);
-setInterval(v853RefreshDashboard,60000);
+setInterval(function(){
+  var p=document.getElementById('p-dashboard');
+  if(p&&p.classList.contains('active'))v853RefreshDashboard();
+},60000);
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -34470,7 +34474,7 @@ window.v8521SaveSessionPlan=async function(){
     persistLocal();v8521Close('m-v8521-session-plan');
     if(typeof toast==='function')toast('Plan de sesión guardado','s');
   }catch(e){
-    console.error('V8.5.155 plan de sesión',e);
+    console.error('V8.5.156 plan de sesión',e);
     if(typeof toast==='function')toast('No se pudo guardar el Plan de Sesión','e');
     alert('No se pudo guardar el Plan de Sesión.\n\n'+(e&&e.message||e));
   }finally{
@@ -42503,6 +42507,34 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 
 <script id="v85151-core-stability-marker">
 (function(){'use strict';window.BM_VERSION='8.5.151';})();
+</script>
+
+<style id="bm-v85156-performance-css">
+/* V8.5.156 — rendimiento global conservador */
+.page:not(.active){pointer-events:none;}
+.page.active{pointer-events:auto;}
+/* Evita que imágenes/logos deformen filas mientras terminan de cargar */
+.club-logo img,.team-logo img,td img{max-width:100%;height:auto;}
+/* Aísla repintados de los grandes contenedores de tablas sin alterar su layout */
+.table-wrap,#ent-tbl-wrap{contain:paint;}
+</style>
+<script id="bm-v85156-performance-core">
+(function(){
+'use strict';
+window.BM_VERSION='8.5.156';
+// Cuando la pestaña vuelve a primer plano, refrescar solo la vista activa que lo necesita.
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden)return;
+  try{
+    var d=document.getElementById('p-dashboard');
+    if(d&&d.classList.contains('active')&&typeof window.v853RefreshDashboard==='function')window.v853RefreshDashboard();
+    var e=document.getElementById('p-entrenamientos');
+    if(e&&e.classList.contains('active')&&typeof window.v845RefreshAllTrainingCards==='function')window.v845RefreshAllTrainingCards();
+    var p=document.getElementById('p-plan-entrenamientos');
+    if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function')window.v858RefreshPeriodStatus();
+  }catch(err){console.warn('V8.5.156 visibility refresh:',err);}
+});
+})();
 </script>
 </body></html>
 <!-- V8.5.153: Encuentros usa encounterStore como única capa de acceso a encounters/encuentros. -->
