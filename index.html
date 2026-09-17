@@ -32,7 +32,7 @@
 }
 </style>
 <script id="v85164-ready-helper">
-/* v8.5.164: helper de inicialización disponible antes de cualquier consumidor. */
+/* v8.5.165: helper de inicialización disponible antes de cualquier consumidor. */
 (function(){
   'use strict';
   if(window.bmOnReady) return;
@@ -7323,7 +7323,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-clubs">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.164</div></div>
+<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.165</div></div>
 <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
 </div>
 </div>
@@ -7385,7 +7385,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-equipos">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
 <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.164</div></div>
+<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.165</div></div>
 <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
 <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
 <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7467,7 +7467,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div class="page" id="p-jugadores">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;">
-<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.164</div></div>
+<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.165</div></div>
 <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
 </div>
 <div class="jg-category-cards">
@@ -24771,11 +24771,7 @@ el.addEventListener('mousedown', function(e){
     setTimeout(spawn, 1200 + Math.round(SPAWN_EVERY_MS / 2));
   }
 
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
-  }
+  window.bmOnReady(start);
 
   /* En esta versión no detenemos el generador antes de tiempo: si el login todavía no está visible por la intro, reintenta hasta que aparezca. */
 
@@ -25877,7 +25873,7 @@ el.addEventListener('mousedown', function(e){
     };
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     setTimeout(function(){ paintSelect(); }, 400);
     setTimeout(function(){ fetchTemporadasFromSupabaseThenPaint(); }, 1200);
   });
@@ -25911,7 +25907,7 @@ el.addEventListener('mousedown', function(e){
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     setTimeout(addLoginBoxArtSafe, 150);
     setTimeout(addLoginBoxArtSafe, 900);
   });
@@ -26003,7 +25999,7 @@ el.addEventListener('mousedown', function(e){
     syncFromSelect('encuentros','fsel-cat-enc');
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     setTimeout(init, 250);
     setTimeout(init, 1000);
   });
@@ -26056,8 +26052,7 @@ el.addEventListener('mousedown', function(e){
       openAppSafe(role);
     }
   };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(showLogin, 10000); });
-  else setTimeout(showLogin, 10000);
+  window.bmOnReady(function(){ setTimeout(showLogin, 10000); });
   document.addEventListener('DOMContentLoaded', function(){
     var btn=document.getElementById('login-submit-btn');
     if(btn){ btn.addEventListener('click', function(){ setTimeout(function(){ if(sessionStorage.getItem('cbNav_logged')==='1') openAppSafe(sessionStorage.getItem('cbNav_role')||'admin'); }, 1300); }); }
@@ -26761,7 +26756,7 @@ el.addEventListener('mousedown', function(e){
       return r;
     };
   }
-  document.addEventListener('DOMContentLoaded', function(){
+  window.bmOnReady(function(){
     setTimeout(function(){ try{ enhanceEmptyCalendarDays(); }catch(e){} }, 700);
   });
 })();
@@ -30546,11 +30541,7 @@ window.v835RefreshPlayers=function(){
     var w=document.getElementById('ent-tbl-wrap');
     if(w) w.scrollLeft=0;
   }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',function(){setTimeout(resetTrainingLeft,80);});
-  }else{
-    setTimeout(resetTrainingLeft,80);
-  }
+  window.bmOnReady(function(){setTimeout(resetTrainingLeft,80);});
 })();
 </script>
 <script id="v838-grid-js">
@@ -30864,13 +30855,9 @@ window.addEventListener('resize',function(){
   setTimeout(applyV841TrainingLayout,50);
 });
 
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',function(){
-    setTimeout(applyV841TrainingLayout,200);
-  });
-}else{
+window.bmOnReady(function(){
   setTimeout(applyV841TrainingLayout,200);
-}
+});
 })();
 </script>
 <script id="v842-training-form-fixes">
@@ -31125,13 +31112,9 @@ function install(){
   installFilterHook();
   setTimeout(v845RefreshAllTrainingCards,20);
 }
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(install,300);});
-}else{
-  setTimeout(install,300);
-}
+window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V8.5.164: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31733,7 +31716,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V8.5.164: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32129,7 +32112,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V8.5.164: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V8.5.165: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -34166,7 +34149,7 @@ function revealLogin8537(){
 }
 
 /* Normal startup keeps its chance to finish. If something old stalls, login is forced visible. */
-document.addEventListener('DOMContentLoaded',function(){
+window.bmOnReady(function(){
   setTimeout(revealLogin8537,1400);
 });
 setTimeout(revealLogin8537,2200);
@@ -36340,7 +36323,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 document.addEventListener('DOMContentLoaded',queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V8.5.164: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V8.5.165: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37669,7 +37652,7 @@ if(typeof previousNav==='function'&&!previousNav.__v8585){
 }
 
 /* Restore last open page only if it exists and user is already inside the app. */
-document.addEventListener('DOMContentLoaded',function(){
+window.bmOnReady(function(){
   setTimeout(function(){
     var last=''; try{last=sessionStorage.getItem('bm_last_page')||''}catch(e){}
     if(last&&pageEl83(last))ensure83(last);
@@ -40267,11 +40250,7 @@ body > #v8588-enc-modal .v8595-subtitle{
       btn.setAttribute('aria-label','Abrir en Google Maps');
     });
   }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',polishMapsButton,{once:true});
-  }else{
-    polishMapsButton();
-  }
+  window.bmOnReady(polishMapsButton);
   new MutationObserver(function(){setTimeout(polishMapsButton,20)})
     .observe(document.documentElement,{childList:true,subtree:true});
 })();
@@ -41671,7 +41650,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V8.5.164 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V8.5.165 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41758,7 +41737,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V8.5.164 — un único reloj de mantenimiento para las vistas que necesitan
+/* V8.5.165 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41775,7 +41754,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V8.5.164 active-view refresh:',err); }
+  }catch(err){ console.warn('V8.5.165 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41783,9 +41762,9 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V8.5.164 — helper de inicialización corregido y adelantado.
+/* V8.5.165 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
-window.BM_BUILD_VERSION='8.5.164';
+window.BM_BUILD_VERSION='8.5.165';
 })();</script>
 
 </body>
