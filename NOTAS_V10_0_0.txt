@@ -1,0 +1,22 @@
+BASKET MANAGER V10.0.0 — CENTRO DE AYUDA Y FORMACIÓN
+
+Base: V9.9.0 confirmada funcional por el usuario.
+
+Novedades:
+- Menú ❓ Ayuda / Guía de uso.
+- Guía por módulos y por procesos.
+- Buscador de ayuda.
+- Secuencias visuales paso a paso.
+- Tutoriales guiados sobre la interfaz para RPE, Centro Técnico y preparación de partido.
+- Botón flotante ? de ayuda contextual según la pantalla activa.
+- Glosario (RPE, UA, carga, mesociclo, microciclo, Match Center).
+- Generación y descarga directa del Manual de Usuario PDF desde la propia web.
+- Sin cambios de esquema ni SQL.
+
+Validación estática:
+- 156 bloques script detectados; 0 errores con node --check.
+- sw.js: 0 errores.
+- 1 cierre BODY y 1 cierre HTML.
+- nav-ayuda y p-ayuda únicos.
+- Ruta ayuda incluida en el router principal.
+- Caché PWA: basket-manager-v10.0.0.
