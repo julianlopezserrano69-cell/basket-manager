@@ -1,0 +1,5 @@
+V8.5.162 - Inicialización Planificación controlada
+- Migrados 5 inicializadores históricos de Planificación al helper bmOnReady.
+- Se preservan retardos y orden funcional.
+- Sin cambios en Supabase, CRUD ni datos.
+- Validación de JavaScript y estructura HTML realizada.
