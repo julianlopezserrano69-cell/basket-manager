@@ -32,7 +32,7 @@
 }
 </style>
 <script id="v85164-ready-helper">
-/* v9.2.0: helper de inicialización disponible antes de cualquier consumidor. */
+/* v9.3.0: helper de inicialización disponible antes de cualquier consumidor. */
 (function(){
   'use strict';
   if(window.bmOnReady) return;
@@ -7337,7 +7337,7 @@ window.bmOnReady(function(){
 <div class="page" id="p-clubs">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v9.2.0</div></div>
+<div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v9.3.0</div></div>
 <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
 </div>
 </div>
@@ -7399,7 +7399,7 @@ window.bmOnReady(function(){
 <div class="page" id="p-equipos">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
 <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v9.2.0</div></div>
+<div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v9.3.0</div></div>
 <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
 <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
 <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7481,7 +7481,7 @@ window.bmOnReady(function(){
 <div class="page" id="p-jugadores">
 <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
 <div style="display:flex;align-items:center;justify-content:space-between;">
-<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v9.2.0</div></div>
+<div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v9.3.0</div></div>
 <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
 </div>
 <div class="jg-category-cards">
@@ -31127,7 +31127,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V9.2.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.3.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31729,7 +31729,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V9.2.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.3.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32126,7 +32126,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V9.2.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.3.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -36337,7 +36337,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V9.2.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V9.3.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37704,7 +37704,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')+(e.__legacy?' · histórico':'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.2.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.3.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -37716,7 +37716,7 @@ async function load(){mount();msg('Cargando datos...');try{
   req('scouting_projects?select=*&order=created_at.desc').catch(function(){return []}),
   req('encuentros?select=*').catch(function(){return []})
  ]);
- /* V9.2.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
+ /* V9.3.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
     legacy_encuentro_id=not.is.null y podía dejar la pantalla a cero. */
  var modern=base[0]||[], legacy=base[3]||[], seen={};
  S.encounters=[];
@@ -41646,7 +41646,7 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 })();
 </script>
 <script id="v85151-core-stability-marker">
-(function(){'use strict';window.BM_VERSION='9.2.0';})();
+(function(){'use strict';window.BM_VERSION='9.3.0';})();
 </script>
 <!-- V8.5.157: UX / responsive global, sin cambios de lógica -->
 <style id="bm-v85157-ux-stable">
@@ -41696,7 +41696,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V9.2.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V9.3.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41750,7 +41750,7 @@ document.addEventListener('click',function(ev){
 })();
 </script>
 <script id="v85151-core-stability-marker">
-(function(){'use strict';window.BM_VERSION='9.2.0';})();
+(function(){'use strict';window.BM_VERSION='9.3.0';})();
 </script>
 <style id="bm-v85156-performance-css">
 /* V8.5.157 — rendimiento global conservador */
@@ -41764,7 +41764,7 @@ document.addEventListener('click',function(ev){
 <script id="bm-v85156-performance-core">
 (function(){
 'use strict';
-window.BM_VERSION='9.2.0';
+window.BM_VERSION='9.3.0';
 // Cuando la pestaña vuelve a primer plano, refrescar solo la vista activa que lo necesita.
 document.addEventListener('visibilitychange',function(){
   if(document.hidden)return;
@@ -41783,7 +41783,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V9.2.0 — un único reloj de mantenimiento para las vistas que necesitan
+/* V9.3.0 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41800,7 +41800,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V9.2.0 active-view refresh:',err); }
+  }catch(err){ console.warn('V9.3.0 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41808,17 +41808,17 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V9.2.0 — helper de inicialización corregido y adelantado.
+/* V9.3.0 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
-window.BM_BUILD_VERSION='9.2.0';
+window.BM_BUILD_VERSION='9.3.0';
 })();</script>
 
 
 <script id="bm-v85167-final-stability">
 (function(){
 'use strict';
-window.BM_VERSION='9.2.0';
-window.BM_BUILD_VERSION='9.2.0';
+window.BM_VERSION='9.3.0';
+window.BM_BUILD_VERSION='9.3.0';
 })();
 </script>
 
@@ -41855,6 +41855,61 @@ var X={selectedTeam:'',playerStats:{},
  openPlayer(id){var j=A(DB.jugadores).find(function(x){return S(x.id)===S(id)});if(!j)return;var z=stats(j),vs=valsFor(j.id),last=vs.slice().sort(function(a,b){return S(b.fecha||b.created_at).localeCompare(S(a.fecha||a.created_at))}).slice(0,5);document.getElementById('bm920-m-name').textContent=(j.dorsal?'#'+j.dorsal+' · ':'')+(j.nombre||j.name||'Jugador');document.getElementById('bm920-m-team').textContent=teamName(playerTeam(j));document.getElementById('bm920-m-body').innerHTML='<div class="bm920-detailgrid"><div><span>Asistencia</span><b>'+(z.attendance==null?'—':z.attendance+'%')+'</b></div><div><span>Vestimenta</span><b>'+(z.vest==null?'—':z.vest+'%')+'</b></div><div><span>Valoración media</span><b>'+(z.avg==null?'—':z.avg.toFixed(1))+'</b></div><div><span>Valoraciones</span><b>'+z.vals+'</b></div></div><div class="bm920-note"><b>Últimos registros disponibles</b><br>'+(last.length?last.map(function(v){var n=valNum(v);return esc2((v.fecha||S(v.created_at).slice(0,10)||'—')+' · '+(n==null?'sin nota':n)+(v.notas||v.observaciones?' · '+(v.notas||v.observaciones):''))}).join('<br>'):'No existen valoraciones registradas para este jugador.')+'</div>';document.getElementById('bm920-modal').classList.add('open')},
  closePlayer(){document.getElementById('bm920-modal').classList.remove('open')}
 };window.BM920=X;
+})();
+</script>
+
+<style id="bm-v930-visual-system">
+/* Basket Manager 9.3 — capa visual global. No modifica lógica ni datos. */
+:root{--bm930-accent:#ff7a1a;--bm930-blue:#4f9cff;--bm930-cyan:#35d0e6;--bm930-panel:rgba(15,27,46,.88);--bm930-line:rgba(126,164,210,.18);--bm930-shadow:0 18px 50px rgba(0,0,0,.22)}
+body{background:radial-gradient(circle at 78% -10%,rgba(55,112,185,.14),transparent 32%),radial-gradient(circle at 5% 92%,rgba(255,122,26,.08),transparent 28%),var(--bg)!important}
+#sidebar{background:linear-gradient(180deg,#0b1525 0%,#09111e 100%)!important;border-right:1px solid rgba(100,148,205,.18)!important;box-shadow:12px 0 40px rgba(0,0,0,.18)}
+#sidebar .logo{margin:8px 10px 12px;border-radius:14px;background:linear-gradient(135deg,rgba(79,156,255,.12),rgba(255,122,26,.08));border:1px solid rgba(100,148,205,.16);padding:12px!important}
+#sidebar .logo-icon{filter:drop-shadow(0 4px 10px rgba(255,122,26,.3))}
+#sidebar nav{padding:4px 8px 20px!important}
+#sidebar .nav-sec{margin:18px 10px 7px!important;font-size:9px!important;letter-spacing:1.8px!important;color:#64809f!important}
+#sidebar .nav-item,#sidebar .nav-sub{border-radius:9px!important;margin:2px 3px!important;border:1px solid transparent;transition:background .15s,border-color .15s,transform .15s}
+#sidebar .nav-item:hover,#sidebar .nav-sub:hover{background:rgba(79,156,255,.08)!important;border-color:rgba(79,156,255,.12);transform:translateX(2px)}
+#sidebar .nav-item.active,#sidebar .nav-sub.active{background:linear-gradient(90deg,rgba(79,156,255,.18),rgba(79,156,255,.06))!important;border-color:rgba(79,156,255,.28)!important;box-shadow:inset 3px 0 0 #4f9cff}
+#main{background:transparent!important}
+.page{padding:24px 28px 38px!important}
+.ph,.bm920-head{border:1px solid var(--bm930-line);border-radius:18px!important;padding:18px 20px!important;margin-bottom:18px!important;background:linear-gradient(135deg,rgba(18,33,56,.92),rgba(11,23,41,.72))!important;box-shadow:0 10px 35px rgba(0,0,0,.12)}
+.pt{font-size:28px!important;letter-spacing:.4px}.ps{color:#89a5c5!important;margin-top:4px}
+.card,.chart-card,.stat-card,.bm920-card,.v8592-card,.v8586-card{border:1px solid var(--bm930-line)!important;border-radius:16px!important;background:linear-gradient(180deg,rgba(17,31,52,.92),rgba(12,24,42,.9))!important;box-shadow:0 10px 28px rgba(0,0,0,.12)!important}
+.card:hover,.chart-card:hover,.bm920-card:hover{border-color:rgba(79,156,255,.28)!important}
+.stat-card{position:relative;overflow:hidden;padding:17px!important;min-height:108px;transition:transform .16s,border-color .16s}
+.stat-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--bm930-blue)}
+.stat-card.green:before{background:#31c48d}.stat-card.blue:before{background:#4f9cff}.stat-card.yellow:before{background:#f7b955}
+.stat-card:hover{transform:translateY(-2px);border-color:rgba(79,156,255,.35)!important}
+.stat-card .slabel{font-size:10px!important;letter-spacing:1px}.stat-card .sval{font-size:38px!important}.stat-card .ssub{opacity:.75}
+.btn{border-radius:10px!important;font-weight:700!important;transition:transform .15s,box-shadow .15s!important}.btn:hover{transform:translateY(-1px)}
+.btn-primary,.btn.primary{background:linear-gradient(135deg,#ff7a1a,#f0540a)!important;box-shadow:0 8px 20px rgba(240,84,10,.22)!important}
+input,select,textarea,.fsel,.search-box{border-radius:10px!important;border-color:rgba(115,153,198,.24)!important;background-color:rgba(9,20,36,.78)!important}
+thead th{background:#12233a!important;color:#9eb8d5!important;text-transform:uppercase!important;letter-spacing:.55px!important;font-size:9px!important}
+tbody tr{transition:background .12s}tbody tr:hover{background:rgba(79,156,255,.055)!important}
+.tbl-wrap,.bm920-tablewrap{border-radius:12px!important;border:1px solid rgba(115,153,198,.14)!important}
+.dashboard-header-filters{gap:8px!important;padding:2px 0 4px}.dashboard-header-filters>div{background:rgba(9,20,36,.72)!important;border-color:rgba(115,153,198,.2)!important}
+#p-dashboard .dash-sticky-kpis{background:transparent!important;backdrop-filter:none!important;padding-top:0!important}
+#p-dashboard>div[style*="grid-template-columns:1fr 1fr 1fr"]{gap:14px!important}
+#p-centro-tecnico .bm920-kpis{gap:12px!important}.bm920-cycle{background:rgba(8,18,32,.55);padding:14px;border-radius:12px}.bm920-cycle button{border-radius:9px!important}
+/* command center visible */
+#bm930-command{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;margin-bottom:16px}
+.bm930-hero{position:relative;overflow:hidden;min-height:145px;border:1px solid rgba(79,156,255,.24);border-radius:18px;padding:22px 24px;background:linear-gradient(120deg,rgba(25,56,94,.9),rgba(14,29,50,.94));box-shadow:var(--bm930-shadow)}
+.bm930-hero:after{content:"🏀";position:absolute;right:22px;top:6px;font-size:104px;opacity:.08;transform:rotate(-16deg)}
+.bm930-kicker{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#66b2ff;font-weight:800}.bm930-hero h2{font-size:25px;margin:8px 0 6px;color:#f6f9fd}.bm930-hero p{max-width:620px;color:#94aecb;font-size:12px;line-height:1.55;margin:0}.bm930-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.bm930-actions button{border:1px solid rgba(114,162,216,.24);background:rgba(7,17,31,.52);color:#dce9f7;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700;cursor:pointer}.bm930-actions button:hover{background:rgba(79,156,255,.13);border-color:rgba(79,156,255,.4)}
+.bm930-side{display:grid;grid-template-columns:1fr 1fr;gap:10px}.bm930-mini{border:1px solid var(--bm930-line);border-radius:15px;background:rgba(15,28,48,.82);padding:15px;cursor:pointer;transition:.15s}.bm930-mini:hover{transform:translateY(-2px);border-color:rgba(79,156,255,.35)}.bm930-mini i{font-style:normal;font-size:20px}.bm930-mini b{display:block;margin-top:8px;font-size:11px}.bm930-mini span{display:block;margin-top:3px;color:#7895b4;font-size:9px;line-height:1.4}
+@media(max-width:1100px){#bm930-command{grid-template-columns:1fr}.page{padding:18px!important}.stats-grid{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:700px){.page{padding:12px!important}.ph,.bm920-head{padding:14px!important;border-radius:14px!important}.pt{font-size:23px!important}.bm930-side{grid-template-columns:1fr 1fr}.stats-grid{grid-template-columns:repeat(2,1fr)!important}.bm930-hero{padding:18px;min-height:auto}}
+</style>
+<script id="bm-v930-command-center">
+(function(){'use strict';
+ function install(){
+   var dash=document.getElementById('p-dashboard'); if(!dash||document.getElementById('bm930-command')) return;
+   var ph=dash.querySelector('.ph'); if(!ph) return;
+   var box=document.createElement('div'); box.id='bm930-command';
+   box.innerHTML='<section class="bm930-hero"><div class="bm930-kicker">Basket Manager · Centro de mando</div><h2>Tu temporada, en una sola vista</h2><p>Acceso directo a planificación, entrenamiento, competición y análisis técnico sin cambiar el funcionamiento de tus módulos actuales.</p><div class="bm930-actions"><button onclick="nav(\'centro-tecnico\')">🧠 Centro Técnico</button><button onclick="nav(\'entrenamientos\')">🏋 Entrenamientos</button><button onclick="nav(\'encuentros\')">⚔️ Encuentros</button><button onclick="nav(\'scouting\')">🔎 Scouting</button></div></section><aside class="bm930-side"><div class="bm930-mini" onclick="nav(\'plan-entrenamientos\')"><i>🗓️</i><b>Planificación</b><span>Mesociclos, microciclos y sesiones</span></div><div class="bm930-mini" onclick="nav(\'jugadores\')"><i>👤</i><b>Jugadores</b><span>Plantilla y seguimiento</span></div><div class="bm930-mini" onclick="nav(\'pizarra\')"><i>📋</i><b>Pizarra</b><span>Jugadas y animaciones</span></div><div class="bm930-mini" onclick="nav(\'informes\')"><i>📊</i><b>Informes</b><span>Resumen técnico y PDFs</span></div></aside>';
+   ph.insertAdjacentElement('afterend',box);
+ }
+ window.bmOnReady(install,30);
 })();
 </script>
 
