@@ -1,0 +1,9 @@
+Basket Manager V9.9.0 — Refuerzo Inteligente
+
+- Centro Técnico: nuevo bloque “Refuerzo → próximo microciclo”.
+- Convierte objetivos individuales activos en objetivos editables del microciclo.
+- Propone ejercicios REALES de exercise_library según categoría/objetivo.
+- Permite seleccionar ejercicios antes de guardar.
+- Añade los seleccionados a microcycle_exercises sin duplicar los ya asignados.
+- Conserva pizarra, vídeo y QR porque referencia los ejercicios existentes de Biblioteca.
+- No requiere migración SQL nueva.

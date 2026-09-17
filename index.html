@@ -7606,7 +7606,7 @@ window.bmOnReady(function(){
  <div class="bm960-grid"><section class="bm960-card"><h3>Evolución técnica</h3><div id="bm960-evolution"></div></section><section class="bm960-card"><h3>Carga de entrenamiento</h3><div id="bm960-load"></div></section></div>
  <div class="bm960-grid"><section class="bm960-card"><h3>Rendimiento en competición</h3><div id="bm960-games"></div></section><section class="bm960-card"><h3>Alertas y seguimiento</h3><div id="bm960-alerts"></div></section></div>
 </div>
-<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Requiere la migración Supabase V9.8.0 incluida en el ZIP.</small></div></div>
+<div class="bm960-modal" id="bm960-modal"><div><button class="bm960-x" onclick="BM960.closeLoad()">×</button><h2>Registrar carga RPE</h2><label>Entrenamiento<select id="bm960-training"></select></label><label>Jugador<select id="bm960-load-player"></select></label><div class="bm960-two"><label>RPE (1–10)<input id="bm960-rpe" type="number" min="1" max="10" step="1"></label><label>Duración (min)<input id="bm960-duration" type="number" min="1" max="300"></label></div><label>Notas<textarea id="bm960-notes"></textarea></label><button class="bm960-save" onclick="BM960.saveLoad()">Guardar carga</button><small>Usa la tabla training_load ya activa en Supabase.</small></div></div>
 
 <div class="page" id="p-match-center">
   <div class="bm950-head"><div><span>COMPETICIÓN · DATOS REALES</span><h1>🏟️ Match Center</h1><p>Encuentros, convocatoria, quinteto, capitán y estadísticas registradas en directo.</p></div><button onclick="BM950.render()">↻ Actualizar</button></div>
@@ -31146,7 +31146,7 @@ function install(){
 }
 window.bmOnReady(function(){setTimeout(install,300);});
 setTimeout(install,1200);
-/* V9.8.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.9.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -31748,7 +31748,7 @@ window.v853RefreshDashboard=function(){
 };
 bmOnReady(function(){setTimeout(v853RefreshDashboard,500)});
 setTimeout(v853RefreshDashboard,1500);
-/* V9.8.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.9.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 /* Cada navegación/refresco vuelve a aplicar la regla */
 var oldNav853=window.nav;
@@ -32145,7 +32145,7 @@ window.v858RefreshPeriodStatus=function(){
   }catch(e){}
 };
 
-/* V9.8.0: refresco periódico gestionado por BMActiveViewScheduler. */
+/* V9.9.0: refresco periódico gestionado por BMActiveViewScheduler. */
 
 })();
 </script>
@@ -36356,7 +36356,7 @@ function queue8563(){clearTimeout(tm8563);tm8563=setTimeout(clean8563,40)}
 window.bmOnReady(queue8563);
 setTimeout(queue8563,600);
 setTimeout(queue8563,1400);
-/* V9.8.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
+/* V9.9.0: observer permanente eliminado. Los decoradores ya impiden duplicados;
    mantenemos las comprobaciones iniciales como red de seguridad sin vigilar el DOM continuamente. */
 })();
 </script>
@@ -37723,7 +37723,7 @@ function ownName(e){var t=S.teams[e.team_id];return t&&t.name||'Equipo'}
 function oppName(e){var t=S.teams[e.opponent_team_id];return t&&t.name||e.opponent_name||'Rival'}
 function encLabel(e){return (e.game_date||'Sin fecha')+' · '+ownName(e)+' vs '+oppName(e)+(e.round?' · '+e.round:'')+(e.__legacy?' · histórico':'')}
 function mount(){var p=E('p-scouting');if(!p||E('v8586-root'))return;var old=p.querySelector('.v8568-scout-wrap');if(old)old.style.display='none';p.insertAdjacentHTML('beforeend','<div id="v8586-root" class="v8586-shell">'+
- '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.8.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
+ '<div class="v8568-scout-hero"><div><div class="v8568-eyebrow">SCOUTING · INTEGRADO · V9.9.0</div><div class="pt">Centro de Scouting FIBA</div><div class="ps">Proyecto por encuentro · Prepartido · Durante · Postpartido</div></div><div class="v8568-hero-actions"><button class="btn btn-secondary" onclick="V8586.load(true)">↻ Recargar</button><button class="btn btn-primary" onclick="V8586.saveAll()">💾 Guardar cambios</button></div></div>'+
  '<div class="v8586-kpis"><div><span>Encuentros</span><b id="v8586-k-enc">—</b></div><div><span>Proyectos</span><b id="v8586-k-proj">—</b></div><div><span>Fase actual</span><b id="v8586-k-phase">PRE</b></div><div><span>Secciones completas</span><b id="v8586-k-done">0/6</b></div></div>'+
  '<div class="v8586-top"><div class="v8586-card"><h3>1 · Seleccionar encuentro</h3><div class="v8586-form"><div><label>Encuentro</label><select id="v8586-enc" onchange="V8586.pickEncounter()"><option value="">Cargando...</option></select></div><div><label>Proyecto</label><select id="v8586-proj" onchange="V8586.pickProject()"><option value="">Sin proyecto</option></select></div></div><div class="v8586-actions"><button class="btn btn-primary btn-sm" onclick="V8586.createProject()">＋ Crear scouting</button><button class="btn btn-secondary btn-sm" onclick="V8586.openMatchCenter()">🏀 Abrir Centro de Partido</button></div><div id="v8586-msg" class="v8586-msg">Selecciona un encuentro para comenzar.</div></div>'+
  '<div class="v8586-card"><h3>2 · Estado del proyecto</h3><div id="v8586-project" class="v8586-empty">Sin proyecto seleccionado</div></div></div>'+
@@ -37735,7 +37735,7 @@ async function load(){mount();msg('Cargando datos...');try{
   req('scouting_projects?select=*&order=created_at.desc').catch(function(){return []}),
   req('encuentros?select=*').catch(function(){return []})
  ]);
- /* V9.8.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
+ /* V9.9.0: Scouting consume TODOS los encuentros. La consulta antigua filtraba
     legacy_encuentro_id=not.is.null y podía dejar la pantalla a cero. */
  var modern=base[0]||[], legacy=base[3]||[], seen={};
  S.encounters=[];
@@ -41715,7 +41715,7 @@ document.addEventListener('click',function(ev){
 },true);
 })();
 </script>
-<!-- V9.8.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
+<!-- V9.9.0 · saneamiento estructural: contenido histórico reubicado dentro de BODY -->
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
 <script>
 (function(){
@@ -41802,7 +41802,7 @@ document.addEventListener('visibilitychange',function(){
 <script id="bm-v85160-active-view-scheduler">
 (function(){
 'use strict';
-/* V9.8.0 — un único reloj de mantenimiento para las vistas que necesitan
+/* V9.9.0 — un único reloj de mantenimiento para las vistas que necesitan
    refresco temporal. Solo ejecuta trabajo sobre la página actualmente activa. */
 function refreshActiveView160(){
   if(document.hidden)return;
@@ -41819,7 +41819,7 @@ function refreshActiveView160(){
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function'){
       window.v858RefreshPeriodStatus();
     }
-  }catch(err){ console.warn('V9.8.0 active-view refresh:',err); }
+  }catch(err){ console.warn('V9.9.0 active-view refresh:',err); }
 }
 window.BMActiveViewScheduler={refresh:refreshActiveView160};
 setInterval(refreshActiveView160,60000);
@@ -41827,7 +41827,7 @@ setInterval(refreshActiveView160,60000);
 </script>
 <script id="bm-v85159-observer-cleanup">(function(){
 'use strict';
-/* V9.8.0 — helper de inicialización corregido y adelantado.
+/* V9.9.0 — helper de inicialización corregido y adelantado.
    Sin cambios de datos ni de lógica de negocio. */
 window.BM_BUILD_VERSION='9.5.0';
 })();</script>
@@ -42103,5 +42103,32 @@ var old=window.nav;window.nav=function(page){var r=old.apply(this,arguments);if(
 window.bmOnReady(()=>{mount();if(document.getElementById('p-centro-tecnico'))X.refresh()});
 })();
 </script>
+
+<style id="bm990-css">
+.bm990-wrap{margin:16px 0 8px;border:1px solid rgba(96,165,250,.22);background:linear-gradient(145deg,rgba(10,18,34,.96),rgba(17,32,55,.88));border-radius:18px;padding:15px}.bm990-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.bm990-head h3{margin:0;font-size:18px}.bm990-head p{margin:4px 0 0;color:#93a8c3;font-size:12px}.bm990-controls{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:13px}.bm990-controls label,.bm990-objective label{font-size:11px;color:#a9bad0;font-weight:800}.bm990-controls select,.bm990-objective textarea{width:100%;margin-top:5px;background:#0f1a2c;color:#eef5ff;border:1px solid rgba(148,163,184,.25);border-radius:10px;padding:9px}.bm990-objective{margin-top:10px}.bm990-objective textarea{min-height:64px;resize:vertical}.bm990-exgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:11px}.bm990-ex{border:1px solid rgba(148,163,184,.18);border-radius:13px;padding:10px;background:rgba(15,23,42,.72);cursor:pointer}.bm990-ex.selected{border-color:#60a5fa;box-shadow:0 0 0 1px rgba(96,165,250,.28)}.bm990-ex b{display:block;font-size:12px}.bm990-ex span{display:block;color:#91a6bf;font-size:10px;margin-top:4px}.bm990-ex input{float:right}.bm990-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}.bm990-note{font-size:10px;color:#8fa3bc}.bm990-save{background:#2563eb;color:white;border:0;border-radius:10px;padding:9px 13px;font-weight:900;cursor:pointer}.bm990-empty{padding:12px;color:#91a6bf;border:1px dashed rgba(148,163,184,.25);border-radius:12px;margin-top:10px}@media(max-width:980px){.bm990-controls,.bm990-exgrid{grid-template-columns:1fr}}
+</style>
+<script id="bm990-refuerzo-inteligente">
+(function(){
+'use strict';
+var X=window.BM990=window.BM990||{};X.exercises=[];X.micros=[];X.selected=new Set();
+function A(x){return Array.isArray(x)?x:[]} function S(x){return x==null?'':String(x)} function E(x){return S(x).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]})} function norm(x){return S(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+function team(){var e=document.getElementById('bm920-team');return e?S(e.value):''}
+function pname(id){var p=A((window.DB||{}).jugadores).find(function(x){return S(x.id)===S(id)});return p?S(p.nombre||p.name||'Jugador'):'Jugador'}
+function catWords(c){var n=norm(c),m={fundamentos:['fundamento','bote','pase','tiro','finalizacion'],ataque:['ataque','spacing','tiro','pase','pick','bloqueo'],defensa:['defensa','closeout','1x1','rebote'],tactica:['tactica','spacing','pick','transicion','sistema'],fisico:['fisico','velocidad','coordinacion','resistencia'],actitud:['competicion','1x1','reto'],spacing:['spacing','5 out','corte','reemplazo']};for(var k in m)if(n.indexOf(k)>=0)return m[k];return [n]}
+function mount(){var page=document.getElementById('p-centro-tecnico');if(!page||document.getElementById('bm990-root'))return;var root=document.createElement('section');root.id='bm990-root';root.className='bm990-wrap';root.innerHTML='<div class="bm990-head"><div><h3>🎯 Refuerzo → próximo microciclo</h3><p>Convierte una necesidad real en objetivo de microciclo y añade ejercicios existentes de tu Biblioteca.</p></div><button class="btn" onclick="BM990.refresh()">↻ Preparar</button></div><div class="bm990-controls"><label>Necesidad / objetivo individual<select id="bm990-need" onchange="BM990.chooseNeed()"><option value="">Selecciona una necesidad…</option></select></label><label>Microciclo destino<select id="bm990-micro" onchange="BM990.syncObjective()"><option value="">Selecciona microciclo…</option></select></label></div><div class="bm990-objective"><label>Objetivo propuesto para el microciclo<textarea id="bm990-objective" placeholder="Se genera a partir del objetivo seleccionado, pero puedes editarlo."></textarea></label></div><div id="bm990-exercises" class="bm990-empty">Selecciona una necesidad para obtener propuestas de la Biblioteca.</div><div class="bm990-foot"><span class="bm990-note" id="bm990-summary">No se guardará nada hasta pulsar Aplicar al microciclo.</span><button class="bm990-save" onclick="BM990.apply()">✓ Aplicar al microciclo</button></div>';var a=document.getElementById('bm980-root');if(a&&a.parentNode)a.parentNode.insertBefore(root,a.nextSibling);else page.appendChild(root)}
+X.refresh=async function(){mount();this.selected=new Set();var t=team();var objectives=A((window.BM980||{}).objectives);if(!objectives.length&&window.SB&&SB.ready&&typeof sbFetch==='function'){try{var ro=await sbFetch('player_objectives?select=*&order=fecha_inicio.desc');if(ro.ok)objectives=A(await ro.json())}catch(e){}}
+ this.objectives=objectives.filter(function(o){return (!t||S(o.equipo_id)===t)&&norm(o.estado||'activo')!=='completado'});
+ try{if(window.SB&&SB.ready&&typeof sbFetch==='function'){var rm=await sbFetch('microcycles?select=*&order=start_date.asc');if(rm.ok)this.micros=A(await rm.json());var re=await sbFetch('exercise_library?select=*&order=fundament.asc,name.asc');if(re.ok)this.exercises=A(await re.json())}}catch(e){console.warn('BM990',e)}
+ if(!this.exercises.length&&window.V8521)this.exercises=A(V8521.exercises);var now=new Date().toISOString().slice(0,10);this.micros=this.micros.filter(function(m){return (!t||S(m.team_id||m.equipo)===t)&&S(m.end_date||'9999-12-31')>=now}).sort(function(a,b){return S(a.start_date).localeCompare(S(b.start_date))});
+ var ne=document.getElementById('bm990-need'),me=document.getElementById('bm990-micro');if(!ne||!me)return;ne.innerHTML='<option value="">Selecciona una necesidad…</option>'+this.objectives.map(function(o,i){return '<option value="'+i+'">'+E(pname(o.jugador_id)+' · '+(o.categoria||'Objetivo')+' · '+(o.objetivo||''))+'</option>'}).join('');me.innerHTML='<option value="">Selecciona microciclo…</option>'+this.micros.map(function(m,i){return '<option value="'+i+'">'+E((m.start_date||'')+' · '+(m.name||m.nombre||'Microciclo')+' · '+(m.type||''))+'</option>'}).join('');document.getElementById('bm990-objective').value='';document.getElementById('bm990-exercises').className='bm990-empty';document.getElementById('bm990-exercises').textContent=this.objectives.length?'Selecciona una necesidad para obtener propuestas de la Biblioteca.':'No hay objetivos individuales activos para el equipo seleccionado.';this.updateSummary()};
+X.chooseNeed=function(){this.selected=new Set();var i=document.getElementById('bm990-need').value,o=i===''?null:this.objectives[Number(i)];if(!o){document.getElementById('bm990-objective').value='';return this.renderExercises([])}document.getElementById('bm990-objective').value='Refuerzo '+(o.categoria||'individual')+': '+S(o.objetivo||'');var words=catWords(o.categoria),needle=norm([o.categoria,o.objetivo].join(' '));var ranked=this.exercises.map(function(x){var txt=norm([x.fundament,x.name,x.objective,x.description].join(' ')),score=0;words.forEach(function(w){if(txt.indexOf(norm(w))>=0)score+=4});needle.split(/\s+/).filter(function(w){return w.length>4}).forEach(function(w){if(txt.indexOf(w)>=0)score++});return{x:x,score:score}}).filter(function(r){return r.score>0}).sort(function(a,b){return b.score-a.score||S(a.x.name).localeCompare(S(b.x.name),'es')}).slice(0,9).map(function(r){return r.x});this.renderExercises(ranked);this.updateSummary()};
+X.renderExercises=function(rows){var box=document.getElementById('bm990-exercises');if(!box)return;if(!rows.length){box.className='bm990-empty';box.textContent='No hay ejercicios de Biblioteca que coincidan claramente con esta necesidad. Puedes ir a Biblioteca para completar la ficha.';return}box.className='bm990-exgrid';box.innerHTML=rows.map(function(x){var id=S(x.id),sel=X.selected.has(id);return '<label class="bm990-ex '+(sel?'selected':'')+'"><input type="checkbox" '+(sel?'checked ':'')+'onchange="BM990.toggle(\''+E(id)+'\',this.checked)"><b>'+E(x.name||x.nombre||'Ejercicio')+'</b><span>'+E((x.fundament||'Sin fundamento')+' · '+(x.level||'')+' · '+(x.duration_min||10)+' min')+'</span></label>'}).join('')};
+X.toggle=function(id,on){if(on)this.selected.add(S(id));else this.selected.delete(S(id));this.chooseNeedKeep()};X.chooseNeedKeep=function(){var ids=new Set(this.selected),i=document.getElementById('bm990-need').value,o=i===''?null:this.objectives[Number(i)];if(!o)return;var words=catWords(o.categoria),needle=norm([o.categoria,o.objetivo].join(' '));var ranked=this.exercises.map(function(x){var txt=norm([x.fundament,x.name,x.objective,x.description].join(' ')),score=0;words.forEach(function(w){if(txt.indexOf(norm(w))>=0)score+=4});needle.split(/\s+/).filter(function(w){return w.length>4}).forEach(function(w){if(txt.indexOf(w)>=0)score++});return{x:x,score:score}}).filter(function(r){return r.score>0}).sort(function(a,b){return b.score-a.score}).slice(0,9).map(function(r){return r.x});this.selected=ids;this.renderExercises(ranked);this.updateSummary()};
+X.syncObjective=function(){this.updateSummary()};X.updateSummary=function(){var el=document.getElementById('bm990-summary');if(el)el.textContent=this.selected.size+' ejercicio'+(this.selected.size===1?'':'s')+' seleccionado'+(this.selected.size===1?'':'s')+' · se conservarán pizarra, vídeo y QR de Biblioteca.'};
+X.apply=async function(){var mi=document.getElementById('bm990-micro').value,ni=document.getElementById('bm990-need').value,obj=S(document.getElementById('bm990-objective').value).trim();if(mi===''||ni==='')return toast('Selecciona necesidad y microciclo','e');if(!obj)return toast('Escribe el objetivo del microciclo','e');if(!(window.SB&&SB.ready&&typeof sbFetch==='function'))return toast('Supabase no está conectado','e');var m=this.micros[Number(mi)],o=this.objectives[Number(ni)],old=S(m.objective||m.objetivo).trim(),combined=old?(old.indexOf(obj)>=0?old:old+' | '+obj):obj;try{var pr=await sbFetch('microcycles?id=eq.'+encodeURIComponent(m.id),{method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({objective:combined,updated_at:new Date().toISOString()})});if(!pr.ok){var pe=await pr.json();throw Error(pe.message||'No se pudo actualizar el microciclo')}var existing=[];try{var er=await sbFetch('microcycle_exercises?microcycle_id=eq.'+encodeURIComponent(m.id)+'&select=exercise_id,sort_order');if(er.ok)existing=A(await er.json())}catch(_e){}var have=new Set(existing.map(function(x){return S(x.exercise_id)})),next=existing.reduce(function(z,x){return Math.max(z,Number(x.sort_order)||0)},0)+1,added=0;for(var id of this.selected){if(have.has(S(id)))continue;var ex=this.exercises.find(function(x){return S(x.id)===S(id)});var rr=await sbFetch('microcycle_exercises',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify({microcycle_id:m.id,exercise_id:id,sort_order:next+added,duration_min:Number(ex&&ex.duration_min)||10,priority:'Alta',specific_objective:obj,notes:'Propuesto desde Centro Técnico · '+pname(o.jugador_id),created_at:new Date().toISOString(),updated_at:new Date().toISOString()})});if(!rr.ok){var ee=await rr.json();throw Error(ee.message||'Error al añadir ejercicio')}added++}m.objective=combined;toast('Microciclo actualizado · '+added+' ejercicio'+(added===1?'':'s')+' añadido'+(added===1?'':'s'),'s');if(window.DB&&Array.isArray(DB.microciclos)){var dm=DB.microciclos.find(function(x){return S(x.id)===S(m.id)});if(dm)dm.objective=combined}this.selected=new Set();this.chooseNeed()}catch(e){toast('No se pudo aplicar el refuerzo · '+e.message,'e')}};
+var old=window.nav;window.nav=function(page){var r=old.apply(this,arguments);if(page==='centro-tecnico')setTimeout(function(){X.refresh()},120);return r};window.bmOnReady(function(){mount()});
+})();
+</script>
+
 </body>
 </html>
