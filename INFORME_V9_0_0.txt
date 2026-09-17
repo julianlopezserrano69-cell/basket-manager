@@ -1,0 +1,6 @@
+Basket Manager V9.0.0 — Evolución integral
+Base: V8.5.167 confirmada estable.
+
+Incluye nueva capa Centro Técnico 360º, buscador de módulos, favoritos/recientes, alertas básicas, registro rápido RPE/carga, flujo técnico, accesos integrados a Jugador 360, Match Center, Scouting, Planificación, Biblioteca, Pizarra/Playbook, Informes, Calendario, Calidad de datos y modos rápidos Tablet Entrenamiento/Partido.
+
+Diseño: sin migración de Supabase ni destrucción de datos. Las funciones avanzadas existentes se reutilizan desde sus módulos actuales. RPE rápido se guarda localmente en este primer paquete para no introducir una migración de base de datos no validada.
