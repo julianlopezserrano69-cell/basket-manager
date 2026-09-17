@@ -7499,7 +7499,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-clubs" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.156</div></div>
+      <div><div class="pt">Club</div><div class="ps">Gestión de clubs y vinculación de varios equipos por categoría · v8.5.157</div></div>
       <button class="btn btn-primary" onclick="openModal('club',null)">+ Añadir Club</button>
     </div>
   </div>
@@ -7564,7 +7564,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-equipos" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;width:100%;">
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;width:100%;">
-      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.156</div></div>
+      <div><div class="pt">Equipos</div><div class="ps">Gestión de equipos de la liga · v8.5.157</div></div>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:280px;">
         <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;white-space:nowrap;">Club</span>
         <select class="fsel" id="fsel-club-eq" onchange="filterEq()" style="min-width:240px;text-align:center;"><option value="">Todos los clubs</option></select>
@@ -7648,7 +7648,7 @@ window.addEventListener('DOMContentLoaded', function(){
 <div id="p-jugadores" class="page">
   <div class="ph" style="flex-direction:column;align-items:stretch;gap:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
-      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.156</div></div>
+      <div><div class="pt">Jugadores</div><div class="ps">Plantilla de la liga · v8.5.157</div></div>
       <button class="btn btn-primary" onclick="openModal('jugador',null)">+ Añadir Jugador</button>
     </div>
     <div class="jg-category-cards">
@@ -31008,7 +31008,7 @@ if(document.readyState==='loading'){
   setTimeout(install,1000);
 }
 
-// V8.5.156: sin polling global. Los wrappers se instalan durante la inicialización.
+// V8.5.157: sin polling global. Los wrappers se instalan durante la inicialización.
 // Evita ejecutar install() cada 3 s durante toda la vida de la aplicación.
 
 })();
@@ -34474,7 +34474,7 @@ window.v8521SaveSessionPlan=async function(){
     persistLocal();v8521Close('m-v8521-session-plan');
     if(typeof toast==='function')toast('Plan de sesión guardado','s');
   }catch(e){
-    console.error('V8.5.156 plan de sesión',e);
+    console.error('V8.5.157 plan de sesión',e);
     if(typeof toast==='function')toast('No se pudo guardar el Plan de Sesión','e');
     alert('No se pudo guardar el Plan de Sesión.\n\n'+(e&&e.message||e));
   }finally{
@@ -42449,6 +42449,55 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 <script id="v85151-core-stability-marker">
 (function(){'use strict';window.BM_VERSION='8.5.151';})();
 </script>
+
+<!-- V8.5.157: UX / responsive global, sin cambios de lógica -->
+<style id="bm-v85157-ux-stable">
+html{scroll-behavior:auto}
+body{overflow-x:hidden}
+/* Evita que el gesto horizontal de una tabla arrastre toda la página. */
+.table-wrap,.table-responsive,[id$="-tbl-wrap"],[class*="table-scroll"]{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+/* Modales: altura predecible y scroll interno en pantallas pequeñas. */
+.modal-content,[class*="modal-box"],[class*="-modal-box"],#v8588-enc-box,#v85129-next-box,#v85127-next-box{max-height:calc(100dvh - 24px)}
+@media(max-width:720px){
+  .modal,.modal-overlay,[id$="-modal"]{padding:8px}
+  .modal-content,[class*="modal-box"],[class*="-modal-box"],#v8588-enc-box,#v85129-next-box,#v85127-next-box{max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}
+  button,.btn,[role="button"]{touch-action:manipulation}
+  input,select,textarea{max-width:100%}
+  table{font-variant-numeric:tabular-nums}
+}
+/* Accesibilidad: el foco de teclado debe ser visible sin alterar el diseño con ratón. */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid rgba(37,99,235,.55);outline-offset:2px}
+/* Respeta usuarios que han desactivado animaciones en el sistema. */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+<script id="bm-v85157-ux-stable-js">
+(function(){
+'use strict';
+/* Mantiene el viewport estable al abrir/cerrar teclado virtual y al rotar móvil.
+   No repinta tablas ni toca datos. */
+var resizeRAF=0;
+function viewportVars(){
+  if(resizeRAF)cancelAnimationFrame(resizeRAF);
+  resizeRAF=requestAnimationFrame(function(){
+    resizeRAF=0;
+    var vv=window.visualViewport;
+    var h=vv?vv.height:window.innerHeight;
+    document.documentElement.style.setProperty('--bm-viewport-height',Math.round(h)+'px');
+  });
+}
+window.addEventListener('resize',viewportVars,{passive:true});
+window.addEventListener('orientationchange',viewportVars,{passive:true});
+if(window.visualViewport)window.visualViewport.addEventListener('resize',viewportVars,{passive:true});
+viewportVars();
+
+/* Evita dobles pulsaciones accidentales solo en acciones asíncronas que ya se
+   autodeshabilitan. No intercepta CRUD ni navegación. */
+document.addEventListener('click',function(ev){
+  var b=ev.target&&ev.target.closest?ev.target.closest('button:disabled,.btn:disabled'):null;
+  if(b){ev.preventDefault();ev.stopPropagation();}
+},true);
+})();
+</script>
 </body>
 </html>
 <!-- V8.5.144 · ENCUENTROS: herencia automática de sede/pista/cancha desde el equipo local -->
@@ -42510,7 +42559,7 @@ window.V850TrainingStable={stabilize:stabilize,remember:remember,restore:restore
 </script>
 
 <style id="bm-v85156-performance-css">
-/* V8.5.156 — rendimiento global conservador */
+/* V8.5.157 — rendimiento global conservador */
 .page:not(.active){pointer-events:none;}
 .page.active{pointer-events:auto;}
 /* Evita que imágenes/logos deformen filas mientras terminan de cargar */
@@ -42532,7 +42581,7 @@ document.addEventListener('visibilitychange',function(){
     if(e&&e.classList.contains('active')&&typeof window.v845RefreshAllTrainingCards==='function')window.v845RefreshAllTrainingCards();
     var p=document.getElementById('p-plan-entrenamientos');
     if(p&&p.classList.contains('active')&&typeof window.v858RefreshPeriodStatus==='function')window.v858RefreshPeriodStatus();
-  }catch(err){console.warn('V8.5.156 visibility refresh:',err);}
+  }catch(err){console.warn('V8.5.157 visibility refresh:',err);}
 });
 })();
 </script>
