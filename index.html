@@ -12811,7 +12811,7 @@ Media pista A"></textarea><div class="fg-hint">Se guardan como pistas vinculadas
       </button>
 </div>
 <div class="pd-setup" style="padding:0 0 40px">
-<!-- V10.5.8.1 · Encuentro programado / partido libre + categoría automática -->
+<!-- V10.5.8.2 · Encuentro programado / partido libre + categoría automática -->
 <div style="background:linear-gradient(135deg,var(--surface),var(--surface2));border-radius:14px;padding:16px 18px;margin-bottom:16px;border:1px solid var(--border);">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
     <div>
@@ -17005,7 +17005,7 @@ function infExportPDF(sec){
     var titles={clas:'Clasificación',partidos:'Partidos',jugadores:'Jugadores',entrenos:'Entrenamientos',valoraciones:'Valoraciones',graficos:'Informe completo'};
     var title=titles[sec]||'Informe';
     var navy=[12,30,52], orange=[249,115,22], muted=[90,105,125];
-    function header(){var w=doc.internal.pageSize.getWidth();doc.setFillColor.apply(doc,navy);doc.rect(0,0,w,25,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text('BASKET MANAGER',12,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(title+' · V10.5.8.1',12,17);doc.setTextColor(0,0,0)}
+    function header(){var w=doc.internal.pageSize.getWidth();doc.setFillColor.apply(doc,navy);doc.rect(0,0,w,25,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.text('BASKET MANAGER',12,10);doc.setFontSize(8);doc.setFont('helvetica','normal');doc.text(title+' · V10.5.8.2',12,17);doc.setTextColor(0,0,0)}
     function footer(){var n=doc.getNumberOfPages();for(var i=1;i<=n;i++){doc.setPage(i);var w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight();doc.setDrawColor(220);doc.line(12,h-11,w-12,h-11);doc.setFontSize(7);doc.setTextColor.apply(doc,muted);doc.text(eqName,12,h-6);doc.text(new Date().toLocaleDateString('es-ES'),w/2,h-6,{align:'center'});doc.text('Página '+i+' / '+n,w-12,h-6,{align:'right'})}}
     function table(head,body,y){doc.autoTable({startY:y,head:[head],body:body,margin:{left:12,right:12,bottom:16},styles:{fontSize:7,cellPadding:1.8,overflow:'linebreak'},headStyles:{fillColor:navy,textColor:[255,255,255],fontStyle:'bold'},alternateRowStyles:{fillColor:[246,248,251]},didDrawPage:function(){header()}});return doc.lastAutoTable.finalY+7}
     header();doc.setFont('helvetica','bold');doc.setFontSize(19);doc.setTextColor.apply(doc,orange);doc.text(title.toUpperCase(),12,36);doc.setTextColor(0);doc.setFontSize(10);doc.text(eqName+(jgName!=='Todos los jugadores'?' · '+jgName:''),12,44);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor.apply(doc,muted);doc.text('Generado: '+new Date().toLocaleString('es-ES'),12,50);doc.setTextColor(0);var y=58;
@@ -17920,7 +17920,7 @@ function pdSetCategoryValue(val) {
   if (val && !target) { var op=document.createElement('option'); op.value=val; op.textContent=val; sel.appendChild(op); target=val; }
   sel.value = target || '';
 }
-// V10.5.8.1 · Resolver categoría del encuentro sin depender de que los encuentros antiguos la guarden.
+// V10.5.8.2 · Resolver categoría del encuentro sin depender de que los encuentros antiguos la guarden.
 // Prioridad: categoría explícita del encuentro -> equipo propio/local -> equipo propio/visitante -> jugadores convocados.
 function pdResolveEncounterCategory(enc) {
   if (!enc) return '';
@@ -42471,7 +42471,7 @@ window.bmOnReady(function(){help()});
 </style>
 <script id="bm104-js">
 (function(){'use strict';
-var V='10.5.8.1'; function A(x){return Array.isArray(x)?x:[]} function S(x){return x==null?'':String(x)} function N(x){var n=Number(x);return isFinite(n)?n:null} function E(x){return S(x).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}
+var V='10.5.8.2'; function A(x){return Array.isArray(x)?x:[]} function S(x){return x==null?'':String(x)} function N(x){var n=Number(x);return isFinite(n)?n:null} function E(x){return S(x).replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]})}
 function rows(k){try{if(typeof window._dbFor==='function'&&['jugadores','entrenamientos','valoraciones','entrenadores'].indexOf(k)>=0)return A(window._dbFor(k));}catch(_e){}return window.DB&&Array.isArray(DB[k])?DB[k]:[]}
 function reportMicro1044(x){var micros=rows('microciclos'),mid=S(x&&x.microciclo_id);if(mid){var direct=micros.find(function(m){return S(m.id)===mid});if(direct)return direct}var dt=S(dateOf(x)),tid=S(tTeam(x));if(!dt)return null;var cand=micros.filter(function(m){var mt=S(m.team_id||m.equipo_id||m.equipo);var ini=S(m.start_date||m.fecha_inicio||m.inicio),fin=S(m.end_date||m.fecha_fin||m.fin);return (!tid||!mt||mt===tid)&&ini&&fin&&dt>=ini&&dt<=fin&&S(m.status||m.estado).toLowerCase()!=='cancelado'});if(!cand.length)return null;cand.sort(function(a,b){var at=S(a.team_id||a.equipo_id||a.equipo)===tid?0:1,bt=S(b.team_id||b.equipo_id||b.equipo)===tid?0:1;if(at!==bt)return at-bt;return S(a.start_date||a.fecha_inicio||a.inicio).localeCompare(S(b.start_date||b.fecha_inicio||b.inicio))});return cand[0]}
 function rawRows(k){return window.DB&&Array.isArray(DB[k])?DB[k]:[]}
@@ -42489,7 +42489,7 @@ function mTeam(x,t){return !t||[x.local,x.visitante,x.local_team_id,x.visitante_
 var X={loads:[],objectives:[],attendance:[]};
 function data(){var t=teamId(),players=eqPlayers(t),pids=players.map(function(x){return S(x.id)}),train=eqTrainings(t),tids=train.map(function(x){return S(x.id)}),matches=encounterRows().filter(function(x){return mTeam(x,t)&&inPeriod(x)}),vals=playerVals(pids,t),loads=A(X.loads).filter(function(x){return (!t||S(x.equipo_id)===S(t)||pids.indexOf(S(x.jugador_id))>=0)&&inPeriod(x)}),objs=A(X.objectives).filter(function(x){return (!t||S(x.equipo_id)===S(t)||pids.indexOf(S(x.jugador_id))>=0)&&inPeriod(x)}),att=A(X.attendance).filter(function(x){return tids.indexOf(S(x.entrenamiento_id))>=0});return {teams:t?[rows('equipos').find(function(x){return S(x.id)===S(t)})].filter(Boolean):rows('equipos'),players:players,train:train,matches:matches,vals:vals,loads:loads,objectives:objs,attendance:att}}
 function diagnosis(d){var t=teamId(),box=document.getElementById('bm104-diagnosis');if(!box)return;var ps=d.players.slice(0,3).map(function(x){return S(x.id)+' ← equipo='+S(x.equipo)}),ts=d.train.slice(0,3).map(function(x){return S(x.id)+' ← equipo='+S(x.equipo)}),vs=d.vals.slice(0,3).map(function(x){return S(x.id)+' ← jugador='+S(x.jugador)});box.innerHTML='<summary>🩺 Diagnosis de relaciones · V'+V+'</summary><div class="bm104-diag-grid">'+[['Equipo ID',t||'TODOS'],['Jugadores',d.players.length],['Entrenamientos',d.train.length],['Valoraciones',d.vals.length],['RPE',d.loads.length],['Partidos',d.matches.length],['Microciclos',rows('microciclos').length]].map(function(x){return '<div class="bm104-diag-item"><span>'+E(x[0])+'</span><b>'+E(x[1])+'</b></div>'}).join('')+'</div><div style="margin-top:9px"><b>Fuente real usada:</b> _dbFor/DB para Jugadores, Entrenamientos y Valoraciones; V81.encounters/DB para Encuentros; training_load para RPE.</div><div style="margin-top:7px"><b>Muestras de relación</b><br><code>Jugadores: '+E(ps.join(' | ')||'—')+'<br>Entrenos: '+E(ts.join(' | ')||'—')+'<br>Valoraciones: '+E(vs.join(' | ')||'—')+'</code></div><div style="margin-top:7px"><b>Microciclos resueltos para estos entrenamientos:</b> '+d.train.filter(function(z){return !!reportMicro1044(z)}).length+' / '+d.train.length+'</div>'}
-function mount(){var page=document.getElementById('p-informes');if(page&&!document.getElementById('bm104-report-center')){var box=document.createElement('section');box.id='bm104-report-center';box.innerHTML='<div class="bm104-head"><div><h2>📊 Centro de Informes 3.8.1</h2><div class="ps">Datos relacionados por equipo · informes profesionales · V'+V+'</div></div><button class="btn btn-secondary btn-sm" onclick="BM104.refresh()">↻ Actualizar datos</button></div><div class="bm104-controls"><select id="bm104-team" onchange="BM104.teamChanged()"><option value="">Todos los equipos</option></select><select id="bm104-type" onchange="BM104.preview()"><option value="tecnico">Informe técnico</option><option value="entrenamiento">Seguimiento de entrenamientos</option><option value="competicion">Competición</option><option value="direccion">Resumen para Dirección Técnica</option><option value="direccion360">Dirección Técnica 360º</option><option value="ejecutivo360">Dashboard Ejecutivo 360º</option><option value="planexec">Planificación vs. Ejecución</option><option value="temporada360">Temporada 360º</option><option value="objetivos360">Objetivos 360º</option><option value="alertas360">Alertas y Seguimiento 360º</option><option value="plantilla360">Plantilla 360º</option><option value="evolucion360">Evolución de plantilla</option></select><input id="bm104-from" type="date" onchange="BM104.preview()" title="Desde"><input id="bm104-to" type="date" onchange="BM104.preview()" title="Hasta"></div><div id="bm104-kpis" class="bm104-kpis"></div><div id="bm104-preview" class="bm104-preview"></div><div class="bm104-actions"><button class="btn btn-primary" onclick="BM104.pdf()">📄 Descargar PDF completo</button><button class="btn btn-secondary" onclick="BM104.json()">⬇ Exportar datos JSON</button></div>';page.insertBefore(box,page.firstChild);fillTeams()}
+function mount(){var page=document.getElementById('p-informes');if(page&&!document.getElementById('bm104-report-center')){var box=document.createElement('section');box.id='bm104-report-center';box.innerHTML='<div class="bm104-head"><div><h2>📊 Centro de Informes 3.8.2</h2><div class="ps">Datos relacionados por equipo · informes profesionales · V'+V+'</div></div><button class="btn btn-secondary btn-sm" onclick="BM104.refresh()">↻ Actualizar datos</button></div><div class="bm104-controls"><select id="bm104-team" onchange="BM104.teamChanged()"><option value="">Todos los equipos</option></select><select id="bm104-type" onchange="BM104.preview()"><option value="tecnico">Informe técnico</option><option value="entrenamiento">Seguimiento de entrenamientos</option><option value="competicion">Competición</option><option value="direccion">Resumen para Dirección Técnica</option><option value="direccion360">Dirección Técnica 360º</option><option value="ejecutivo360">Dashboard Ejecutivo 360º</option><option value="planexec">Planificación vs. Ejecución</option><option value="temporada360">Temporada 360º</option><option value="objetivos360">Objetivos 360º</option><option value="alertas360">Alertas y Seguimiento 360º</option><option value="plantilla360">Plantilla 360º</option><option value="evolucion360">Evolución de plantilla</option></select><input id="bm104-from" type="date" onchange="BM104.preview()" title="Desde"><input id="bm104-to" type="date" onchange="BM104.preview()" title="Hasta"></div><div id="bm104-kpis" class="bm104-kpis"></div><div id="bm104-preview" class="bm104-preview"></div><div class="bm104-actions"><button class="btn btn-primary" onclick="BM104.pdf()">📄 Descargar PDF completo</button><button class="btn btn-secondary" onclick="BM104.json()">⬇ Exportar datos JSON</button></div>';page.insertBefore(box,page.firstChild);fillTeams()}
 var q=document.getElementById('p-calidad-datos');if(q&&!document.getElementById('bm104-backup-center')){var b=document.createElement('section');b.id='bm104-backup-center';b.innerHTML='<div class="bm104-head"><div><h2>🛡️ Copia de seguridad local</h2><div class="ps">Exporta una instantánea de los datos cargados actualmente en Basket Manager.</div></div></div><div class="bm104-actions"><button class="btn btn-primary" onclick="BM104.backup()">⬇ Descargar backup JSON</button><button class="btn btn-secondary" onclick="BM104.audit()">🔎 Resumen de integridad</button></div><div id="bm104-audit" class="bm104-preview" style="display:none"></div>';q.insertBefore(b,q.children[1]||null)}}
 function fillTeams(){var s=document.getElementById('bm104-team');if(!s)return;var old=s.value;s.innerHTML='<option value="">Todos los equipos</option>'+rows('equipos').slice().sort(function(a,b){return S(a.nombre).localeCompare(S(b.nombre),'es')}).map(function(e){return '<option value="'+E(e.id)+'">'+E(e.nombre||e.name||e.id)+'</option>'}).join('');s.value=old}
 function stats(d){var avg=d.vals.length?(d.vals.reduce(function(a,x){return a+(N(x.global)||0)},0)/d.vals.length):null,load=d.loads.reduce(function(a,x){var c=N(x.carga);return a+(c!=null?c:(N(x.rpe)||0)*(N(x.duracion||x.duracion_minutos)||0))},0),rpes=d.loads.map(function(x){return N(x.rpe)}).filter(function(x){return x!=null}),rpe=rpes.length?rpes.reduce(function(a,b){return a+b},0)/rpes.length:null,played=d.matches.filter(function(x){return /jugado|final|finished/i.test(S(x.estado||x.status))});return {avg:avg,load:load,rpe:rpe,played:played}}
@@ -42613,9 +42613,51 @@ if(type==='planexec'){doc.addPage();head(title);y=38;var pe=planExec104(d);y=sec
 foot();doc.save('Basket_Manager_'+safe(title)+'_'+safe(tn)+'_'+(p.a||'inicio')+'_'+(p.b||'hoy')+'.pdf')}catch(e){if(window.toast)toast('No se pudo generar el PDF: '+e.message,'e');else alert(e.message)}}
 async function playerPdf(id){try{if(!window.BM102||typeof BM102.fetch!=='function'||typeof BM102.pdf!=='function')throw Error('Módulo Jugador 360º no disponible');var j=rows('jugadores').find(function(x){return S(x.id)===S(id)});if(!j)throw Error('Jugador no encontrado');BM102.current=j;await BM102.fetch(S(id));BM102.pdf()}catch(e){if(window.toast)toast('No se pudo generar la ficha individual: '+e.message,'e')}}
 window.BM104={mount:mount,preview:preview,refresh:refresh,teamChanged:teamChanged,json:json,backup:backup,audit:audit,pdf:pdf,playerPdf:playerPdf};
-function ready(){try{document.documentElement.setAttribute('data-bm-build',V);document.title=document.title.replace(/V?10\.[45]\.[0-9]+/g,'V'+V)}catch(_e){}mount();refresh();if(window.BM100){BM100.version=V;BM100.articles.reports2={icon:'📊',title:'Centro de Informes 3.8.1',desc:'Informes por equipo y periodo, Dirección Técnica 360º, Planificación vs. Ejecución, Temporada 360º, Objetivos 360º, Alertas y Seguimiento 360º, Dashboard Ejecutivo 360º, Plantilla 360º, evolución y cobertura.',body:'<p>Los jugadores se relacionan por su equipo, las valoraciones por jugador y los entrenamientos por equipo. Los informes PDF incluyen KPIs, tablas y conclusiones.</p>',steps:['Informes','Equipo','Tipo','Periodo','Actualizar datos','Revisar','Descargar PDF']};BM100.articles.backup={icon:'🛡️',title:'Copias y calidad de datos',desc:'Exporta una copia local y revisa incidencias básicas.',body:'<p>En Calidad de datos puedes descargar una instantánea JSON y ejecutar una comprobación de integridad.</p>',steps:['Calidad de datos','Revisar','Backup JSON','Guardar copia']};BM100.contextMap.informes='reports2';BM100.contextMap['calidad-datos']='backup'}}
+function ready(){try{document.documentElement.setAttribute('data-bm-build',V);document.title=document.title.replace(/V?10\.[45]\.[0-9]+/g,'V'+V)}catch(_e){}mount();refresh();if(window.BM100){BM100.version=V;BM100.articles.reports2={icon:'📊',title:'Centro de Informes 3.8.2',desc:'Informes por equipo y periodo, Dirección Técnica 360º, Planificación vs. Ejecución, Temporada 360º, Objetivos 360º, Alertas y Seguimiento 360º, Dashboard Ejecutivo 360º, Plantilla 360º, evolución y cobertura.',body:'<p>Los jugadores se relacionan por su equipo, las valoraciones por jugador y los entrenamientos por equipo. Los informes PDF incluyen KPIs, tablas y conclusiones.</p>',steps:['Informes','Equipo','Tipo','Periodo','Actualizar datos','Revisar','Descargar PDF']};BM100.articles.backup={icon:'🛡️',title:'Copias y calidad de datos',desc:'Exporta una copia local y revisa incidencias básicas.',body:'<p>En Calidad de datos puedes descargar una instantánea JSON y ejecutar una comprobación de integridad.</p>',steps:['Calidad de datos','Revisar','Backup JSON','Guardar copia']};BM100.contextMap.informes='reports2';BM100.contextMap['calidad-datos']='backup'}}
 if(typeof bmOnReady==='function')bmOnReady(ready);else if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else setTimeout(ready,0);
 })();
 </script>
+
+<!-- V10.5.8.2 · Ajustes UI globales / prevención de solapamientos -->
+<style id="bm10582-ui-fixes">
+/* El buscador global deja libre la franja superior para las acciones de cada módulo. */
+#bm940-search-btn{
+  top:auto!important; right:22px!important; bottom:22px!important;
+  z-index:9400!important; max-width:170px!important; white-space:nowrap!important;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+/* Encuentros: cabecera y acción principal siempre conservan su espacio. */
+#p-encuentros .v8592-head{position:relative!important;isolation:isolate;min-height:64px}
+#p-encuentros .v8592-add{position:relative!important;z-index:2!important;white-space:nowrap!important}
+#p-encuentros .v8592-club{min-width:0!important}
+#p-encuentros .v8592-club select{max-width:min(420px,100%)!important}
+/* Mejora adicional: filtros no fuerzan solapamientos en anchuras intermedias. */
+@media (max-width:1250px){
+  #p-encuentros .v8592-head{grid-template-columns:minmax(0,1fr) minmax(240px,.8fr) auto!important;gap:12px!important}
+  #p-encuentros .v8592-add{padding:11px 15px!important}
+  #bm940-search-btn{width:48px!important;height:48px!important;padding:0!important;border-radius:50%!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+  #bm940-search-btn::before{content:'⌕';font-size:25px!important}
+  #bm940-search-btn kbd{display:none!important}
+}
+@media (max-width:800px){
+  #bm940-search-btn{right:14px!important;bottom:76px!important}
+}
+</style>
+<script id="bm10582-ui-fixes-js">
+(function(){
+  function markPage(){
+    try{
+      var a=document.querySelector('.page.active');
+      document.body.setAttribute('data-bm-active-page',a&&a.id?a.id.replace(/^p-/,''):'');
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    markPage();
+    var main=document.getElementById('main')||document.body;
+    new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].attributeName==='class'){markPage();break}}}).observe(main,{subtree:true,attributes:true,attributeFilter:['class']});
+  });
+})();
+</script>
+
 </body>
 </html>
