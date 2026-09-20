@@ -42668,5 +42668,52 @@ if(typeof bmOnReady==='function')bmOnReady(ready);else if(document.readyState===
 })();
 </script>
 
+
+
+<!-- V10.5.8.4 · Sistema global de acciones flotantes -->
+<style id="bm10584-global-actions">
+/* Una sola búsqueda global: BM940 sustituye al antiguo botón circular creado por openGS. */
+body > button[title="Búsqueda rápida (Ctrl+K)"]:not(#bm940-search-btn){display:none!important}
+/* Zonas independientes: Ayuda a la izquierda del área de contenido, Buscar a la derecha. */
+#bm100-float.bm100-float{
+  left:calc(var(--sidebar-w, 300px) + 18px)!important; right:auto!important;
+  bottom:20px!important; top:auto!important; z-index:9300!important;
+}
+#bm940-search-btn{
+  right:20px!important; left:auto!important; bottom:20px!important; top:auto!important;
+  z-index:9300!important;
+}
+/* Evitar que las acciones tapen el último contenido desplazable. */
+.page{padding-bottom:82px!important}
+@media(max-width:1250px){
+  #bm940-search-btn{width:48px!important;height:48px!important;padding:0!important;border-radius:50%!important;font-size:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+  #bm940-search-btn::before{content:'⌕';font-size:25px!important}
+  #bm940-search-btn kbd{display:none!important}
+}
+@media(max-width:900px){
+  #bm100-float.bm100-float{left:14px!important;bottom:78px!important}
+  #bm940-search-btn{right:14px!important;bottom:78px!important}
+  .page{padding-bottom:138px!important}
+}
+@media(max-width:520px){
+  #bm100-float.bm100-float{width:44px!important;height:44px!important;left:10px!important;bottom:72px!important}
+  #bm940-search-btn{width:44px!important;height:44px!important;right:10px!important;bottom:72px!important}
+}
+</style>
+<script id="bm10584-version-help">
+(function(){
+ var V='10.5.8.4';
+ function apply(){
+  try{document.documentElement.setAttribute('data-bm-build',V)}catch(e){}
+  if(window.BM100){
+   BM100.version=V;
+   BM100.articles.floating={icon:'🧭',title:'Accesos globales: Ayuda y Buscar',desc:'Ayuda contextual y búsqueda global ocupan zonas independientes en todas las pantallas.',body:'<p><b>Ayuda (?)</b> permanece en la zona inferior izquierda y abre el artículo relacionado con la pantalla activa. <b>Buscar (Ctrl+K)</b> permanece en la zona inferior derecha y abre la búsqueda global.</p><div class="bm100-callout"><b>Diseño global:</b> ambos accesos usan posiciones reservadas y reglas responsive comunes para evitar solapamientos con botones, tablas y entre sí.</div>',steps:['Abrir cualquier módulo','? para ayuda contextual','Ctrl+K o Buscar para búsqueda global','Cerrar y continuar trabajando']};
+   BM100.articles.news={icon:'✨',title:'Novedades V10.5.8.4',desc:'Sistema global de acciones flotantes y prevención de solapamientos.',body:'<p>Se ha unificado el comportamiento de los accesos flotantes. Se elimina visualmente el antiguo botón de búsqueda duplicado y se reservan zonas independientes para <b>Ayuda</b> y <b>Buscar</b> en escritorio, tablet y móvil.</p><p>Se mantiene la integración Encuentros ↔ Partido en Directo, categoría automática y el resto de mejoras de V10.5.8.x.</p>',steps:['Actualizar aplicación','Comprobar Ayuda','Comprobar Buscar','Revisar escritorio/tablet/móvil']};
+   if(document.querySelector('#p-ayuda.active'))BM100.mount();
+  }
+ }
+ if(typeof bmOnReady==='function')bmOnReady(apply,99);else if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
+})();
+</script>
 </body>
 </html>
