@@ -29546,6 +29546,10 @@ X.saveEncounter813=async function(){
         J:s.round||null,
         Temporada:seasonName,
         genero:s.gender||'MASC',
+        // V10.7.0.1: persistir también convocatoria, quinteto y capitán del equipo gestionado.
+        convocados:(s.ourCalled||[]).map(String),
+        quinteto_inicial:(s.ourStarters||[]).map(String),
+        capitan:s.ourCaptain||null,
         updated_at:new Date().toISOString()
       };
       await this.encounterStore.save(s.id,null,payloadLegacy);
@@ -29617,6 +29621,18 @@ X.render813=function(){
   const pg=document.getElementById('v813-pages');let ph='';
   for(let i=1;i<=max;i++){if(max>7&&i>3&&i<max-2){if(i===4)ph+='<span style="padding:5px">…</span>';continue}ph+=`<button class="v813-page ${i===this.v813.page?'active':''}" onclick="V81.v813.page=${i};V81.render813()">${i}</button>`}
   pg.innerHTML=ph;
+};
+// V10.7.0.1 · Compatibilidad robusta con arrays/JSON/texto de la tabla histórica encuentros.
+X.v10701Array=function(v){
+  if(Array.isArray(v))return v.map(String).filter(Boolean);
+  if(v==null||v==='')return [];
+  if(typeof v==='string'){
+    var t=v.trim();if(!t)return [];
+    try{var j=JSON.parse(t);if(Array.isArray(j))return j.map(String).filter(Boolean);}catch(_e){}
+    if(t.charAt(0)==='{'&&t.charAt(t.length-1)==='}')t=t.slice(1,-1);
+    return t.split(',').map(function(x){return String(x).trim().replace(/^['"]|['"]$/g,'')}).filter(Boolean);
+  }
+  return [];
 };
 X.load813=async function(){
   const all=await Promise.allSettled([
@@ -29713,8 +29729,14 @@ X.load813=async function(){
         home_team_id:home, away_team_id:away,
         home_score:(r.ptsLocal!=null?Number(r.ptsLocal):(r.pts_local!=null?Number(r.pts_local):null)),
         away_score:(r.ptsVis!=null?Number(r.ptsVis):(r.pts_vis!=null?Number(r.pts_vis):null)),
-        home_color:'', away_color:'', home_called_ids:[], away_called_ids:[],
-        home_starter_ids:[], away_starter_ids:[], captain_ids:[]
+        home_color:'', away_color:'',
+        // V10.7.0.1: conservar convocatoria histórica al normalizar public.encuentros.
+        // La tabla legacy guarda la plantilla del equipo gestionado en convocados/quinteto_inicial/capitan.
+        home_called_ids:(function(){var a=self.v10701Array(r.convocados);return own===home?a:[];})(),
+        away_called_ids:(function(){var a=self.v10701Array(r.convocados);return own===away?a:[];})(),
+        home_starter_ids:(function(){var a=self.v10701Array(r.quinteto_inicial!=null?r.quinteto_inicial:r.quinteto);return own===home?a:[];})(),
+        away_starter_ids:(function(){var a=self.v10701Array(r.quinteto_inicial!=null?r.quinteto_inicial:r.quinteto);return own===away?a:[];})(),
+        captain_ids:r.capitan?[String(r.capitan)]:[]
       };
       self.encounters.push(modern);
     });
@@ -42869,7 +42891,7 @@ function ready(){
  if(window.BM100){
    BM100.version='10.7.0';
    BM100.articles.levels={icon:'🎚️',title:'Niveles de uso: Básico, Intermedio y Avanzado',desc:'Adapta la interfaz a la experiencia del entrenador sin duplicar datos ni crear tres aplicaciones.',body:'<p><b>Básico</b> muestra las funciones esenciales: dashboard, equipos, jugadores, encuentros, entrenamientos, asistencia, biblioteca, calendario y ayuda.</p><p><b>Intermedio</b> añade Centro Técnico, Match Center, planificación, valoraciones, informes, partido en directo, pizarra y herramientas de trabajo habituales.</p><p><b>Avanzado</b> muestra Basket Manager completo, incluidos Rendimiento 360º, scouting, calidad de datos, temporadas y administración avanzada.</p><div class="bm100-callout"><b>Importante:</b> el nivel adapta la interfaz; no borra ni modifica datos y no sustituye los permisos de usuario.</div><p>El nivel elegido se conserva en este navegador. El candado permite fijarlo para evitar cambios accidentales.</p>',steps:['Menú lateral','Nivel de uso','Elegir Básico / Intermedio / Avanzado','Opcional: fijar con 🔒','Seguir trabajando']};
-   BM100.articles.news={icon:'✨',title:'Novedades V10.7.0',desc:'Experiencia Adaptativa por Niveles.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
+   BM100.articles.news={icon:'✨',title:'Novedades V10.7.0.1',desc:'Convocatorias persistentes en Encuentros.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
    BM100.contextMap.config='levels';
    if(document.querySelector('#p-ayuda.active'))BM100.mount();
  }
@@ -42878,5 +42900,34 @@ if(typeof bmOnReady==='function')bmOnReady(ready,100);else if(document.readyStat
 })();
 </script>
 
+
+<script id="bm-v10701-encuentros-roster-persistence">
+/* Basket Manager V10.7.0.1 · Encuentros: persistencia y visualización de convocatoria */
+(function(){
+  function go(){
+    var X=window.V81;if(!X){setTimeout(go,80);return;}
+    var oldView=X.viewEncounter;
+    X.viewEncounter=function(id){
+      oldView.call(X,id);
+      var e=(X.encounters||[]).find(function(x){return String(x.id)===String(id)});if(!e)return;
+      setTimeout(function(){
+        var grid=document.querySelector('#v8588-modal-body .v8588-view-grid');if(!grid||grid.querySelector('[data-v10701-roster]'))return;
+        var isLocal=e.home_away==='Local';
+        var called=isLocal?(e.home_called_ids||[]):(e.away_called_ids||[]);
+        var starters=isLocal?(e.home_starter_ids||[]):(e.away_starter_ids||[]);
+        var cap=(e.captain_ids||[])[0]||'';
+        var teamId=e.team_id|| (isLocal?e.home_team_id:e.away_team_id);
+        var players=X.playersFor(teamId)||[],map=new Map(players.map(function(p){return [String(p.id),p]}));
+        function labels(a){return (a||[]).map(function(i){return map.get(String(i))}).filter(Boolean).map(function(p){return X.playerLabel(p)}).join(', ')||'—'}
+        var cp=map.get(String(cap));
+        var d=document.createElement('div');d.className='v8588-view-box w4';d.setAttribute('data-v10701-roster','1');
+        d.innerHTML='<label>Convocatoria / Quinteto / Capitán</label><div style="line-height:1.7"><b>Convocados ('+(called||[]).length+')</b>: '+X.esc(labels(called))+'<br><b>Quinteto ('+(starters||[]).length+')</b>: '+X.esc(labels(starters))+'<br><b>Capitán</b>: '+(cp?X.esc(X.playerLabel(cp)):'—')+'</div>';
+        grid.appendChild(d);
+      },0);
+    };
+  }
+  go();
+})();
+</script>
 </body>
 </html>
