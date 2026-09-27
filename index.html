@@ -39830,7 +39830,7 @@ function boot(){
   var p=document.getElementById('p-encuentros');if(!p)return;
   p.innerHTML=`<div id="v813-root">
     <div class="v8592-head">
-      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v10.7.1</span></small></div>
+      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v10.7.2</span></small></div>
       <div class="v8592-club"><label>Club</label><select id="v8592-club" onchange="V81.v8592ClubChanged(this.value)"></select></div>
       <button class="v813-btn v8592-add" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
     </div>
@@ -42980,7 +42980,7 @@ function ready(){
  if(window.BM100){
    BM100.version='10.7.0';
    BM100.articles.levels={icon:'🎚️',title:'Niveles de uso: Básico, Intermedio y Avanzado',desc:'Adapta la interfaz a la experiencia del entrenador sin duplicar datos ni crear tres aplicaciones.',body:'<p><b>Básico</b> muestra las funciones esenciales: dashboard, equipos, jugadores, encuentros, entrenamientos, asistencia, biblioteca, calendario y ayuda.</p><p><b>Intermedio</b> añade Centro Técnico, Match Center, planificación, valoraciones, informes, partido en directo, pizarra y herramientas de trabajo habituales.</p><p><b>Avanzado</b> muestra Basket Manager completo, incluidos Rendimiento 360º, scouting, calidad de datos, temporadas y administración avanzada.</p><div class="bm100-callout"><b>Importante:</b> el nivel adapta la interfaz; no borra ni modifica datos y no sustituye los permisos de usuario.</div><p>El nivel elegido se conserva en este navegador. El candado permite fijarlo para evitar cambios accidentales.</p>',steps:['Menú lateral','Nivel de uso','Elegir Básico / Intermedio / Avanzado','Opcional: fijar con 🔒','Seguir trabajando']};
-   BM100.articles.news={icon:'✨',title:'Novedades V10.7.1',desc:'Integridad relacional de Encuentros y convocatorias.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
+   BM100.articles.news={icon:'✨',title:'Novedades V10.7.2',desc:'Integridad relacional de Encuentros y convocatorias.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
    BM100.contextMap.config='levels';
    if(document.querySelector('#p-ayuda.active'))BM100.mount();
  }
@@ -43000,6 +43000,70 @@ if(typeof bmOnReady==='function')bmOnReady(ready,100);else if(document.readyStat
     var badAway=e.away_starter_ids.filter(function(id){return !away.has(String(id))});
     return {ok:!badHome.length&&!badAway.length,homeCalled:e.home_called_ids.length,awayCalled:e.away_called_ids.length,homeStarters:e.home_starter_ids.length,awayStarters:e.away_starter_ids.length,captains:e.captain_ids.slice(),badHome:badHome,badAway:badAway};
   };
+})();
+</script>
+
+<script id="bm-v1072-encuentros-fresh-roster">
+(function(){
+'use strict';
+function install(){
+  var X=window.V81;
+  if(!X||!X.v813||!X.encounterStore||typeof X.json!=='function'){setTimeout(install,80);return;}
+  if(X.__v1072FreshRoster)return; X.__v1072FreshRoster=true;
+  function S(v){return String(v==null?'':v)}
+  function A(v){return X.encArray?X.encArray(v):(Array.isArray(v)?v:[])}
+  function N(v){try{return S(v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}catch(e){return S(v).trim().toLowerCase()}}
+  function stats(v){if(Array.isArray(v))return v;if(!v)return [];try{var a=JSON.parse(v);return Array.isArray(a)?a:[]}catch(e){return []}}
+  function teamPlayers(teamId){return (X.v813.players||[]).filter(function(p){return S(p.team_id||p.equipo)===S(teamId)})}
+  function matchPlayer(teamId,st){var pool=teamPlayers(teamId),d=S(st&&st.dorsal).trim(),n=N(st&&(st.nombre||st.name));return pool.find(function(p){return d&&S(p.dorsal).trim()===d})||pool.find(function(p){return n&&N(p.name||p.nombre)===n})||null}
+  function fromStats(teamId,rows){var called=[],five=[],cap='';stats(rows).forEach(function(st){var p=matchPlayer(teamId,st);if(!p)return;var id=S(p.id);if(called.indexOf(id)<0)called.push(id);if(st.starter&&five.indexOf(id)<0)five.push(id);if(st.capitan&&!cap)cap=id});return {called:called,starters:five.slice(0,5),captain:cap}}
+  function mergeDirect(e,d){if(!e||!d)return e;var h=fromStats(e.home_team_id,d.stats_local),a=fromStats(e.away_team_id,d.stats_visitante);if(!A(e.home_called_ids).length)e.home_called_ids=h.called;if(!A(e.away_called_ids).length)e.away_called_ids=a.called;if(!A(e.home_starter_ids).length)e.home_starter_ids=h.starters;if(!A(e.away_starter_ids).length)e.away_starter_ids=a.starters;var caps=A(e.captain_ids);if(!caps.length){if(h.captain)caps.push(h.captain);if(a.captain)caps.push(a.captain);e.captain_ids=caps}return e}
+  function normalize(e){X.normalizeEncounterRoster(e);var hc=new Set(A(e.home_called_ids).map(S)),ac=new Set(A(e.away_called_ids).map(S));e.home_starter_ids=A(e.home_starter_ids).filter(function(x){return hc.has(S(x))}).slice(0,5);e.away_starter_ids=A(e.away_starter_ids).filter(function(x){return ac.has(S(x))}).slice(0,5);e.captain_ids=A(e.captain_ids).filter(function(x){return hc.has(S(x))||ac.has(S(x))});return e}
+  async function fresh(id){
+    var legacy=X.encounterStore.isLegacy(id),real=X.encounterStore.realId(id),e=null,raw=null;
+    try{var rows=await X.json((legacy?'encuentros':'encounters')+'?id=eq.'+encodeURIComponent(real)+'&select=*');raw=(rows||[])[0]||null}catch(_e){}
+    if(legacy&&raw){e=(X.encounters||[]).find(function(z){return S(z.id)===S(id)})||{};e=Object.assign({},e);X.applyLegacyRoster(e,raw);}
+    else if(raw){e=Object.assign({},raw)}
+    else {e=(X.encounters||[]).find(function(z){return S(z.id)===S(id)})||null;if(e)e=Object.assign({},e)}
+    if(!e)return null;
+    if(legacy){e.id='legacy-'+real;e.legacy_encuentro_id=real}
+    var direct=null,queries=[
+      'partidos_directo?id=eq.'+encodeURIComponent(real)+'&select=*',
+      'partidos_directo?encounter_id=eq.'+encodeURIComponent(real)+'&select=*'
+    ];
+    for(var i=0;i<queries.length&&!direct;i++){try{var rr=await X.json(queries[i]);direct=(rr||[])[0]||null}catch(_e){}}
+    if(!direct){
+      var pool=(X.v813.directRows||[]),date=S(e.game_date||raw&&raw.fecha);
+      direct=pool.find(function(d){return S(d.fecha)===date})||null;
+    }
+    mergeDirect(e,direct);return normalize(e);
+  }
+  X.editEncounter=async function(id){
+    if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede modificar encuentros.');return;}
+    try{
+      var e=await fresh(id);if(!e){alert('No se pudo recuperar el encuentro.');return;}
+      var ix=(X.encounters||[]).findIndex(function(z){return S(z.id)===S(id)});if(ix>=0)X.encounters[ix]=e;
+      X.initFormState(e);X.render813Form();
+      var card=document.getElementById('v813-form-card');if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch(err){console.error('[V10.7.2] editEncounter',err);alert('No se pudo cargar la convocatoria del encuentro:\n'+(err.message||err));}
+  };
+  var oldOpen=X.openCenter;
+  if(typeof oldOpen==='function')X.openCenter=async function(id){try{var e=await fresh(id);if(e){var ix=(X.encounters||[]).findIndex(function(z){return S(z.id)===S(id)});if(ix>=0)X.encounters[ix]=e;}}catch(_e){}return oldOpen.apply(X,arguments)};
+  var oldSave=X.encounterStore.save.bind(X.encounterStore);
+  X.encounterStore.save=async function(id,modernPayload,legacyPayload){
+    var r=await oldSave(id,modernPayload,legacyPayload);
+    /* V10.7.2: lectura posterior obligatoria. Si Supabase no conserva la plantilla, el guardado falla visiblemente. */
+    if(id){
+      var legacy=this.isLegacy(id),real=this.realId(id),expected=legacy?legacyPayload:modernPayload;
+      var rows=await X.json((legacy?'encuentros':'encounters')+'?id=eq.'+encodeURIComponent(real)+'&select=*'),got=(rows||[])[0]||{};
+      var expCalled=legacy?A(expected&&expected.convocados):A(expected&&expected.home_called_ids).concat(A(expected&&expected.away_called_ids));
+      var gotCalled=legacy?A(got.convocados):A(got.home_called_ids).concat(A(got.away_called_ids));
+      if(expCalled.length&&!gotCalled.length)throw new Error('La base de datos no ha conservado la convocatoria. Revisa las columnas/permisos de la tabla '+(legacy?'encuentros':'encounters')+'.');
+    }
+    return r;
+  };
+}
+install();
 })();
 </script>
 </body>
