@@ -29497,7 +29497,7 @@ X.render813Form=function(){
   setTimeout(()=>this.updateMap813(curLoc),0);
   this.refreshRosterControls=function(){this.render813Form();};
 };
-/* V10.7.0.4 · Integridad relacional canónica de Encuentros.
+/* V10.7.1 · Integridad relacional canónica de Encuentros.
    Un único adaptador traduce public.encuentros (histórico) y public.encounters (moderno)
    al mismo modelo de UI. Convocatoria/quinteto/capitán pertenecen al equipo gestionado. */
 X.encArray=function(v){
@@ -29667,6 +29667,10 @@ X.load813=async function(){
     this.json('clubs?select=*'),
     this.json('players?select=*'),
     this.json('categories?select=*'),
+    this.json('partidos_directo?select=*'),
+    // V10.7.1: cargar SIEMPRE la estadística directa junto con Encuentros.
+    // Es una fuente complementaria real para reconstruir convocatoria/quinteto/capitán
+    // cuando un registro histórico fue finalizado por Partido en Directo.
     // V8.5.147: cargar SIEMPRE la tabla histórica directamente desde Supabase.
     // No dependemos de la carrera asíncrona de sbPullAll() / DB.encuentros.
     this.encounterStore.loadLegacy(this)
@@ -29703,7 +29707,7 @@ X.load813=async function(){
   try{
     // Fuente primaria: public.encuentros leído en ESTE MISMO load813().
     // Fallback: DB.encuentros por compatibilidad/offline.
-    var legacyRows=(val(7)||[]).slice();
+    var legacyRows=(val(8)||[]).slice();
     if(!legacyRows.length){try{legacyRows=((window.DB&&DB.encuentros)||[]).slice();}catch(_e){legacyRows=[];}}
     var modernLegacyIds={};
     (this.encounters||[]).forEach(function(e){
@@ -29762,6 +29766,67 @@ X.load813=async function(){
     });
     console.info('[V8.5.147] Encuentros modernos + históricos:',this.encounters.length,'(históricos disponibles:',legacyRows.length+')');
   }catch(e){console.warn('[V8.5.147] No se pudo fusionar encuentros históricos',e);}
+
+  /* V10.7.1 · HIDRATACIÓN RELACIONAL CANÓNICA DE ENCUENTROS
+     Fuentes, por prioridad: campos del encuentro -> DB histórico -> partidos_directo.
+     Nunca sustituye datos existentes: solo completa relaciones ausentes. */
+  try{
+    var directRows=(val(7)||[]).slice();
+    var legacyById={};
+    try{(val(8)||[]).forEach(function(r){if(r&&r.id!=null)legacyById[String(r.id)]=r;});}catch(_e){}
+    try{((window.DB&&DB.encuentros)||[]).forEach(function(r){if(r&&r.id!=null&&!legacyById[String(r.id)])legacyById[String(r.id)]=r;});}catch(_e){}
+    var directById={};directRows.forEach(function(r){if(r&&r.id!=null)directById[String(r.id)]=r;});
+    function norm(v){return String(v==null?'':v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+    function parseStats(v){if(Array.isArray(v))return v;if(!v)return [];try{var a=JSON.parse(v);return Array.isArray(a)?a:[];}catch(_e){return [];}}
+    function playerIdsForTeam(teamId,stats){
+      var pool=(self.v813.players||[]).filter(function(p){return String(p.team_id||p.equipo||'')===String(teamId||'');});
+      var out=[];stats.forEach(function(st){
+        var dorsal=String(st.dorsal==null?'':st.dorsal).trim(), name=norm(st.nombre||st.name);
+        var p=pool.find(function(x){return dorsal&&String(x.dorsal==null?'':x.dorsal).trim()===dorsal;}) || pool.find(function(x){return name&&norm(x.name||x.nombre)===name;});
+        if(p&&out.indexOf(String(p.id))<0)out.push(String(p.id));
+      });return out;
+    }
+    function recoverSide(teamId,stats){
+      var ids=playerIdsForTeam(teamId,stats), byId={};
+      ids.forEach(function(id){byId[id]=true;});
+      var starters=[],captain='';
+      stats.forEach(function(st){
+        var dorsal=String(st.dorsal==null?'':st.dorsal).trim(),name=norm(st.nombre||st.name);
+        var pool=(self.v813.players||[]).filter(function(p){return String(p.team_id||p.equipo||'')===String(teamId||'');});
+        var p=pool.find(function(x){return dorsal&&String(x.dorsal==null?'':x.dorsal).trim()===dorsal;})||pool.find(function(x){return name&&norm(x.name||x.nombre)===name;});
+        if(!p)return;var id=String(p.id);if(st.starter&&starters.indexOf(id)<0)starters.push(id);if(st.capitan&&!captain)captain=id;
+      });
+      return {called:ids,starters:starters.slice(0,5),captain:captain};
+    }
+    (this.encounters||[]).forEach(function(e){
+      self.normalizeEncounterRoster(e);
+      var realId=String(e.legacy_encuentro_id||e.id||'').replace(/^legacy-/,'');
+      var lr=legacyById[realId];
+      if(lr){
+        var called=self.encArray(lr.convocados), starters=self.encArray(lr.quinteto_inicial!=null?lr.quinteto_inicial:lr.quinteto), cap=self.encCaptain(lr.capitan);
+        var ownHome=e.home_away==='Local';
+        if(called.length){if(ownHome&&!e.home_called_ids.length)e.home_called_ids=called;if(!ownHome&&!e.away_called_ids.length)e.away_called_ids=called;}
+        if(starters.length){if(ownHome&&!e.home_starter_ids.length)e.home_starter_ids=starters;if(!ownHome&&!e.away_starter_ids.length)e.away_starter_ids=starters;}
+        if(cap&&!e.captain_ids.length)e.captain_ids=[cap];
+      }
+      var dr=directById[realId]||directById[String(e.id||'')];
+      if(!dr){
+        dr=directRows.find(function(d){return String(d.fecha||'')===String(e.game_date||'') && ((norm(d.equipo_local)===norm(self.homeName(e))&&norm(d.equipo_visitante)===norm(self.awayName(e)))||(norm(d.equipo_local)===norm(self.awayName(e))&&norm(d.equipo_visitante)===norm(self.homeName(e))));});
+      }
+      if(dr){
+        var hs=parseStats(dr.stats_local),as=parseStats(dr.stats_visitante),hr=recoverSide(e.home_team_id,hs),ar=recoverSide(e.away_team_id,as);
+        if(!e.home_called_ids.length)e.home_called_ids=hr.called;if(!e.away_called_ids.length)e.away_called_ids=ar.called;
+        if(!e.home_starter_ids.length)e.home_starter_ids=hr.starters;if(!e.away_starter_ids.length)e.away_starter_ids=ar.starters;
+        var caps=self.encArray(e.captain_ids);if(!caps.length){if(hr.captain)caps.push(hr.captain);if(ar.captain)caps.push(ar.captain);e.captain_ids=caps;}
+      }
+      // Integridad: quinteto siempre subconjunto de convocados; capitán debe pertenecer a una convocatoria.
+      var hc=new Set(e.home_called_ids.map(String)),ac=new Set(e.away_called_ids.map(String));
+      e.home_starter_ids=e.home_starter_ids.filter(function(x){return hc.has(String(x));}).slice(0,5);
+      e.away_starter_ids=e.away_starter_ids.filter(function(x){return ac.has(String(x));}).slice(0,5);
+      e.captain_ids=self.encArray(e.captain_ids).filter(function(x){return hc.has(String(x))||ac.has(String(x));});
+    });
+    this.v813.directRows=directRows;
+  }catch(e){console.warn('[V10.7.1] No se pudo completar hidratación relacional',e);}
 
   this.loaded=true;
   this.buildPage();this.render813();
@@ -39109,7 +39174,11 @@ function go(){
       box('Jornada',E(e.round_label||'—'))+box('Fecha',E(e.game_date||'—'))+box('Hora',E((e.game_time||'').slice(0,5)||'—'))+box('Estado',E(e.status||'—'))+
       box('Local',X.teamCell813(ht,e.home_color),'w2')+box('Visitante',X.teamCell813(at,e.away_color),'w2')+
       box('Resultado',E(result))+box('Nuestro equipo',E(e.home_away||'—'))+box('Categoría',E(e.category||'—'))+box('Temporada',E(X.activeSeasonName()||'—'))+
-      box('Pabellón / localización',E(e.location||'—'),'w4')+box('Notas',E(e.notes||'—'),'w4')+
+      box('Pabellón / localización',E(e.location||'—'),'w4')+
+      (function(){
+        function names(ids){return (ids||[]).map(function(id){var p=(X.v813.players||[]).find(function(z){return String(z.id)===String(id)});return p?E(X.playerLabel(p)):''}).filter(Boolean).join(', ')||'—'}
+        var caps=X.encArray(e.captain_ids||[]);return box('Convocados local ('+X.encArray(e.home_called_ids).length+')',names(X.encArray(e.home_called_ids)),'w2')+box('Convocados visitante ('+X.encArray(e.away_called_ids).length+')',names(X.encArray(e.away_called_ids)),'w2')+box('Quinteto local',names(X.encArray(e.home_starter_ids)),'w2')+box('Quinteto visitante',names(X.encArray(e.away_starter_ids)),'w2')+box('Capitán/es',names(caps),'w4');
+      })()+box('Notas',E(e.notes||'—'),'w4')+
       '</div><div class="v813-actions"><button class="v813-btn" onclick="V81.closeEncounterModal()">Cerrar</button><button class="v813-btn blue" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎ Modificar</button></div>';
     X.openEncounterModal();
   };
@@ -39761,7 +39830,7 @@ function boot(){
   var p=document.getElementById('p-encuentros');if(!p)return;
   p.innerHTML=`<div id="v813-root">
     <div class="v8592-head">
-      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v10.7.0.4</span></small></div>
+      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v10.7.1</span></small></div>
       <div class="v8592-club"><label>Club</label><select id="v8592-club" onchange="V81.v8592ClubChanged(this.value)"></select></div>
       <button class="v813-btn v8592-add" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
     </div>
@@ -42911,7 +42980,7 @@ function ready(){
  if(window.BM100){
    BM100.version='10.7.0';
    BM100.articles.levels={icon:'🎚️',title:'Niveles de uso: Básico, Intermedio y Avanzado',desc:'Adapta la interfaz a la experiencia del entrenador sin duplicar datos ni crear tres aplicaciones.',body:'<p><b>Básico</b> muestra las funciones esenciales: dashboard, equipos, jugadores, encuentros, entrenamientos, asistencia, biblioteca, calendario y ayuda.</p><p><b>Intermedio</b> añade Centro Técnico, Match Center, planificación, valoraciones, informes, partido en directo, pizarra y herramientas de trabajo habituales.</p><p><b>Avanzado</b> muestra Basket Manager completo, incluidos Rendimiento 360º, scouting, calidad de datos, temporadas y administración avanzada.</p><div class="bm100-callout"><b>Importante:</b> el nivel adapta la interfaz; no borra ni modifica datos y no sustituye los permisos de usuario.</div><p>El nivel elegido se conserva en este navegador. El candado permite fijarlo para evitar cambios accidentales.</p>',steps:['Menú lateral','Nivel de uso','Elegir Básico / Intermedio / Avanzado','Opcional: fijar con 🔒','Seguir trabajando']};
-   BM100.articles.news={icon:'✨',title:'Novedades V10.7.0.4',desc:'Integridad relacional de Encuentros y convocatorias.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
+   BM100.articles.news={icon:'✨',title:'Novedades V10.7.1',desc:'Integridad relacional de Encuentros y convocatorias.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
    BM100.contextMap.config='levels';
    if(document.querySelector('#p-ayuda.active'))BM100.mount();
  }
