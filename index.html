@@ -19477,7 +19477,7 @@ var SB_MAPS = {
   equipos:        { table: 'equipos',        toRow: function(o){ return {id:o.id,nombre:o.nombre,ciudad:o.ciudad,club_id:o.club_id||null,pabellon:o.pabellon||null,google_maps_url:o.google_maps_url||null,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,entrenador_id:o.entrenador_id||getEntrenadorEquipoId(o.id)||null,color:o.color,vestimenta_principal:o.vestimenta_principal||null,vestimenta_reserva:o.vestimenta_reserva||null,"Temporada":o.temporada,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||'',ciudad:r.ciudad||'',club_id:r.club_id||'',pabellon:r.pabellon||'',google_maps_url:r.google_maps_url||'',categoria:r.categoria||'',genero:sbReadGenero(r),entrenador_id:r.entrenador_id||'',entrenador:'',color:r.color||'#f97316',vestimenta_principal:r.vestimenta_principal||'',vestimenta_reserva:r.vestimenta_reserva||'',temporada:r["Temporada"]||r.temporada||'',notas:r.notas||''}; } },
   jugadores:      { table: 'jugadores',      toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,dorsal:o.dorsal,posicion:o.posicion,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,equipo:o.equipo||null,edad:calcularEdadPorAnoNacimiento(o.ano_nacimiento),ano_nacimiento:o.ano_nacimiento?parseInt(o.ano_nacimiento):null,altura:o.altura,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',dorsal:r.dorsal||'',posicion:r.posicion||'Base',categoria:r.categoria||'',genero:sbReadGenero(r),equipo:r.equipo||'',edad:r.edad||'',ano_nacimiento:r.ano_nacimiento||'',altura:r.altura||'',notas:r.notas||''}; } },
   entrenadores:   { table: 'entrenadores',   toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,nombre:o.nombre,club_id:o.club_id||null,equipo:o.equipo||((o.equipos_ids||[])[0])||null,equipos_ids:Array.isArray(o.equipos_ids)?o.equipos_ids:(o.equipo?[o.equipo]:[]),genero:sbGeneroValue(o.genero)||null,telefono:o.telefono,mail:o.mail,notas:o.notas}; }, fromRow: function(r){ var ids=Array.isArray(r.equipos_ids)?r.equipos_ids.filter(Boolean):(r.equipo?[r.equipo]:[]); return {id:r.id,temporada:r["Temporada"]||r.temporada||'',nombre:r.nombre||'',club_id:r.club_id||'',equipo:r.equipo||ids[0]||'',equipos_ids:ids,equipos:ids.slice(),genero:sbReadGenero(r),telefono:r.telefono||'',mail:r.mail||'',notas:r.notas||''}; } },
-  encuentros:     { table: 'encuentros',     toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,fecha:o.fecha||null,diasemana:o.diasemana||null,hora:o.hora||null,genero:sbGeneroValue(o.genero)||null,local:o.local||null,visitante:o.visitante||null,pts_local:parseInt(o.ptsLocal)||0,pts_vis:parseInt(o.ptsVis)||0,cancha:o.cancha,google_maps_url:o.google_maps_url||googleMapsLinkFromText(o.cancha),localizacion_id:o.localizacion_id||null,pista_id:o.pista_id||null,estado:o.estado,convocados:o.convocados||[],quinteto_inicial:o.quinteto||[],capitan:o.capitan||null,eventos:o.eventos||[],notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',fecha:r.fecha||'',diasemana:r.diasemana||'',hora:r.hora||'',genero:sbReadGenero(r),local:r.local||'',visitante:r.visitante||'',ptsLocal:r.pts_local||0,ptsVis:r.pts_vis||0,cancha:r.cancha||'',google_maps_url:r.google_maps_url||'',localizacion_id:r.localizacion_id||'',pista_id:r.pista_id||'',estado:r.estado||'Programado',convocados:(window.V81&&V81.encArray?V81.encArray(r.convocados):(Array.isArray(r.convocados)?r.convocados:[])),quinteto:(window.V81&&V81.encArray?V81.encArray(r.quinteto_inicial):(Array.isArray(r.quinteto_inicial)?r.quinteto_inicial:[])),capitan:(window.V81&&V81.encCaptain?V81.encCaptain(r.capitan):(r.capitan||'')),eventos:Array.isArray(r.eventos)?r.eventos:[],notas:r.notas||''}; } },
+  encuentros:     { table: 'encuentros',     toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,fecha:o.fecha||null,diasemana:o.diasemana||null,hora:o.hora||null,genero:sbGeneroValue(o.genero)||null,local:o.local||null,visitante:o.visitante||null,pts_local:parseInt(o.ptsLocal)||0,pts_vis:parseInt(o.ptsVis)||0,cancha:o.cancha,google_maps_url:o.google_maps_url||googleMapsLinkFromText(o.cancha),localizacion_id:o.localizacion_id||null,pista_id:o.pista_id||null,estado:o.estado,convocados:o.convocados||[],quinteto_inicial:o.quinteto||[],capitan:o.capitan||null,eventos:o.eventos||[],notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',fecha:r.fecha||'',diasemana:r.diasemana||'',hora:r.hora||'',genero:sbReadGenero(r),local:r.local||'',visitante:r.visitante||'',ptsLocal:r.pts_local||0,ptsVis:r.pts_vis||0,cancha:r.cancha||'',google_maps_url:r.google_maps_url||'',localizacion_id:r.localizacion_id||'',pista_id:r.pista_id||'',estado:r.estado||'Programado',convocados:Array.isArray(r.convocados)?r.convocados:[],quinteto:Array.isArray(r.quinteto_inicial)?r.quinteto_inicial:[],capitan:r.capitan||'',eventos:Array.isArray(r.eventos)?r.eventos:[],notas:r.notas||''}; } },
   entrenamientos: { table: 'entrenamientos', toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,fecha:o.fecha||null,diasemana:o.diasemana||null,hora:o.hora||null,equipo:o.equipo||null,categoria:o.categoria||null,genero:sbGeneroValue(o.genero)||null,tipo:o.tipo,duracion:parseInt(o.dur)||null,asistencia:parseInt(o.asis)||0,jug_asistencia:o.jugAsistencia||[],vestimenta:parseInt(o.vest)||0,jug_vestimenta:o.jugVestimenta||[],localizacion_id:o.localizacion_id||null,pista_id:o.pista_id||null,localizacion_nombre:o.localizacion_nombre||null,pista_nombre:o.pista_nombre||null,mat_balones:!!o.matBalones,mat_cierre:!!o.matCierre,mat_extractor:!!o.matExtractor,mat_luces:!!o.matLuces,mat_puerta:!!o.matPuerta,pdf_path:o.pdf_path||null,pdf_name:o.pdf_name||null,pdf_url:o.pdf_url||null,observaciones:o.obs}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',fecha:r.fecha||'',diasemana:r.diasemana||'',hora:r.hora||'',equipo:r.equipo||'',categoria:r.categoria||'',genero:sbReadGenero(r),tipo:r.tipo||'Mixto',dur:r.duracion?String(r.duracion):'',asis:r.asistencia?String(r.asistencia):'',jugAsistencia:r.jug_asistencia||[],vest:r.vestimenta?String(r.vestimenta):'',jugVestimenta:r.jug_vestimenta||[],localizacion_id:r.localizacion_id||'',pista_id:r.pista_id||'',localizacion_nombre:r.localizacion_nombre||'',pista_nombre:r.pista_nombre||'',matBalones:!!r.mat_balones,matCierre:!!r.mat_cierre,matExtractor:!!r.mat_extractor,matLuces:!!r.mat_luces,matPuerta:!!r.mat_puerta,pdf_path:r.pdf_path||'',pdf_name:r.pdf_name||'',pdf_url:r.pdf_url||'',obs:r.observaciones||''}; } },
   valoraciones:   { table: 'valoraciones',   toRow: function(o){ return {id:o.id,"Temporada":o.temporada||null,fecha:o.fecha||null,jugador:o.jugador||null,referencia:o.ref,ataque:o.ataque||0,defensa:o.defensa||0,fisico:o.fisico||0,fundamentos:o.fundamentos||0,tactica:o.tactica||0,equipo_jg:o.equipo_jg||0,spacing:o.spacing||0,actitud:o.actitud||0,aptitud:o.aptitud||0,motivacion:o.motivacion||0,notas:o.notas}; }, fromRow: function(r){ return {id:r.id,temporada:r["Temporada"]||r.temporada||'',fecha:r.fecha||'',jugador:r.jugador||'',ref:r.referencia||'',ataque:parseFloat(r.ataque)||0,defensa:parseFloat(r.defensa)||0,fisico:parseFloat(r.fisico)||0,fundamentos:parseFloat(r.fundamentos)||0,tactica:parseFloat(r.tactica)||0,equipo_jg:parseFloat(r.equipo_jg)||0,spacing:parseFloat(r.spacing)||0,actitud:parseFloat(r.actitud)||0,aptitud:parseFloat(r.aptitud)||0,motivacion:parseFloat(r.motivacion)||0,global:String(r.global||'0'),notas:r.notas||''}; } },
   localizaciones: { table: 'localizaciones', toRow: function(o){ return {id:o.id,club_id:o.club_id||null,nombre:o.nombre||'',tipo:o.tipo||'Ambos',direccion:o.direccion||null,municipio:o.municipio||null,provincia:o.provincia||null,codigo_postal:o.codigo_postal||null,latitud:o.latitud?Number(o.latitud):null,longitud:o.longitud?Number(o.longitud):null,google_maps_url:o.google_maps_url||null,pistas:parseInt(o.pistas)||1,cubierta:o.cubierta!==false,activa:o.activa!==false,notas:o.notas||null}; }, fromRow: function(r){ return {id:r.id,nombre:r.nombre||'',club_id:r.club_id||'',tipo:r.tipo||'Ambos',direccion:r.direccion||'',municipio:r.municipio||'',provincia:r.provincia||'',codigo_postal:r.codigo_postal||'',latitud:r.latitud||'',longitud:r.longitud||'',google_maps_url:r.google_maps_url||'',pistas:r.pistas||1,cubierta:r.cubierta!==false,activa:r.activa!==false,notas:r.notas||''}; } },
@@ -29376,13 +29376,9 @@ X.refresh813Filters=function(){
 };
 X.initFormState=function(e){
   if(e){
-    this.normalizeEncounterRoster(e);
     const isLocal=e.home_away==='Local';
     const ownId=e.team_id||'', rivalId=e.opponent_team_id||'';
-    const caps=this.encArray(e.captain_ids||[]);
-    const ourCalled0=this.encArray((isLocal?e.home_called_ids:e.away_called_ids)||[]), rivalCalled0=this.encArray((isLocal?e.away_called_ids:e.home_called_ids)||[]);
-    const ourCap0=caps.find(function(x){return ourCalled0.map(String).includes(String(x))})||caps[0]||'';
-    const rivalCap0=caps.find(function(x){return rivalCalled0.map(String).includes(String(x))})||(caps.length>1?caps[1]:'');
+    const caps=e.captain_ids||[];
     this.v813.formState={
       id:e.id,round:e.round_label||'J1',category:e.category||'',ownTeamId:ownId,rivalTeamId:rivalId,
       gender:e.gender||'MASC',homeAway:e.home_away||'Local',status:e.status||'Programado',
@@ -29394,7 +29390,7 @@ X.initFormState=function(e){
       rivalCalled:(isLocal?e.away_called_ids:e.home_called_ids)||[],
       ourStarters:(isLocal?e.home_starter_ids:e.away_starter_ids)||[],
       rivalStarters:(isLocal?e.away_starter_ids:e.home_starter_ids)||[],
-      ourCaptain:ourCap0,rivalCaptain:rivalCap0,newLocation:''
+      ourCaptain:(isLocal?(caps[0]||''):(caps[1]||'')),rivalCaptain:(isLocal?(caps[1]||''):(caps[0]||'')),newLocation:''
     };
   }else{
     const cat=(document.getElementById('fsel-cat-enc')||{}).value||this.categoriesForSeason()[0]||'';
@@ -29497,39 +29493,6 @@ X.render813Form=function(){
   setTimeout(()=>this.updateMap813(curLoc),0);
   this.refreshRosterControls=function(){this.render813Form();};
 };
-/* V10.7.1 · Integridad relacional canónica de Encuentros.
-   Un único adaptador traduce public.encuentros (histórico) y public.encounters (moderno)
-   al mismo modelo de UI. Convocatoria/quinteto/capitán pertenecen al equipo gestionado. */
-X.encArray=function(v){
-  if(Array.isArray(v))return v.filter(function(x){return x!==null&&x!==undefined&&String(x)!==''}).map(String);
-  if(v===null||v===undefined||v==='')return [];
-  if(typeof v==='string'){
-    var t=v.trim(); if(!t)return [];
-    try{var j=JSON.parse(t);if(Array.isArray(j))return j.filter(Boolean).map(String);}catch(_e){}
-    if(t.charAt(0)==='{'&&t.charAt(t.length-1)==='}')t=t.slice(1,-1);
-    return t.split(/[,;|]/).map(function(x){return x.trim().replace(/^['\"]|['\"]$/g,'')}).filter(Boolean);
-  }
-  return [String(v)];
-};
-X.encCaptain=function(v){var a=this.encArray(v);return a[0]||''};
-X.applyLegacyRoster=function(modern,r){
-  var called=this.encArray(r.convocados), starters=this.encArray(r.quinteto_inicial!=null?r.quinteto_inicial:r.quinteto), cap=this.encCaptain(r.capitan);
-  var ownHome=modern.home_away==='Local';
-  modern.home_called_ids=ownHome?called:[]; modern.away_called_ids=ownHome?[]:called;
-  modern.home_starter_ids=ownHome?starters:[]; modern.away_starter_ids=ownHome?[]:starters;
-  modern.captain_ids=cap?[cap]:[];
-  return modern;
-};
-X.legacyRosterPayload=function(s){
-  return {convocados:(s.ourCalled||[]).map(String),quinteto_inicial:(s.ourStarters||[]).map(String),capitan:s.ourCaptain||null};
-};
-X.normalizeEncounterRoster=function(e){
-  if(!e)return e;
-  e.home_called_ids=this.encArray(e.home_called_ids);e.away_called_ids=this.encArray(e.away_called_ids);
-  e.home_starter_ids=this.encArray(e.home_starter_ids);e.away_starter_ids=this.encArray(e.away_starter_ids);
-  e.captain_ids=this.encArray(e.captain_ids);
-  return e;
-};
 /* V8.5.153 · Repositorio único de Encuentros.
    La UI deja de conocer qué tabla física corresponde a cada registro. */
 X.encounterStore={
@@ -29583,6 +29546,8 @@ X.saveEncounter813=async function(){
         J:s.round||null,
         Temporada:seasonName,
         genero:s.gender||'MASC',
+        // V10.7.3: persistencia simétrica con load813(). La tabla histórica contiene
+        // la convocatoria del equipo gestionado, independientemente de Local/Visitante.
         convocados:(s.ourCalled||[]).map(String),
         quinteto_inicial:(s.ourStarters||[]).map(String),
         capitan:s.ourCaptain||null,
@@ -29601,7 +29566,7 @@ X.saveEncounter813=async function(){
         notes:s.notes||null,home_team_id:homeTeam?.id||null,away_team_id:awayTeam?.id||null,
         home_color:isLocal?s.ourColor:s.rivalColor,away_color:isLocal?s.rivalColor:s.ourColor,
         home_called_ids:homeCalled||[],away_called_ids:awayCalled||[],home_starter_ids:homeStarters||[],away_starter_ids:awayStarters||[],
-        captain_ids:[s.ourCaptain,s.rivalCaptain].filter(Boolean)
+        captain_ids:(isLocal?[s.ourCaptain||'',s.rivalCaptain||'']:[s.rivalCaptain||'',s.ourCaptain||''])
       };
       if(!s.id){payload.id=(crypto.randomUUID?crypto.randomUUID():('00000000-0000-4000-8000-'+String(Date.now()).slice(-12)));payload.code='APP-'+Date.now();}
       await this.encounterStore.save(s.id,payload,null);
@@ -29667,10 +29632,6 @@ X.load813=async function(){
     this.json('clubs?select=*'),
     this.json('players?select=*'),
     this.json('categories?select=*'),
-    this.json('partidos_directo?select=*'),
-    // V10.7.1: cargar SIEMPRE la estadística directa junto con Encuentros.
-    // Es una fuente complementaria real para reconstruir convocatoria/quinteto/capitán
-    // cuando un registro histórico fue finalizado por Partido en Directo.
     // V8.5.147: cargar SIEMPRE la tabla histórica directamente desde Supabase.
     // No dependemos de la carrera asíncrona de sbPullAll() / DB.encuentros.
     this.encounterStore.loadLegacy(this)
@@ -29707,7 +29668,7 @@ X.load813=async function(){
   try{
     // Fuente primaria: public.encuentros leído en ESTE MISMO load813().
     // Fallback: DB.encuentros por compatibilidad/offline.
-    var legacyRows=(val(8)||[]).slice();
+    var legacyRows=(val(7)||[]).slice();
     if(!legacyRows.length){try{legacyRows=((window.DB&&DB.encuentros)||[]).slice();}catch(_e){legacyRows=[];}}
     var modernLegacyIds={};
     (this.encounters||[]).forEach(function(e){
@@ -29725,6 +29686,16 @@ X.load813=async function(){
         if(normSeason(k)===nv){found=self.seasonByName[k];return true;} return false;
       });
       return found||'';
+    }
+    function parseRosterField(v){
+      if(Array.isArray(v)) return v.map(String).filter(Boolean);
+      if(v==null||v==='') return [];
+      if(typeof v==='string'){
+        var s=v.trim(); if(!s)return [];
+        try{var j=JSON.parse(s);if(Array.isArray(j))return j.map(String).filter(Boolean);if(j!=null&&j!=='')return [String(j)];}catch(_e){}
+        return s.split(/[;,|]/).map(function(x){return x.trim();}).filter(Boolean);
+      }
+      return [String(v)].filter(Boolean);
     }
     function isOwnTeam(tid){
       var t=self.teams&&self.teams[tid];
@@ -29757,76 +29728,19 @@ X.load813=async function(){
         home_team_id:home, away_team_id:away,
         home_score:(r.ptsLocal!=null?Number(r.ptsLocal):(r.pts_local!=null?Number(r.pts_local):null)),
         away_score:(r.ptsVis!=null?Number(r.ptsVis):(r.pts_vis!=null?Number(r.pts_vis):null)),
-        home_color:'', away_color:'', home_called_ids:[], away_called_ids:[],
-        home_starter_ids:[], away_starter_ids:[], captain_ids:[]
+        home_color:'', away_color:'',
+        // V10.7.3: el histórico `encuentros` guarda la convocatoria del equipo gestionado.
+        // Nunca se vuelve a sustituir por arrays vacíos al normalizar el registro.
+        home_called_ids:(function(){var a=parseRosterField(r.convocados);return own===home?a:[]})(),
+        away_called_ids:(function(){var a=parseRosterField(r.convocados);return own===away?a:[]})(),
+        home_starter_ids:(function(){var a=parseRosterField(r.quinteto_inicial!=null?r.quinteto_inicial:r.quinteto);return own===home?a:[]})(),
+        away_starter_ids:(function(){var a=parseRosterField(r.quinteto_inicial!=null?r.quinteto_inicial:r.quinteto);return own===away?a:[]})(),
+        captain_ids:(function(){var c=parseRosterField(r.capitan)[0]||'';return own===home?[c,''].filter(Boolean):['',c]})()
       };
-      self.applyLegacyRoster(modern,r);
-      self.normalizeEncounterRoster(modern);
       self.encounters.push(modern);
     });
     console.info('[V8.5.147] Encuentros modernos + históricos:',this.encounters.length,'(históricos disponibles:',legacyRows.length+')');
   }catch(e){console.warn('[V8.5.147] No se pudo fusionar encuentros históricos',e);}
-
-  /* V10.7.1 · HIDRATACIÓN RELACIONAL CANÓNICA DE ENCUENTROS
-     Fuentes, por prioridad: campos del encuentro -> DB histórico -> partidos_directo.
-     Nunca sustituye datos existentes: solo completa relaciones ausentes. */
-  try{
-    var directRows=(val(7)||[]).slice();
-    var legacyById={};
-    try{(val(8)||[]).forEach(function(r){if(r&&r.id!=null)legacyById[String(r.id)]=r;});}catch(_e){}
-    try{((window.DB&&DB.encuentros)||[]).forEach(function(r){if(r&&r.id!=null&&!legacyById[String(r.id)])legacyById[String(r.id)]=r;});}catch(_e){}
-    var directById={};directRows.forEach(function(r){if(r&&r.id!=null)directById[String(r.id)]=r;});
-    function norm(v){return String(v==null?'':v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
-    function parseStats(v){if(Array.isArray(v))return v;if(!v)return [];try{var a=JSON.parse(v);return Array.isArray(a)?a:[];}catch(_e){return [];}}
-    function playerIdsForTeam(teamId,stats){
-      var pool=(self.v813.players||[]).filter(function(p){return String(p.team_id||p.equipo||'')===String(teamId||'');});
-      var out=[];stats.forEach(function(st){
-        var dorsal=String(st.dorsal==null?'':st.dorsal).trim(), name=norm(st.nombre||st.name);
-        var p=pool.find(function(x){return dorsal&&String(x.dorsal==null?'':x.dorsal).trim()===dorsal;}) || pool.find(function(x){return name&&norm(x.name||x.nombre)===name;});
-        if(p&&out.indexOf(String(p.id))<0)out.push(String(p.id));
-      });return out;
-    }
-    function recoverSide(teamId,stats){
-      var ids=playerIdsForTeam(teamId,stats), byId={};
-      ids.forEach(function(id){byId[id]=true;});
-      var starters=[],captain='';
-      stats.forEach(function(st){
-        var dorsal=String(st.dorsal==null?'':st.dorsal).trim(),name=norm(st.nombre||st.name);
-        var pool=(self.v813.players||[]).filter(function(p){return String(p.team_id||p.equipo||'')===String(teamId||'');});
-        var p=pool.find(function(x){return dorsal&&String(x.dorsal==null?'':x.dorsal).trim()===dorsal;})||pool.find(function(x){return name&&norm(x.name||x.nombre)===name;});
-        if(!p)return;var id=String(p.id);if(st.starter&&starters.indexOf(id)<0)starters.push(id);if(st.capitan&&!captain)captain=id;
-      });
-      return {called:ids,starters:starters.slice(0,5),captain:captain};
-    }
-    (this.encounters||[]).forEach(function(e){
-      self.normalizeEncounterRoster(e);
-      var realId=String(e.legacy_encuentro_id||e.id||'').replace(/^legacy-/,'');
-      var lr=legacyById[realId];
-      if(lr){
-        var called=self.encArray(lr.convocados), starters=self.encArray(lr.quinteto_inicial!=null?lr.quinteto_inicial:lr.quinteto), cap=self.encCaptain(lr.capitan);
-        var ownHome=e.home_away==='Local';
-        if(called.length){if(ownHome&&!e.home_called_ids.length)e.home_called_ids=called;if(!ownHome&&!e.away_called_ids.length)e.away_called_ids=called;}
-        if(starters.length){if(ownHome&&!e.home_starter_ids.length)e.home_starter_ids=starters;if(!ownHome&&!e.away_starter_ids.length)e.away_starter_ids=starters;}
-        if(cap&&!e.captain_ids.length)e.captain_ids=[cap];
-      }
-      var dr=directById[realId]||directById[String(e.id||'')];
-      if(!dr){
-        dr=directRows.find(function(d){return String(d.fecha||'')===String(e.game_date||'') && ((norm(d.equipo_local)===norm(self.homeName(e))&&norm(d.equipo_visitante)===norm(self.awayName(e)))||(norm(d.equipo_local)===norm(self.awayName(e))&&norm(d.equipo_visitante)===norm(self.homeName(e))));});
-      }
-      if(dr){
-        var hs=parseStats(dr.stats_local),as=parseStats(dr.stats_visitante),hr=recoverSide(e.home_team_id,hs),ar=recoverSide(e.away_team_id,as);
-        if(!e.home_called_ids.length)e.home_called_ids=hr.called;if(!e.away_called_ids.length)e.away_called_ids=ar.called;
-        if(!e.home_starter_ids.length)e.home_starter_ids=hr.starters;if(!e.away_starter_ids.length)e.away_starter_ids=ar.starters;
-        var caps=self.encArray(e.captain_ids);if(!caps.length){if(hr.captain)caps.push(hr.captain);if(ar.captain)caps.push(ar.captain);e.captain_ids=caps;}
-      }
-      // Integridad: quinteto siempre subconjunto de convocados; capitán debe pertenecer a una convocatoria.
-      var hc=new Set(e.home_called_ids.map(String)),ac=new Set(e.away_called_ids.map(String));
-      e.home_starter_ids=e.home_starter_ids.filter(function(x){return hc.has(String(x));}).slice(0,5);
-      e.away_starter_ids=e.away_starter_ids.filter(function(x){return ac.has(String(x));}).slice(0,5);
-      e.captain_ids=self.encArray(e.captain_ids).filter(function(x){return hc.has(String(x))||ac.has(String(x));});
-    });
-    this.v813.directRows=directRows;
-  }catch(e){console.warn('[V10.7.1] No se pudo completar hidratación relacional',e);}
 
   this.loaded=true;
   this.buildPage();this.render813();
@@ -39170,15 +39084,18 @@ function go(){
     var body=document.getElementById('v8588-modal-body'),title=document.getElementById('v813-form-title'),crumb=document.getElementById('v813-breadcrumb');
     if(title)title.textContent='Ver encuentro';if(crumb)crumb.textContent='Ver encuentro';
     function box(k,v,c){return '<div class="v8588-view-box '+(c||'')+'"><label>'+E(k)+'</label><div>'+v+'</div></div>'}
+    function names(ids,teamId){var map={};X.playersFor(teamId).forEach(function(p){map[String(p.id)]=p});return (ids||[]).map(function(id){var p=map[String(id)];return p?X.playerLabel(p):String(id)}).join(', ')||'—'}
+    var hc=e.home_called_ids||[], ac=e.away_called_ids||[], hs=e.home_starter_ids||[], as=e.away_starter_ids||[], caps=e.captain_ids||[];
+    var hcap=names(caps[0]?[caps[0]]:[],e.home_team_id), acap=names(caps[1]?[caps[1]]:[],e.away_team_id);
     body.innerHTML='<div class="v8588-view-grid">'+
       box('Jornada',E(e.round_label||'—'))+box('Fecha',E(e.game_date||'—'))+box('Hora',E((e.game_time||'').slice(0,5)||'—'))+box('Estado',E(e.status||'—'))+
       box('Local',X.teamCell813(ht,e.home_color),'w2')+box('Visitante',X.teamCell813(at,e.away_color),'w2')+
       box('Resultado',E(result))+box('Nuestro equipo',E(e.home_away||'—'))+box('Categoría',E(e.category||'—'))+box('Temporada',E(X.activeSeasonName()||'—'))+
       box('Pabellón / localización',E(e.location||'—'),'w4')+
-      (function(){
-        function names(ids){return (ids||[]).map(function(id){var p=(X.v813.players||[]).find(function(z){return String(z.id)===String(id)});return p?E(X.playerLabel(p)):''}).filter(Boolean).join(', ')||'—'}
-        var caps=X.encArray(e.captain_ids||[]);return box('Convocados local ('+X.encArray(e.home_called_ids).length+')',names(X.encArray(e.home_called_ids)),'w2')+box('Convocados visitante ('+X.encArray(e.away_called_ids).length+')',names(X.encArray(e.away_called_ids)),'w2')+box('Quinteto local',names(X.encArray(e.home_starter_ids)),'w2')+box('Quinteto visitante',names(X.encArray(e.away_starter_ids)),'w2')+box('Capitán/es',names(caps),'w4');
-      })()+box('Notas',E(e.notes||'—'),'w4')+
+      box('Convocados local ('+hc.length+')',E(names(hc,e.home_team_id)),'w2')+box('Convocados visitante ('+ac.length+')',E(names(ac,e.away_team_id)),'w2')+
+      box('Quinteto local ('+hs.length+')',E(names(hs,e.home_team_id)),'w2')+box('Quinteto visitante ('+as.length+')',E(names(as,e.away_team_id)),'w2')+
+      box('Capitán local',E(hcap),'w2')+box('Capitán visitante',E(acap),'w2')+
+      box('Notas',E(e.notes||'—'),'w4')+
       '</div><div class="v813-actions"><button class="v813-btn" onclick="V81.closeEncounterModal()">Cerrar</button><button class="v813-btn blue" onclick="V81.editEncounter(\''+E(e.id)+'\')">✎ Modificar</button></div>';
     X.openEncounterModal();
   };
@@ -39830,7 +39747,7 @@ function boot(){
   var p=document.getElementById('p-encuentros');if(!p)return;
   p.innerHTML=`<div id="v813-root">
     <div class="v8592-head">
-      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v10.7.2</span></small></div>
+      <div class="v8592-title"><h2>Encuentros</h2><small>Gestión de encuentros de la temporada <b id="v813-season">—</b> <span style="opacity:.55;font-size:10px">v8.5.153</span></small></div>
       <div class="v8592-club"><label>Club</label><select id="v8592-club" onchange="V81.v8592ClubChanged(this.value)"></select></div>
       <button class="v813-btn v8592-add" onclick="V81.newEncounter()">＋ Nuevo encuentro</button>
     </div>
@@ -42980,7 +42897,7 @@ function ready(){
  if(window.BM100){
    BM100.version='10.7.0';
    BM100.articles.levels={icon:'🎚️',title:'Niveles de uso: Básico, Intermedio y Avanzado',desc:'Adapta la interfaz a la experiencia del entrenador sin duplicar datos ni crear tres aplicaciones.',body:'<p><b>Básico</b> muestra las funciones esenciales: dashboard, equipos, jugadores, encuentros, entrenamientos, asistencia, biblioteca, calendario y ayuda.</p><p><b>Intermedio</b> añade Centro Técnico, Match Center, planificación, valoraciones, informes, partido en directo, pizarra y herramientas de trabajo habituales.</p><p><b>Avanzado</b> muestra Basket Manager completo, incluidos Rendimiento 360º, scouting, calidad de datos, temporadas y administración avanzada.</p><div class="bm100-callout"><b>Importante:</b> el nivel adapta la interfaz; no borra ni modifica datos y no sustituye los permisos de usuario.</div><p>El nivel elegido se conserva en este navegador. El candado permite fijarlo para evitar cambios accidentales.</p>',steps:['Menú lateral','Nivel de uso','Elegir Básico / Intermedio / Avanzado','Opcional: fijar con 🔒','Seguir trabajando']};
-   BM100.articles.news={icon:'✨',title:'Novedades V10.7.2',desc:'Integridad relacional de Encuentros y convocatorias.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
+   BM100.articles.news={icon:'✨',title:'Novedades V10.7.3',desc:'Experiencia Adaptativa por Niveles.',body:'<p>Basket Manager incorpora tres experiencias sobre la misma aplicación y la misma base de datos. El menú se adapta al nivel seleccionado y las funciones ocultas vuelven a estar disponibles al subir de nivel.</p>',steps:['Elegir nivel','Revisar menú adaptado','Fijar nivel si se desea','Cambiar de nivel cuando sea necesario']};
    BM100.contextMap.config='levels';
    if(document.querySelector('#p-ayuda.active'))BM100.mount();
  }
@@ -42989,82 +42906,8 @@ if(typeof bmOnReady==='function')bmOnReady(ready,100);else if(document.readyStat
 })();
 </script>
 
-
-<script id="bm-v10704-relational-integrity">
-(function(){
-  window.BM_ENCOUNTER_INTEGRITY_VERSION='10.7.0.4';
-  window.bmCheckEncounterIntegrity=function(e){
-    var X=window.V81;if(!X||!e)return {ok:false,reason:'Encuentro no disponible'};X.normalizeEncounterRoster(e);
-    var home=new Set(e.home_called_ids.map(String)),away=new Set(e.away_called_ids.map(String));
-    var badHome=e.home_starter_ids.filter(function(id){return !home.has(String(id))});
-    var badAway=e.away_starter_ids.filter(function(id){return !away.has(String(id))});
-    return {ok:!badHome.length&&!badAway.length,homeCalled:e.home_called_ids.length,awayCalled:e.away_called_ids.length,homeStarters:e.home_starter_ids.length,awayStarters:e.away_starter_ids.length,captains:e.captain_ids.slice(),badHome:badHome,badAway:badAway};
-  };
-})();
-</script>
-
-<script id="bm-v1072-encuentros-fresh-roster">
-(function(){
-'use strict';
-function install(){
-  var X=window.V81;
-  if(!X||!X.v813||!X.encounterStore||typeof X.json!=='function'){setTimeout(install,80);return;}
-  if(X.__v1072FreshRoster)return; X.__v1072FreshRoster=true;
-  function S(v){return String(v==null?'':v)}
-  function A(v){return X.encArray?X.encArray(v):(Array.isArray(v)?v:[])}
-  function N(v){try{return S(v).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}catch(e){return S(v).trim().toLowerCase()}}
-  function stats(v){if(Array.isArray(v))return v;if(!v)return [];try{var a=JSON.parse(v);return Array.isArray(a)?a:[]}catch(e){return []}}
-  function teamPlayers(teamId){return (X.v813.players||[]).filter(function(p){return S(p.team_id||p.equipo)===S(teamId)})}
-  function matchPlayer(teamId,st){var pool=teamPlayers(teamId),d=S(st&&st.dorsal).trim(),n=N(st&&(st.nombre||st.name));return pool.find(function(p){return d&&S(p.dorsal).trim()===d})||pool.find(function(p){return n&&N(p.name||p.nombre)===n})||null}
-  function fromStats(teamId,rows){var called=[],five=[],cap='';stats(rows).forEach(function(st){var p=matchPlayer(teamId,st);if(!p)return;var id=S(p.id);if(called.indexOf(id)<0)called.push(id);if(st.starter&&five.indexOf(id)<0)five.push(id);if(st.capitan&&!cap)cap=id});return {called:called,starters:five.slice(0,5),captain:cap}}
-  function mergeDirect(e,d){if(!e||!d)return e;var h=fromStats(e.home_team_id,d.stats_local),a=fromStats(e.away_team_id,d.stats_visitante);if(!A(e.home_called_ids).length)e.home_called_ids=h.called;if(!A(e.away_called_ids).length)e.away_called_ids=a.called;if(!A(e.home_starter_ids).length)e.home_starter_ids=h.starters;if(!A(e.away_starter_ids).length)e.away_starter_ids=a.starters;var caps=A(e.captain_ids);if(!caps.length){if(h.captain)caps.push(h.captain);if(a.captain)caps.push(a.captain);e.captain_ids=caps}return e}
-  function normalize(e){X.normalizeEncounterRoster(e);var hc=new Set(A(e.home_called_ids).map(S)),ac=new Set(A(e.away_called_ids).map(S));e.home_starter_ids=A(e.home_starter_ids).filter(function(x){return hc.has(S(x))}).slice(0,5);e.away_starter_ids=A(e.away_starter_ids).filter(function(x){return ac.has(S(x))}).slice(0,5);e.captain_ids=A(e.captain_ids).filter(function(x){return hc.has(S(x))||ac.has(S(x))});return e}
-  async function fresh(id){
-    var legacy=X.encounterStore.isLegacy(id),real=X.encounterStore.realId(id),e=null,raw=null;
-    try{var rows=await X.json((legacy?'encuentros':'encounters')+'?id=eq.'+encodeURIComponent(real)+'&select=*');raw=(rows||[])[0]||null}catch(_e){}
-    if(legacy&&raw){e=(X.encounters||[]).find(function(z){return S(z.id)===S(id)})||{};e=Object.assign({},e);X.applyLegacyRoster(e,raw);}
-    else if(raw){e=Object.assign({},raw)}
-    else {e=(X.encounters||[]).find(function(z){return S(z.id)===S(id)})||null;if(e)e=Object.assign({},e)}
-    if(!e)return null;
-    if(legacy){e.id='legacy-'+real;e.legacy_encuentro_id=real}
-    var direct=null,queries=[
-      'partidos_directo?id=eq.'+encodeURIComponent(real)+'&select=*',
-      'partidos_directo?encounter_id=eq.'+encodeURIComponent(real)+'&select=*'
-    ];
-    for(var i=0;i<queries.length&&!direct;i++){try{var rr=await X.json(queries[i]);direct=(rr||[])[0]||null}catch(_e){}}
-    if(!direct){
-      var pool=(X.v813.directRows||[]),date=S(e.game_date||raw&&raw.fecha);
-      direct=pool.find(function(d){return S(d.fecha)===date})||null;
-    }
-    mergeDirect(e,direct);return normalize(e);
-  }
-  X.editEncounter=async function(id){
-    if(sessionStorage.getItem('cbNav_role')==='read'){alert('El usuario Solo lectura no puede modificar encuentros.');return;}
-    try{
-      var e=await fresh(id);if(!e){alert('No se pudo recuperar el encuentro.');return;}
-      var ix=(X.encounters||[]).findIndex(function(z){return S(z.id)===S(id)});if(ix>=0)X.encounters[ix]=e;
-      X.initFormState(e);X.render813Form();
-      var card=document.getElementById('v813-form-card');if(card)card.scrollIntoView({behavior:'smooth',block:'start'});
-    }catch(err){console.error('[V10.7.2] editEncounter',err);alert('No se pudo cargar la convocatoria del encuentro:\n'+(err.message||err));}
-  };
-  var oldOpen=X.openCenter;
-  if(typeof oldOpen==='function')X.openCenter=async function(id){try{var e=await fresh(id);if(e){var ix=(X.encounters||[]).findIndex(function(z){return S(z.id)===S(id)});if(ix>=0)X.encounters[ix]=e;}}catch(_e){}return oldOpen.apply(X,arguments)};
-  var oldSave=X.encounterStore.save.bind(X.encounterStore);
-  X.encounterStore.save=async function(id,modernPayload,legacyPayload){
-    var r=await oldSave(id,modernPayload,legacyPayload);
-    /* V10.7.2: lectura posterior obligatoria. Si Supabase no conserva la plantilla, el guardado falla visiblemente. */
-    if(id){
-      var legacy=this.isLegacy(id),real=this.realId(id),expected=legacy?legacyPayload:modernPayload;
-      var rows=await X.json((legacy?'encuentros':'encounters')+'?id=eq.'+encodeURIComponent(real)+'&select=*'),got=(rows||[])[0]||{};
-      var expCalled=legacy?A(expected&&expected.convocados):A(expected&&expected.home_called_ids).concat(A(expected&&expected.away_called_ids));
-      var gotCalled=legacy?A(got.convocados):A(got.home_called_ids).concat(A(got.away_called_ids));
-      if(expCalled.length&&!gotCalled.length)throw new Error('La base de datos no ha conservado la convocatoria. Revisa las columnas/permisos de la tabla '+(legacy?'encuentros':'encounters')+'.');
-    }
-    return r;
-  };
-}
-install();
-})();
+<script id="v1073-encuentros-integridad-final">
+window.BM_ENCUENTROS_RELEASE="10.7.3";
 </script>
 </body>
 </html>
